@@ -1,26 +1,30 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaAngleDown, FaPhoneAlt, FaMapMarkerAlt, FaStickyNote, FaStore } from 'react-icons/fa';
 import { BiSolidUser } from 'react-icons/bi';
 import { Button, Input } from '../../components';
 import CheckoutItem from '../../components/Checkout-Item';
 import styles from './Checkout.module.scss';
-import {  useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UserCheckoutSchema } from '../../validate/Form';
-import {  useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { v4 as uuidv4 } from 'uuid';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useCreateOrderMutation } from '../../store/slices/order';
+import { CartItemState } from '../../store/slices/types/cart.type';
+import { toast } from 'react-toastify';
+import { resetAllCart } from '../../store/slices/cart.slice';
 
 const Checkout = () => {
   const [orderAPIFn, orderAPIRes] = useCreateOrderMutation();
-
+  const dispatch = useAppDispatch();
   const {
     register,
     formState: { errors },
     handleSubmit,
     setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(UserCheckoutSchema),
   });
@@ -28,7 +32,7 @@ const Checkout = () => {
   const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart);
   const dataInfoUser = useAppSelector((state) => state.persistedReducer.auth);
   const textNoteOrderRef = useRef<HTMLTextAreaElement>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username);
@@ -36,28 +40,27 @@ const Checkout = () => {
     }
   }, [dataInfoUser.user, dataInfoUser.user.address, dataInfoUser.user.username, setValue]);
 
-  console.log('textNoteOrderRef', textNoteOrderRef.current?.value);
-
   const getData = useCallback(
     (getData: string) => {
-      const arrTotal: { product: string; quantity: number; price: number }[] = [];
+      const arrTotal: Omit<CartItemState, 'total'>[] = [];
       const arrTotalNumbers: number[] = [];
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
-            arrTotal.push({ product: item.name, quantity: data.quantity, price: data.price });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { total, ...rest } = data;
+            arrTotal.push(rest);
           } else {
             let value: number | undefined;
-            if (getData === 'total') {
+            if (getData === 'quantity') {
+              value = data.quantity;
+            } else if (getData === 'total') {
               value = data.total;
-            } else if (getData === 'price') {
-              value = data.price;
             }
 
             if (value !== undefined) {
               arrTotalNumbers.push(value);
             }
-
           }
         })
       );
@@ -65,7 +68,6 @@ const Checkout = () => {
     },
     [dataCartCheckout.items]
   );
-
 
   const moneyShipping = useMemo(() => 117000, []);
   const moneyPromotion = useMemo(() => 0 as number, []);
@@ -78,6 +80,7 @@ const Checkout = () => {
   }, [getData]);
   const totalQuantity = useMemo(() => {
     const all = getData('quantity') as number[];
+
     const a = all.reduce((acc, curent) => {
       return acc + curent;
     }, 0);
@@ -88,27 +91,39 @@ const Checkout = () => {
     return moneyShipping + moneyPromotion + totalMoneyCheckout;
   }, [moneyPromotion, moneyShipping, totalMoneyCheckout]);
 
-  // console.log('all total', dataInfoUser);
-  // console.log('all pp total', getData('list'));
-
   const handleFormInfoCheckout = handleSubmit(async (data) => {
-    console.log(data);
-    const dataForm = {
-      user: dataInfoUser.user && dataInfoUser.user._id,
-      items: getData('list'),
-      // {
-      // product: ,
-      // quantity: ,
-      // price: ,
-      // },
-      status: 'pending',
-      total: totalAllMoneyCheckOut,
-      priceShipping: moneyShipping,
-      address: data.shippingLocation,
-      is_active: true,
-    };
-    await orderAPIFn(dataForm);
+    if (!(dataInfoUser.user.accessToken && dataInfoUser.user._id)) {
+      return navigate('/sign');
+    } else {
+      const productOrder = getData('list');
+      console.log(data);
+      const dataForm = {
+        user: dataInfoUser.user && dataInfoUser.user._id,
+        items: getData('list'),
+        total: totalAllMoneyCheckOut,
+        priceShipping: moneyShipping,
+        noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
+        paymentMethodId: 'cod',
+        inforOrderShipping: {
+          name: data.name,
+          phone: data.phone,
+          address: data.shippingLocation,
+          noteShipping: data.shippingNote,
+        },
+      };
+      orderAPIFn(dataForm).then((res: any) => {
+        if (res.error) {
+          return toast.error('Đặt hàng thất bại' + res.error.data.error);
+        } else {
+          toast.success('Bạn đặt hàng thành công');
+          reset();
+          dispatch(resetAllCart());
+          navigate('/');
+        }
+      });
+    }
   });
+
   return (
     <div className="w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto">
       <div className="detail flex justify-between mt-6 flex-col gap-y-10 lg:gap-y-0  lg:flex-row">
@@ -278,7 +293,6 @@ const Checkout = () => {
             <div className="">
               <Button type="checkout" size="large" shape="circle">
                 <span className="block" onClick={handleFormInfoCheckout}>
-                  {' '}
                   Đặt hàng
                 </span>
               </Button>

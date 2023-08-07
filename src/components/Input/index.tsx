@@ -20,10 +20,10 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: 
     >
       {prefix && prefix}
       <input
-        className={`p-0 outline-none  ${
+        className={`p-0 outline-none px-2 block ${
           type === 'auth' &&
           'border-transparent border border-b-[#d6cdbc] text-sm outline-none py-[10px] w-full focus:ring-0'
-        } 
+        }
         ${
           type === 'search' &&
           'w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem]'

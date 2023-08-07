@@ -105,7 +105,7 @@ const cartSlice = createSlice({
         quantity: number;
         size: { _id: string; name: string; price: number };
         toppings: { name: string; price: number }[];
-        product: string;
+        product?: string;
       }>
     ) => {
       const payload = action.payload;
@@ -135,7 +135,7 @@ const cartSlice = createSlice({
         quantity: number;
         size: { _id: string; name: string; price: number };
         toppings: { name: string; price: number }[];
-        product: string;
+        product?: string;
       }>
     ) => {
       const result = action.payload;

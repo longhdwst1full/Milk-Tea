@@ -1,12 +1,6 @@
 import { Tabs } from 'flowbite-react';
-import {
-  HiAdjustments,
-  HiClipboardList,
-  HiClipboard,
-  HiCheckCircle,
-  HiClipboardCheck,
-} from 'react-icons/hi';
-import { MdDashboard, MdLocalShipping } from 'react-icons/md';
+import { HiClipboardList, HiClipboard, HiCheckCircle, HiClipboardCheck } from 'react-icons/hi';
+import { MdLocalShipping } from 'react-icons/md';
 import AllOrdersTable from './AllOrdersTable';
 import AllOrdersPending from './AllOrdersPending';
 import AllOrdersConfirmed from './AllOrdersConfirmed';
@@ -14,8 +8,19 @@ import AllOrderDelivered from './AllOrderDelivered';
 import AllOrdersDone from './AllOrdersDone';
 import AllOrdersCanceled from './AllOrdersCanceled';
 import { FaTimesCircle } from 'react-icons/fa';
+import { useGetAllOrderQuery } from '../../../store/slices/order';
+import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
+import { useEffect, useState } from 'react';
 
 const Orders = () => {
+  const { data, isLoading, isError } = useGetAllOrderQuery();
+  const [orderPending, setOrderPending] = useState<dataDocsOrderRes[] | []>([]);
+  useEffect(() => {
+    if (data?.docs) {
+      setOrderPending(data.docs);
+    }
+  }, [data]);
+  console.log(data?.docs);
   return (
     <div className="p-2">
       <Tabs.Group aria-label="Default tabs" style="default">
@@ -23,10 +28,18 @@ const Orders = () => {
           <AllOrdersTable />
         </Tabs.Item>
         <Tabs.Item icon={HiClipboard} title="Order pending">
-          <AllOrdersPending />
+          <AllOrdersPending
+            dataOrderPending={orderPending}
+            isLoading={isLoading}
+            isError={isError}
+          />
         </Tabs.Item>
         <Tabs.Item icon={HiClipboardCheck} title="Order comfirmed">
-          <AllOrdersConfirmed />
+          <AllOrdersConfirmed
+            dataOrderCofirmed={orderPending}
+            isLoading={isLoading}
+            isError={isError}
+          />
         </Tabs.Item>
         <Tabs.Item icon={MdLocalShipping} title="Order delivered">
           <AllOrderDelivered />

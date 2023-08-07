@@ -36,7 +36,7 @@ export interface IAddProduct {
   name: string;
   images: IImage[];
   description: string;
-  price: Number;
+  price: number;
   sale: number;
   category: ICategory;
   sizes: ISize[];

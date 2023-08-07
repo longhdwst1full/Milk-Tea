@@ -29,7 +29,6 @@ const Categories = () => {
     const rows = [
       ...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt]),
     ];
-    console.log('🚀 ~ file: Categories.tsx:33 ~ useEffect ~ rows:', rows);
     setData([...rows]);
   }, [categories]);
   return (

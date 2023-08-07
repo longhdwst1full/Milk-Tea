@@ -128,7 +128,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           size: nameRadioInput,
                           toppings: checkedToppings,
                           quantity,
-                          image: product.images[0].url,
+                          image: product.images[0].url!,
                           // price: price - product.sale,
                           price: nameRadioInput.price - product.sale!,
                           total: (price - product.sale!) * quantity,

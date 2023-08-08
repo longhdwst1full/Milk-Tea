@@ -81,6 +81,12 @@ export const OrderAPI = createApi({
     getAllOrderCancel: builder.query<IDocsTypeOrder, void>({
       query: () => '/api/order-canceled',
     }),
+
+    /* get all order delivery */
+    getAllOrderDelivery: builder.query<IDocsTypeOrder, void>({
+      query: () => '/api/order-delivered',
+    }),
+
     orderPending: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/pending/${id}`,
@@ -105,4 +111,5 @@ export const {
   useGetOrderByidQuery,
   useGetAllOrderDoneQuery,
   useGetAllOrderCancelQuery,
+  useGetAllOrderDeliveryQuery,
 } = OrderAPI;

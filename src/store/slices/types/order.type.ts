@@ -10,7 +10,7 @@ interface inforOrderShipping {
   noteShipping: string;
 }
 
-enum StatusOrder {
+export enum StatusOrder {
   PENDING = 'pending',
   CONFIRMED = 'confirmed',
   DELIVERED = 'delivered',

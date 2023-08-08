@@ -1,16 +1,18 @@
-import React from 'react';
-import styles from './Footer-HomePage.module.scss';
 import {
-  FaMapMarker,
-  FaPhone,
   FaEnvelope,
   FaFacebookSquare,
-  FaInstagram,
-  FaYoutube,
-  FaTwitter,
   FaGooglePlus,
+  FaInstagram,
+  FaMapMarker,
+  FaPhone,
+  FaTwitter,
+  FaYoutube,
 } from 'react-icons/fa';
+
 import { Link } from 'react-router-dom';
+import React from 'react';
+import styles from './Footer-HomePage.module.scss';
+
 type Props = {};
 
 const FooterHomePage = (props: Props) => {
@@ -38,7 +40,7 @@ const FooterHomePage = (props: Props) => {
             </div>
             <div className="row flex items-center mb-[10px]">
               <FaEnvelope className="text-[#d3b673]  sm:text-sm mr-[10px]" />
-              <span className="text-white text-sm">info@tocotocotea.com</span>
+              <span className="text-white text-sm">info@datn.com</span>
             </div>
             <div className="row flex items-center mb-[10px]">
               <span className="text-white text-sm">Số ĐKKD: 0106341306. Ngày cấp: 16/03/2017.</span>
@@ -84,7 +86,7 @@ const FooterHomePage = (props: Props) => {
             <div className="content">
               <ul>
                 <li className="mb-2 text-sm">
-                  <Link to="/">Giới thiệu về TocoToco</Link>
+                  <Link to="/">Giới thiệu về MilkTea</Link>
                 </li>
                 <li className="mb-2 text-sm">
                   <Link to="/">Nhượng quyền</Link>
@@ -134,10 +136,10 @@ const FooterHomePage = (props: Props) => {
         </div>
         <div className="footer-bottom border-transparent border border-t-white flex justify-between flex-col sm:flex-row">
           <div className="font-[700] text-center my-5 mx-1">
-            ToCoToCo - Thương hiệu trà sữa tiên phong sử dụng nguồn nông sản Việt Nam
+            Thương hiệu trà sữa tiên phong sử dụng nguồn nông sản Việt Nam
           </div>
           <div className="text-center my-5 mx-1 text-sm">
-            Copyrights © 2019 by ToCoToCoTea. All rights reserved.
+            Copyrights © 2019 by Tea. All rights reserved.
           </div>
         </div>
       </div>

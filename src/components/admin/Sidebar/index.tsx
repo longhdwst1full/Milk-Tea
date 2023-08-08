@@ -98,16 +98,6 @@ const AdminSidebar: FC = function () {
               </Sidebar.Item>
               <Sidebar.Item
                 // href="/admin/orders"
-                onClick={() => handleRedirect('/admin/sizes')}
-                icon={ImFontSize}
-                className={`cursor-pointer ${
-                  '/admin/sizes' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
-                }`}
-              >
-                Sizes
-              </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/orders"
                 onClick={() => handleRedirect('/admin/role')}
                 icon={BiSolidUserCheck}
                 className={`cursor-pointer ${

@@ -5,7 +5,6 @@ type Props = {};
 
 const MyInfor = (props: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth);
-  console.log(user);
 
   return (
     <div className="my-account grow ">

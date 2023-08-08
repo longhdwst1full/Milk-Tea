@@ -6,9 +6,7 @@ import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiTrash } from 'rea
 import AddProductModal from '../../../components/CrudProduct/addProduct';
 import ProductsTable from '../../../components/CrudProduct/listProduct';
 
-type Props = {};
-
-const ProductsList = (props: Props) => {
+const ProductsList = () => {
   const [isOpenModalAdd, setOpenModalAdd] = useState(false);
 
   return (

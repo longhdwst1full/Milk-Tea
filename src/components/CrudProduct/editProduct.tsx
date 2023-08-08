@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import SizeApi from '../../api/size';
 import { ToppingAPI } from '../../api/topping';
 import { ProductForm, ProductSchema } from '../../validate/Form';
 import { useForm } from 'react-hook-form';

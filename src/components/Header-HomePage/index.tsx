@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import { FaBars, FaSearch, FaTimes } from 'react-icons/fa';
+import { useEffect, useRef } from 'react';
+
+import { Auth } from '../../api/Auth';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaBars, FaTimes } from 'react-icons/fa';
-import { Auth, useFetchUserQuery } from '../../api/Auth';
 
-type Props = {};
-
-const HeaderHomePage = (props: Props) => {
+const HeaderHomePage = () => {
   const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery();
   useEffect(() => {
     fetchUser();
@@ -23,8 +22,8 @@ const HeaderHomePage = (props: Props) => {
         <div className="left flex items-center ">
           <Link to="/">
             <img
-              className="w-[150px] max-w-[150px] md:w-[200px] md:max-w-[200px]"
-              src="/logo.png"
+              className="w-[56px] max-w-[56px] md:w-[56px] md:max-w-[56px]"
+              src="/logo_removebg.png"
               alt=""
             />
           </Link>

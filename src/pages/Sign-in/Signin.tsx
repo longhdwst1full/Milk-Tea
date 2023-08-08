@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useLoginMutation } from '../../api/Auth';
 import { Button, Input } from '../../components';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { Login, LoginSchema } from '../../validate/Form';
@@ -37,8 +37,6 @@ const Signin = () => {
         return toast.error(data.error.data.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
-      } else {
-        window.location.href = '/';
       }
     });
   };

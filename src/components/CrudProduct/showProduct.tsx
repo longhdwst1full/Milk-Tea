@@ -1,18 +1,11 @@
 import { memo, useState } from 'react';
 import { Button, Card, Textarea } from 'flowbite-react';
-import {
-  Box,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  ImageListItem,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, CardContent, CardHeader, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { AiFillEye } from 'react-icons/ai';
 import { IProduct } from '../../interfaces/products.type';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   product: IProduct;
@@ -20,11 +13,6 @@ interface Props {
 
 const ShowProduct = ({ product }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  //   useEffect(() => {
-  //     getDataTopping();
-  //     getCategory();
-  //   }, [DataCategory]);
 
   return (
     <div>
@@ -62,7 +50,7 @@ const ShowProduct = ({ product }: Props) => {
                       <img src={url.url} width={300} alt="" />
                     </Box>
                   ))}
-                  <Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <Box sx={{ fontWeight: 'bold' }}>
                       Category: <Button className="bg-green-400">{product.category.name}</Button>
                     </Box>
@@ -70,14 +58,24 @@ const ShowProduct = ({ product }: Props) => {
                       Sizes:
                       <Box sx={{ display: 'flex', gap: '10px' }}>
                         {product.sizes.map((item) => (
-                          <Button className="bg-orange-400">
+                          <Button key={uuidv4()} className="bg-orange-400">
                             {item.name}: {formatCurrency(item.price)}
                           </Button>
                         ))}
                       </Box>
                     </Box>
                     <Box sx={{ fontWeight: 'bold' }}>
-                      Sales:{' '}
+                      Toppings:
+                      <Box sx={{ display: 'flex', gap: '10px' }}>
+                        {product.toppings.map((item) => (
+                          <Button key={uuidv4()+"io"} className="bg-purple-400">
+                            {item.name}: {formatCurrency(item.price)}
+                          </Button>
+                        ))}
+                      </Box>
+                    </Box>
+                    <Box sx={{ fontWeight: 'bold' }}>
+                      Sales:
                       <Button className="bg-red-400">{formatCurrency(Number(product.sale))}</Button>
                     </Box>
                   </Box>

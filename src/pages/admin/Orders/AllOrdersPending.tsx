@@ -1,11 +1,12 @@
-import { Button, Checkbox, Label, Table } from 'flowbite-react';
+import { Button, Table } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import { HiPlus } from 'react-icons/hi';
-import { Link } from 'react-router-dom';
 
+import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading';
+import { LuClipboardEdit } from 'react-icons/lu';
 import { dataDocsOrderRes } from '../../../store/slices/types/order.type';
 import formatDate from '../../../utils/formatDate';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IProps {
   dataOrderPending: dataDocsOrderRes[];
@@ -23,75 +24,102 @@ const AllOrdersPending = ({ dataOrderPending, isLoading }: IProps) => {
   if (isLoading) return <Loading />;
   return (
     <Table className="min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600">
-      <Table.Head className="bg-gray-100 dark:bg-gray-700">
-        <Table.HeadCell>
-          <Label htmlFor="select-all" className="sr-only">
-            Select all
-          </Label>
-          <Checkbox id="select-all" name="select-all" />
-        </Table.HeadCell>
+      <Table.Head className="dark:bg-gray-700 bg-gray-100">
+        <Table.HeadCell>Stt</Table.HeadCell>
         <Table.HeadCell>User Name</Table.HeadCell>
         <Table.HeadCell>Address</Table.HeadCell>
         <Table.HeadCell>Create At</Table.HeadCell>
-        <Table.HeadCell>Deleted</Table.HeadCell>
         <Table.HeadCell>Status</Table.HeadCell>
         <Table.HeadCell>Actions</Table.HeadCell>
       </Table.Head>
-      <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+      <Table.Body className="dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200">
         {orderPending &&
-          orderPending.map((item, index) => {
+          orderPending.map((item, index: number) => {
             if (item.status == 'pending')
               return (
-                <Table.Row key={index} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
-                  <Table.Cell className="w-4 p-4">
-                    <div className="flex items-center">
-                      <Checkbox aria-describedby="checkbox-1" id="checkbox-1" />
-                      <label htmlFor="checkbox-1" className="sr-only">
-                        checkbox
-                      </label>
+                // <Table.Row key={index} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
+                //   <Table.Cell className="whitespace-nowrap lg:mr-0 flex items-center p-4 mr-12 space-x-6">
+                //     <img className="w-10 h-10 rounded-full" src={item.user.avatar} alt="" />
+                //     <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
+                //       <div className="dark:text-white text-base font-semibold text-gray-900">
+                //         {item.user.username}
+                //       </div>
+                //       <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
+                //         {item.user.account}
+                //       </div>
+                //     </div>
+                //   </Table.Cell>
+                //   <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize">
+                //     {item.inforOrderShipping.address}
+                //   </Table.Cell>
+                //   <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize">
+                //     {formatDate(item.createdAt)}
+                //   </Table.Cell>
+                //   <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-white capitalize">
+                //     <span className={` rounded inline-block px-2`}>{item.is_active}</span>
+                //   </Table.Cell>
+                //   <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize">
+                //     <span className="inline-block px-2 py-1 text-white bg-yellow-400 rounded">
+                //       {item.status}
+                //     </span>
+                //   </Table.Cell>
+                //   <Table.Cell>
+                //     <div className="gap-x-3 whitespace-nowrap flex items-center">
+                //       <Button color="primary">
+                //         <Link
+                //           to={`/admin/orders/${item._id}`}
+                //           className="gap-x-3 flex items-center"
+                //         >
+                //           <HiPlus className="text-xl" />
+                //           Detail
+                //         </Link>
+                //       </Button>
+                //       <Button color="failure">
+                //         <div className="gap-x-2 flex items-center">Delete order</div>
+                //       </Button>
+                //     </div>
+                //   </Table.Cell>
+                // </Table.Row>
+                <Table.Row
+                  className="dark:border-gray-700 dark:bg-gray-800 bg-white"
+                  key={uuidv4()}
+                >
+                  <Table.Cell className="whitespace-nowrap dark:text-white font-medium text-gray-900">
+                    {index + 1}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex items-center gap-2">
+                      <img className="w-10 h-10 rounded-full" src={item.user?.avatar} alt="" />
+                      <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
+                        <div className="dark:text-white text-base font-semibold text-gray-900">
+                          {item.user?.username}
+                        </div>
+                        <div className="dark:text-gray-400 text-sm font-normal text-gray-500">
+                          {item.user?.account}
+                        </div>{' '}
+                      </div>
                     </div>
                   </Table.Cell>
-                  <Table.Cell className="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 lg:mr-0">
-                    <img className="h-10 w-10 rounded-full" src={item.user.avatar} alt="" />
-                    <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                      <div className="text-base font-semibold text-gray-900 dark:text-white">
-                        {item.user.username}
-                      </div>
-                      <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                        {item.user.account}
-                      </div>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-                    {item.inforOrderShipping.address}
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-                    {formatDate(item.createdAt)}
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-white dark:text-white capitalize ">
-                    <span className={` rounded inline-block px-2`}>{item.is_active}</span>
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white capitalize">
-                    <span
-                      className="text-white
-                      rounded inline-block px-2 py-1   bg-yellow-400"
-                    >
-                      {item.status}
+                  <Table.Cell>{item.inforOrderShipping.address}</Table.Cell>
+                  <Table.Cell>{formatDate(item.createdAt)}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize">
+                    <span className="inline-block px-2 py-1 text-white bg-yellow-400 rounded">
+                      {item.status ? item.status : 'pending'}
                     </span>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="flex items-center gap-x-3 whitespace-nowrap">
+                    <div className="gap-x-3 whitespace-nowrap flex items-center">
                       <Button color="primary">
                         <Link
                           to={`/admin/orders/${item._id}`}
-                          className="flex items-center gap-x-3"
+                          className="gap-x-3 flex items-center"
                         >
-                          <HiPlus className="text-xl" />
+                          <LuClipboardEdit className="text-xl" />
                           Detail
                         </Link>
                       </Button>
                       <Button color="failure">
-                        <div className="flex items-center gap-x-2">Delete order</div>
+                        <div className="gap-x-2 flex items-center">Cancel order</div>
                       </Button>
                     </div>
                   </Table.Cell>

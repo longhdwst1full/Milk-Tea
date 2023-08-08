@@ -187,7 +187,9 @@ const CategoryTable = ({ dataCate, error }: { dataCate: ICategory[]; error: stri
                   <EditCategoryModal dataCate11={item} error={error} />
                   <Button color="failure">
                     <div
-                      onClick={() => handleDeleteCate(item._id)}
+                      onClick={() =>
+                        handleDeleteCate((item?._id as string) && (item._id as string))
+                      }
                       className="gap-x-2 flex items-center"
                     >
                       <HiTrash className="text-lg" />

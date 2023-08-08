@@ -1,5 +1,5 @@
 import { Button, Checkbox, Table } from 'flowbite-react';
-import { FC, useEffect, useState } from 'react';
+
 import { HiTrash } from 'react-icons/hi';
 import EditProductModal from './editProduct';
 import {
@@ -7,15 +7,17 @@ import {
   useDeleteRealProductMutation,
   useFetchProductsQuery,
 } from '../../api/Product';
-import { FaPlus } from 'react-icons/fa';
-import { formatCurrency } from '../../utils/formatCurrency';
-import { AiFillEye } from 'react-icons/ai';
-import ShowProduct from './showProduct';
 
-const ProductsTable: FC = function () {
-  const [isOpenModalEdit, setOpenModalEdit] = useState(false);
+import { formatCurrency } from '../../utils/formatCurrency';
+
+import ShowProduct from './showProduct';
+import Loading from '../Loading';
+
+const ProductsTable = function () {
+  // const [isOpenModalEdit, setOpenModalEdit] = useState(false);
   const { data, isLoading } = useFetchProductsQuery();
   const [deleteFakeProduct] = useDeleteFakeProductMutation();
+  if (isLoading) return <Loading />;
 
   return (
     <Table className="min-w-full  divide-y divide-gray-200 dark:divide-gray-600">
@@ -30,9 +32,9 @@ const ProductsTable: FC = function () {
         <Table.HeadCell>Category</Table.HeadCell>
         <Table.HeadCell colSpan={3}>Actions</Table.HeadCell>
       </Table.Head>
-      {isLoading ? (
+      {/* {isLoading ? (
         <h2>Loading</h2>
-      ) : (
+      ) : ( */}
         <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
           {data?.docs.map((product, index: number) => (
             <Table.Row key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700 text-center">
@@ -76,7 +78,7 @@ const ProductsTable: FC = function () {
             </Table.Row>
           ))}
         </Table.Body>
-      )}
+      {/* )} */}
     </Table>
   );
 };

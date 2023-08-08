@@ -16,7 +16,6 @@ import ApiVoucher from '../api/voucher';
 import { Auth } from '../api/Auth';
 import AuthReducer from './slices/Auth.slice';
 import RoleApi from '../api/role';
-import SizeApi from '../api/size';
 import { ToppingAPI } from '../api/topping';
 import cartReducer from './slices/cart.slice';
 import { categoriesReducer } from './slices/categories';
@@ -47,7 +46,6 @@ export const store = configureStore({
     [ApiProducts.reducerPath]: ApiProducts.reducer,
     [ToppingAPI.reducerPath]: ToppingAPI.reducer,
     [ApiVoucher.reducerPath]: ApiVoucher.reducer,
-    [SizeApi.reducerPath]: SizeApi.reducer,
     [RoleApi.reducerPath]: RoleApi.reducer,
     [CategoryApi.reducerPath]: CategoryApi.reducer,
     [Auth.reducerPath]: Auth.reducer,
@@ -63,7 +61,6 @@ export const store = configureStore({
       ApiProducts.middleware,
       ToppingAPI.middleware,
       ApiVoucher.middleware,
-      SizeApi.middleware,
       RoleApi.middleware,
       CategoryApi.middleware,
       Auth.middleware,

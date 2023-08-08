@@ -11,9 +11,10 @@ type Props = {
   typeInput?: string;
   register?: UseFormRegister<any>;
   error?: string;
+  setText?: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: Props) => {
+const Input = ({ placeholder, type, prefix, name, typeInput, register, error, setText }: Props) => {
   return (
     <div
       className={`flex items-center ${type === 'auth' ? 'justify-center flex-col gap-x-3' : ''}`}
@@ -32,6 +33,7 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error }: 
         placeholder={placeholder && placeholder}
         type={typeInput}
         {...register?.(name)}
+        onChange={(e) => setText && setText(e.target.value)}
         name={name}
       />
       {error && <span className="text-red-500 text-[13px]">{error}</span>}

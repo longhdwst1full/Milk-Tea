@@ -1,13 +1,13 @@
 import { IProduct } from './products.type';
 
 export interface ICategory {
-  _id: string;
+  _id?: string;
   name: string;
   slug: string;
-  products: IProduct[];
-  is_deleted: boolean;
-  createdAt: string;
-  updatedAt: string;
+  products?: IProduct[];
+  is_deleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ICategoryDocs {

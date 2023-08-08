@@ -10,6 +10,7 @@ const baseQuery = fetchBaseQuery({
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken;
+    console.log(accessToken);
 
     if (accessToken) {
       headers.set('authorization', `Bearer ${accessToken}`);

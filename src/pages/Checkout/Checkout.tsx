@@ -1,20 +1,21 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { FaAngleDown, FaPhoneAlt, FaMapMarkerAlt, FaStickyNote, FaStore } from 'react-icons/fa';
-import { BiSolidUser } from 'react-icons/bi';
 import { Button, Input } from '../../components';
-import CheckoutItem from '../../components/Checkout-Item';
-import styles from './Checkout.module.scss';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { UserCheckoutSchema } from '../../validate/Form';
+import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { v4 as uuidv4 } from 'uuid';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { formatCurrency } from '../../utils/formatCurrency';
-import { useCreateOrderMutation } from '../../store/slices/order';
+
+import { BiSolidUser } from 'react-icons/bi';
 import { CartItemState } from '../../store/slices/types/cart.type';
-import { toast } from 'react-toastify';
+import CheckoutItem from '../../components/Checkout-Item';
+import { UserCheckoutSchema } from '../../validate/Form';
+import { formatCurrency } from '../../utils/formatCurrency';
 import { resetAllCart } from '../../store/slices/cart.slice';
+import styles from './Checkout.module.scss';
+import { toast } from 'react-toastify';
+import { useCreateOrderMutation } from '../../store/slices/order';
+import { useForm } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const Checkout = () => {
   const [orderAPIFn, orderAPIRes] = useCreateOrderMutation();
@@ -226,7 +227,7 @@ const Checkout = () => {
               <div className="flex items-center justify-between cursor-pointer ">
                 <div className="flex items-center gap-x-2">
                   <FaStore />
-                  <span className="text-sm">Tocotoco - 93 Hoàng Công</span>
+                  <span className="text-sm">MilkTea - 93 Hoàng Công</span>
                 </div>
                 <div className="flex items-center gap-x-2">
                   <span className="text-sm">20.45km</span>

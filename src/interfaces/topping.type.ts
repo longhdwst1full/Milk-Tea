@@ -3,8 +3,8 @@ export interface ITopping {
   name: string;
   slug?: string;
   price: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IToppingResList {

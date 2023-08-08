@@ -27,7 +27,9 @@ const AuthSlice = createSlice({
   initialState,
   reducers: {
     refreshUser: (state, { payload }) => {
-      console.log(payload);
+      state.user = payload;
+    },
+    tickLogin: (state, { payload }) => {
       state.user = payload;
     },
   },
@@ -46,6 +48,6 @@ const AuthSlice = createSlice({
   },
 });
 
-export const { refreshUser } = AuthSlice.actions;
+export const { refreshUser, tickLogin } = AuthSlice.actions;
 
 export default AuthSlice.reducer;

@@ -33,12 +33,12 @@ const AllOrdersDone = () => {
                 <div className="flex items-center gap-4">
                   <img
                     className="h-14 w-14 object-cover rounded-full"
-                    src={order?.user?.avatar&& order?.user?.avatar}
+                    src={order.user.avatar}
                     alt={order.inforOrderShipping.name}
                   />
                   <div className="">
                     <p className="dark:text-white text-base font-semibold text-gray-900">
-                      {order.user?.username&&order.user.username}
+                      {order.user.username}
                     </p>
                     <p className="dark:text-gray-400 text-sm font-normal text-gray-500">
                       {order.inforOrderShipping.phone}

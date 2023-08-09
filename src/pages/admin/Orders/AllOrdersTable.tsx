@@ -1,5 +1,5 @@
 import { Button, Table } from 'flowbite-react';
-import { useCanceledOrderMutation, useLazyGetAllOrderQuery } from '../../../store/slices/order';
+import { useLazyGetAllOrderQuery } from '../../../store/slices/order';
 
 import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading';

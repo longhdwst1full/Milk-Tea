@@ -23,7 +23,7 @@ const News = (props: Props) => {
             <div className="img overflow-hidden">
               <img
                 className="w-full transition-all group-hover:scale-[1.1]"
-                src="https://tea.com/wp-content/uploads/2023/04/hinhthumb-scaled.jpg"
+                src="https://tocotocotea.com/wp-content/uploads/2023/04/hinhthumb-scaled.jpg"
                 alt=""
               />
             </div>
@@ -60,7 +60,7 @@ const News = (props: Props) => {
             <div className="img overflow-hidden">
               <img
                 className="w-full transition-all group-hover:scale-[1.1]"
-                src="https://tea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg"
+                src="https://tocotocotea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg"
                 alt=""
               />
             </div>
@@ -80,7 +80,7 @@ const News = (props: Props) => {
             <div className="img overflow-hidden">
               <img
                 className="w-full transition-all group-hover:scale-[1.1]"
-                src="https://tea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg"
+                src="https://tocotocotea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg"
                 alt=""
               />
             </div>
@@ -100,7 +100,7 @@ const News = (props: Props) => {
             <div className="img overflow-hidden">
               <img
                 className="w-full transition-all group-hover:scale-[1.1]"
-                src="https://tea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg"
+                src="https://tocotocotea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg"
                 alt=""
               />
             </div>
@@ -121,7 +121,7 @@ const News = (props: Props) => {
                 <div className="img">
                   <img
                     className="w-full transition-all group-hover:scale-[1.1]"
-                    src="https://tea.com/wp-content/uploads/2021/07/video_bg.png"
+                    src="https://tocotocotea.com/wp-content/uploads/2021/07/video_bg.png"
                     alt=""
                   />
                 </div>
@@ -138,7 +138,7 @@ const News = (props: Props) => {
                   <div className="img w-[160px]">
                     <img
                       className="w-full transition-all group-hover:scale-[1.1]"
-                      src="https://tea.com/wp-content/uploads/2021/07/TACO_THU%CC%9BO%CC%9BNG-HIE%CC%A3%CC%82U-TIE%CC%82U-BIE%CC%82%CC%89U-CHA%CC%82U-A%CC%81-THA%CC%81I-BI%CC%80NH-DU%CC%9BO%CC%9BNG-2021.jpg"
+                      src="https://tocotocotea.com/wp-content/uploads/2021/07/TACO_THU%CC%9BO%CC%9BNG-HIE%CC%A3%CC%82U-TIE%CC%82U-BIE%CC%82%CC%89U-CHA%CC%82U-A%CC%81-THA%CC%81I-BI%CC%80NH-DU%CC%9BO%CC%9BNG-2021.jpg"
                       alt=""
                     />
                   </div>
@@ -154,7 +154,7 @@ const News = (props: Props) => {
                   <div className="img w-[160px]">
                     <img
                       className="w-full transition-all group-hover:scale-[1.1]"
-                      src="https://tea.com/wp-content/uploads/2021/07/TACO_THU%CC%9BO%CC%9BNG-HIE%CC%A3%CC%82U-TIE%CC%82U-BIE%CC%82%CC%89U-CHA%CC%82U-A%CC%81-THA%CC%81I-BI%CC%80NH-DU%CC%9BO%CC%9BNG-2021.jpg"
+                      src="https://tocotocotea.com/wp-content/uploads/2021/07/TACO_THU%CC%9BO%CC%9BNG-HIE%CC%A3%CC%82U-TIE%CC%82U-BIE%CC%82%CC%89U-CHA%CC%82U-A%CC%81-THA%CC%81I-BI%CC%80NH-DU%CC%9BO%CC%9BNG-2021.jpg"
                       alt=""
                     />
                   </div>

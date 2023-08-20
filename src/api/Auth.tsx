@@ -4,7 +4,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { refreshUser } from '../store/slices/Auth.slice';
-
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000',
   credentials: 'include',
@@ -39,7 +38,6 @@ export const baseQueryWithReauth: BaseQueryFn<
 
 export const Auth = createApi({
   reducerPath: 'Auth',
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     register: builder.mutation<void, IUser>({
@@ -47,6 +45,7 @@ export const Auth = createApi({
         url: '/api/register',
         body: rest,
         method: 'POST',
+        credentials: 'include',
       }),
     }),
     login: builder.mutation<responseUser, IUser>({
@@ -54,6 +53,7 @@ export const Auth = createApi({
         url: '/api/login',
         body: rest,
         method: 'POST',
+        credentials: 'include',
       }),
     }),
     logout: builder.mutation<any, void>({
@@ -69,7 +69,21 @@ export const Auth = createApi({
         credentials: 'include',
       }),
     }),
+    updateInfor: builder.mutation<any, IUser>({
+      query: ({ _id, ...rest }) => ({
+        url: `/api/updateInfor/${_id}`,
+        method: 'PATCH',
+        body: rest,
+        credentials: 'include',
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation, useFetchUserQuery } = Auth;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useFetchUserQuery,
+  useUpdateInforMutation,
+} = Auth;

@@ -16,7 +16,7 @@ import { useCreateOrderMutation } from '../../store/slices/order';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+//
 const Checkout = () => {
   const [orderAPIFn, orderAPIRes] = useCreateOrderMutation();
   const dispatch = useAppDispatch();
@@ -112,14 +112,23 @@ const Checkout = () => {
           noteShipping: data.shippingNote,
         },
       };
+      console.log(dataForm);
       orderAPIFn(dataForm).then((res: any) => {
         if (res.error) {
           return toast.error('Đặt hàng thất bại' + res.error.data.error);
-        } else {
-          toast.success('Bạn đặt hàng thành công');
+        } 
+        else {
           reset();
           dispatch(resetAllCart());
-          navigate('/');
+          toast.success('Bạn đặt hàng thành công');
+          // alert(data.shippingNote)
+       
+
+          // reset();
+          // dispatch(resetAllCart());
+          // navigate('http://localhost:4000/vnpay');
+          const returnUrl = "http://localhost:5173";// url trả về
+          window.location.href='http://ketquaday99.com/vnpay/fast?amount='+dataForm.total+"&txt_inv_mobile="+data.phone+"&txt_billing_fullname="+data.name+"&txt_ship_addr1="+data.shippingLocation+"&returnUrl="+returnUrl;
         }
       });
     }
@@ -128,7 +137,7 @@ const Checkout = () => {
   return (
     <div className="w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto">
       <div className="detail flex justify-between mt-6 flex-col gap-y-10 lg:gap-y-0  lg:flex-row">
-        <form id="form_info_checkout" className="left w-full lg:w-[60%]">
+        <form id="form_info_checkout" className="left w-full lg:w-[60%]" method='get' action='.pay'>
           <div className="title flex justify-between items-center px-5 mb-[7px] ">
             <div>
               <h2 className="font-bold text-sm">Thông tin giao hàng</h2>
@@ -156,6 +165,7 @@ const Checkout = () => {
                 error={errors.phone?.message}
               />
             </div>
+           
             <div className="location">
               <div className="title pt-[10px] text-sm">
                 <h2>Giao đến</h2>
@@ -192,6 +202,17 @@ const Checkout = () => {
                   defaultChecked
                   type="radio"
                   value="cold"
+                  {...register('paymentMethod')}
+                />
+                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
+              </label>
+              <label className={` ${styles.container_radio} cod-payment block group`}>
+                <span className="text-sm">Thanh toán qua Ví vnPay</span>
+                <input
+                  className="opacity-0 absolute"
+                  defaultChecked
+                  type="radio"
+                  value="vnpay"
                   {...register('paymentMethod')}
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>

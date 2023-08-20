@@ -37,6 +37,10 @@ const Signin = () => {
         return toast.error(data.error.data.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
+      } else {
+        return toast.success('Login Success', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
       }
     });
   };

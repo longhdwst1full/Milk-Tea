@@ -19,6 +19,9 @@ export interface IUser {
   deleted?: boolean;
   accessToken?: string;
   refreshToken?: string;
+  birthday?: Date;
+  grade?: number;
+  gender?: string;
 }
 
 export interface responseUser {

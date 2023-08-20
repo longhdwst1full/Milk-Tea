@@ -1,4 +1,4 @@
-import { GuardExistUser, GuardNotUser } from './guardRoute';
+import GuardAuth, { GuardAccount, GuardSign } from './guardRoute';
 import { MyInfor, MyOrder, MyVoucher } from './components';
 
 import AccountLayout from './layouts/AccountLayout/accountLayout';
@@ -28,11 +28,11 @@ const routes = createBrowserRouter([
   },
   {
     path: '/signin',
-    element: <GuardNotUser JSX={Signin} />,
+    element: <GuardSign JSX={Signin} />,
   },
   {
     path: '/signup',
-    element: <GuardNotUser JSX={Signup} />,
+    element: <GuardSign JSX={Signup} />,
   },
   {
     path: '/products',
@@ -50,7 +50,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/account-layout',
-    element: <GuardExistUser JSX={AccountLayout} />,
+    element: <GuardAccount JSX={AccountLayout} />,
     children: [
       {
         index: true,
@@ -68,43 +68,48 @@ const routes = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: <GuardAuth />,
     children: [
       {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
-        path: 'users',
-        element: <UserList />,
-      },
-      {
-        path: 'categories',
-        element: <Categories />,
-      },
-      {
-        path: 'products',
-        element: <ProductsList />,
-      },
-      {
-        path: 'orders',
-        element: <Orders />,
-      },
-      {
-        path: 'orders/:id',
-        element: <OrderDetail />,
-      },
-      {
-        path: 'toppings',
-        element: <Topping />,
-      },
-      {
-        path: 'role',
-        element: <Role />,
-      },
-      {
-        path: 'voucher',
-        element: <Voucher />,
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
+          },
+          {
+            path: 'users',
+            element: <UserList />,
+          },
+          {
+            path: 'categories',
+            element: <Categories />,
+          },
+          {
+            path: 'products',
+            element: <ProductsList />,
+          },
+          {
+            path: 'orders',
+            element: <Orders />,
+          },
+          {
+            path: 'orders/:id',
+            element: <OrderDetail />,
+          },
+          {
+            path: 'toppings',
+            element: <Topping />,
+          },
+          {
+            path: 'role',
+            element: <Role />,
+          },
+          {
+            path: 'voucher',
+            element: <Voucher />,
+          },
+        ],
       },
     ],
   },

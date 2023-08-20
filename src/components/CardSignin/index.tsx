@@ -1,8 +1,5 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { Auth, useFetchUserQuery } from '../../api/Auth';
-import { tickLogin } from '../../store/slices/Auth.slice';
-import { useAppDispatch } from '../../store/hooks';
 // import { useFetchUserQuery } from '../../api/User';
 
 interface Props {

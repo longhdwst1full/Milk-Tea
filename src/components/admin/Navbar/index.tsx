@@ -6,9 +6,7 @@ import { useLogoutMutation } from '../../../api/Auth';
 const AdminNavbar: FC = function () {
   const [logout] = useLogoutMutation();
   const onLogout = () => {
-    logout().then(() => {
-      window.location.href = '/';
-    });
+    logout();
   };
   return (
     <Navbar fluid>

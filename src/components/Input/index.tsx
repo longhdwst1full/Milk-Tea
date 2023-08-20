@@ -12,9 +12,20 @@ type Props = {
   register?: UseFormRegister<any>;
   error?: string;
   setText?: React.Dispatch<React.SetStateAction<any>>;
+  searchValue?: string;
 };
 
-const Input = ({ placeholder, type, prefix, name, typeInput, register, error, setText }: Props) => {
+const Input = ({
+  placeholder,
+  type,
+  prefix,
+  name,
+  typeInput,
+  register,
+  error,
+  setText,
+  searchValue,
+}: Props) => {
   return (
     <div
       className={`flex items-center ${type === 'auth' ? 'justify-center flex-col gap-x-3' : ''}`}
@@ -30,13 +41,15 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error, se
           'w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem]'
         }`}
         autoComplete="off"
+        autoFocus
         placeholder={placeholder && placeholder}
         type={typeInput}
         {...register?.(name)}
         onChange={(e) => setText && setText(e.target.value)}
+        value={searchValue}
         name={name}
       />
-      {error && <span className="text-red-500 text-[13px]">{error}</span>}
+      {error && <span className="text-red-500 text-[13px] self-start">{error}</span>}
     </div>
   );
 };

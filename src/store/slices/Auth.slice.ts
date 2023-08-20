@@ -35,7 +35,11 @@ const AuthSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      isAnyOf(Auth.endpoints.login.matchFulfilled, Auth.endpoints.fetchUser.matchFulfilled),
+      isAnyOf(
+        Auth.endpoints.login.matchFulfilled,
+        Auth.endpoints.fetchUser.matchFulfilled,
+        Auth.endpoints.updateInfor.matchFulfilled
+      ),
       (state, { payload }) => {
         if (payload.user) {
           state.user = payload.user;

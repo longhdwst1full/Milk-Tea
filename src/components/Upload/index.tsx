@@ -117,7 +117,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
                   <BiFile />
                 </Box>
                 <Typography component="p" sx={{ fontSize: '20px' }}>
-                  <Link to={image.url} target="_blank">
+                  <Link to={image.url!} target="_blank">
                     {image.filename}
                   </Link>
                 </Typography>

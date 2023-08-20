@@ -76,6 +76,7 @@ export const UpdateUserSchema = Yup.object({
 });
 
 export type UpdateUserForm = Yup.InferType<typeof UpdateUserSchema>;
+
 export const UserCheckoutSchema = Yup.object({
   name: Yup.string().required(),
   phone: Yup.string().required(),
@@ -83,3 +84,13 @@ export const UserCheckoutSchema = Yup.object({
   shippingNote: Yup.string().required(),
   paymentMethod: Yup.string().required(),
 });
+
+export const InforFormSchema = Yup.object({
+  _id: Yup.string().required('ID Không được để trống'),
+  username: Yup.string().required('Họ và tên không được để trống'),
+  account: Yup.string().required('Tài khoản không được để trống'),
+  gender: Yup.string().required('Giới tính không được để trống'),
+  address: Yup.string().required('Địa chỉ không được để trống'),
+});
+
+export type InforForm = Yup.InferType<typeof InforFormSchema>;

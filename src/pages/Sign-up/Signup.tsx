@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Register, RegisterSchema } from '../../validate/Form';
 import { useRegisterMutation } from '../../api/Auth';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const [registerUser, { isSuccess }] = useRegisterMutation();
@@ -28,7 +29,17 @@ const Signup = () => {
   const onRegister = (registerData: Register) => {
     console.log(registerData);
 
-    registerUser(registerData);
+    registerUser(registerData).then((data: any) => {
+      if (data.error) {
+        return toast.error(data.error.data.err, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else {
+        return toast.success('Register Success', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    });
   };
 
   return (

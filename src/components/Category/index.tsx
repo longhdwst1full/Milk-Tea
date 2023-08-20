@@ -8,19 +8,20 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { FaBars } from 'react-icons/fa';
 import { ICategory } from '../../interfaces/category.type';
-import http from '../../api/instance';
+import { useAppDispatch } from '../../store/hooks';
+import { getIdCate } from '../../store/slices/categories';
 
 interface SidebarCateProps {
   categories: ICategory[];
-  onClick: (id?: string) => void;
 }
 
-const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
+const SidebarCate = ({ categories }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const dispatch = useAppDispatch();
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -29,14 +30,7 @@ const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleFetch = async () => {
-    try {
-      const { data } = await http.get('/products');
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   return (
     <>
       <div className="sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block">
@@ -44,22 +38,24 @@ const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
           Danh mục
         </div>
         <div className="">
-          {/* <div
-            onClick={() => onClick()}
+          <div
+            onClick={() => dispatch(getIdCate(''))}
             className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
           >
-            <div className="cat-name capitalize">Tất cả sản phẩm</div>
-          </div> */}
+            <div className="cat-name capitalize">All</div>
+          </div>
           {categories &&
             categories?.length > 0 &&
             categories?.map((category: ICategory) => (
               <div
-                onClick={() => onClick(category._id)}
+                onClick={() =>
+                  dispatch(getIdCate({ idCate: category._id, nameCate: category.name }))
+                }
                 key={category._id}
                 className="cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none"
               >
                 <div className="cat-name capitalize">{category.name}</div>
-                <div className="cat-amount text-[#8a733f]">{category.products.length}</div>
+                <div className="cat-amount text-[#8a733f]">{category.products?.length}</div>
               </div>
             ))}
         </div>
@@ -114,11 +110,11 @@ const SidebarCate = ({ categories, onClick }: SidebarCateProps) => {
                             fontSize={13}
                           >
                             {category.name}
-                            <span>10</span>
+                            <span>{category.products?.length}</span>
                           </Typography>
                         </Fragment>
                       }
-                      onClick={() => onClick(category._id)}
+                      onClick={() => dispatch(getIdCate(category._id))}
                     />
                   </ListItem>
                   <Divider sx={{ marginLeft: '16px' }} />

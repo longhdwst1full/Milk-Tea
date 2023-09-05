@@ -1,11 +1,11 @@
 export interface IRole {
-  _id?: string;
-  name: string;
-  status: string;
-  users: string[];
+  _id?: string
+  name: string
+  status: string
+  users: string[]
 }
 
 export interface IRoleDocs {
-  message: string;
-  data: IRole[];
+  message: string
+  data: IRole[]
 }

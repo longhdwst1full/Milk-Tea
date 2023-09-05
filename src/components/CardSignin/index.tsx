@@ -1,20 +1,20 @@
-import React from 'react';
-import { Button } from '@mui/material';
+import React from 'react'
+import { Button } from '@mui/material'
 // import { useFetchUserQuery } from '../../api/User';
 
 interface Props {
-  bgColor: string; // Màu là mã Hex
-  icon?: React.ReactNode;
-  color?: string; // Màu chữ là mã Hex
-  bgColorHover?: string; // Màu là mã Hex
-  LoginIn?: string;
-  colorHover?: string;
+  bgColor: string // Màu là mã Hex
+  icon?: React.ReactNode
+  color?: string // Màu chữ là mã Hex
+  bgColorHover?: string // Màu là mã Hex
+  LoginIn?: string
+  colorHover?: string
 }
 
 const CardSigin = ({ bgColor, icon, color, LoginIn, colorHover, bgColorHover }: Props) => {
   const OAuthLogin = () => {
-    window.open(`http://localhost:8000/auth/${LoginIn}`, '_self');
-  };
+    window.open(`http://localhost:8000/auth/${LoginIn}`, '_self')
+  }
   return (
     <Button
       onClick={OAuthLogin}
@@ -24,15 +24,15 @@ const CardSigin = ({ bgColor, icon, color, LoginIn, colorHover, bgColorHover }: 
         backgroundColor: bgColor,
         ':hover': {
           color: colorHover,
-          backgroundColor: bgColorHover,
+          backgroundColor: bgColorHover
         },
         color: color,
-        fontSize: '16px',
+        fontSize: '16px'
       }}
     >
       {icon && icon}
     </Button>
-  );
-};
+  )
+}
 
-export default CardSigin;
+export default CardSigin

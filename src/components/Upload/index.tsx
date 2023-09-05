@@ -1,45 +1,45 @@
-import { Box, Button, Paper, Stack, Typography, CircularProgress } from '@mui/material';
-import { BiSolidPlusCircle, BiFile, BiTrash } from 'react-icons/bi';
-import { IImage } from '../../interfaces/image.type';
-import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product';
-import { useEffect, useState } from 'react';
-import { memo } from 'react';
-import SKUpload from '../SkeletonUpload';
-import { Link } from 'react-router-dom';
+import { Box, Button, Paper, Stack, Typography, CircularProgress } from '@mui/material'
+import { BiSolidPlusCircle, BiFile, BiTrash } from 'react-icons/bi'
+import { IImage } from '../../interfaces/image.type'
+import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product'
+import { useEffect, useState } from 'react'
+import { memo } from 'react'
+import SKUpload from '../Skeleton/SKUpload'
+import { Link } from 'react-router-dom'
 
 interface Props {
-  urls: IImage[];
-  setUrl: any;
-  setLoadingUpload: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>;
+  urls: IImage[]
+  setUrl: any
+  setLoadingUpload: React.Dispatch<React.SetStateAction<boolean>>
+  setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) => {
-  const [lenghtFiles, setLenghtFiles] = useState(0);
-  const [id, setId] = useState<string>();
-  const [uploadImages, { isLoading }] = useUploadImagesProductMutation();
-  const [deleteImages, { isLoading: deleting }] = useDeleteImagesProductMutation();
+  const [lenghtFiles, setLenghtFiles] = useState(0)
+  const [id, setId] = useState<string>()
+  const [uploadImages, { isLoading }] = useUploadImagesProductMutation()
+  const [deleteImages, { isLoading: deleting }] = useDeleteImagesProductMutation()
   const uploadHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = [] as File[];
-    const file = event.target.files!;
-    setLenghtFiles(file.length);
-    if (!file) return;
-    for (var i = 0; i < file.length; i++) {
-      fileList.push(file[i]);
+    const fileList = [] as File[]
+    const file = event.target.files!
+    setLenghtFiles(file.length)
+    if (!file) return
+    for (let i = 0; i < file.length; i++) {
+      fileList.push(file[i])
     }
-    const formData = new FormData();
+    const formData = new FormData()
     fileList.forEach((file: File) => {
-      formData.append('images', file);
-    });
+      formData.append('images', file)
+    })
     uploadImages(formData).then(({ data }: any) => {
-      setUrl((pre: IImage[]) => [...pre, ...data.urls]);
-    });
-  };
+      setUrl((pre: IImage[]) => [...pre, ...data.urls])
+    })
+  }
 
   useEffect(() => {
-    setLoadingUpload(isLoading);
-    setLoadingDelete(deleting);
-  }, [isLoading, deleting]);
+    setLoadingUpload(isLoading)
+    setLoadingDelete(deleting)
+  }, [isLoading, deleting])
 
   return (
     <>
@@ -54,19 +54,19 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: 'column'
         }}
       >
-        <Typography component="h3" sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
+        <Typography component='h3' sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
           Upload file
         </Typography>
         <Box sx={{ position: 'relative' }}>
           <input
-            className="relative max-w-[200px] h-[46px] z-[2] opacity-0 cursor-pointer"
-            type="file"
-            name="images[]"
-            id=""
-            formEncType="multipart/form-data"
+            className='relative max-w-[200px] h-[46px] z-[2] opacity-0 cursor-pointer'
+            type='file'
+            name='images[]'
+            id=''
+            formEncType='multipart/form-data'
             multiple
             onChange={uploadHandler}
           />
@@ -80,21 +80,21 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
               margin: '0 auto',
               alignItems: 'center',
               ':hover': {
-                backgroundColor: '#06b6d4',
+                backgroundColor: '#06b6d4'
               },
               width: '100%',
               height: '100%',
               inset: 0,
-              zIndex: 1,
+              zIndex: 1
             }}
           >
-            <i className="text-[20px]">
+            <i className='text-[20px]'>
               <BiSolidPlusCircle />
             </i>
             Upload
           </Button>
         </Box>
-        <Typography component="p" sx={{ marginTop: '10px' }}>
+        <Typography component='p' sx={{ marginTop: '10px' }}>
           JPG,PNG
         </Typography>
       </Paper>
@@ -110,14 +110,14 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
                   backgroundColor: '#60a5fa',
                   color: 'white',
                   display: 'flex',
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <Box sx={{ fontSize: '30px' }}>
                   <BiFile />
                 </Box>
-                <Typography component="p" sx={{ fontSize: '20px' }}>
-                  <Link to={image.url!} target="_blank">
+                <Typography component='p' sx={{ fontSize: '20px' }}>
+                  <Link to={image.url!} target='_blank'>
                     {image.filename}
                   </Link>
                 </Typography>
@@ -125,21 +125,21 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
                   sx={{ cursor: 'pointer', marginLeft: 'auto' }}
                   onClick={() => {
                     deleteImages(image.publicId).then(({ data }: any) => {
-                      const filterFile = urls.filter((item) => item.publicId !== data.publicId);
-                      setUrl(filterFile);
-                    });
-                    setId(image.publicId);
+                      const filterFile = urls.filter((item) => item.publicId !== data.publicId)
+                      setUrl(filterFile)
+                    })
+                    setId(image.publicId)
                   }}
                 >
                   {deleting && id === image.publicId ? (
-                    <CircularProgress color="inherit" size={24} />
+                    <CircularProgress color='inherit' size={24} />
                   ) : (
                     <Box
                       sx={{
                         fontSize: '30px',
                         cursor: 'pointer',
                         marginLeft: 'auto',
-                        color: '#e11d48',
+                        color: '#e11d48'
                       }}
                     >
                       <BiTrash />
@@ -155,7 +155,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
         )}
       </Stack>
     </>
-  );
-};
+  )
+}
 
-export default memo(BoxUpload);
+export default memo(BoxUpload)

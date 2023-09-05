@@ -1,49 +1,45 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
-import { IVoucher, IVoucherDocs } from '../interfaces/voucher.type';
+import { createApi } from '@reduxjs/toolkit/query/react'
+import baseQueryWithReAuth from './requestRefresh'
+import { IVoucher, IVoucherDocs } from '../interfaces/voucher.type'
 
 const ApiVoucher = createApi({
   reducerPath: 'Voucher',
   baseQuery: baseQueryWithReAuth,
   tagTypes: ['voucher'],
   endpoints: (builder) => ({
-    getAllVouchers: builder.query<IVoucherDocs, void>({
-      query: () => '/api/vouchers',
-      providesTags: ['voucher'],
+    getAllVouchers: builder.query<IVoucherDocs, number | string>({
+      query: (page) => `/api/vouchers?_page=${page}`,
+      providesTags: ['voucher']
     }),
 
     addVoucher: builder.mutation<void, IVoucher>({
       query: (voucher) => ({
         url: '/api/voucher',
         method: 'POST',
-        body: voucher,
+        body: voucher
       }),
-      invalidatesTags: ['voucher'],
+      invalidatesTags: ['voucher']
     }),
 
     deleteVoucher: builder.mutation<any, string>({
       query: (id) => ({
         url: `/api/voucher/${id}`,
-        method: 'DELETE',
+        method: 'DELETE'
       }),
-      invalidatesTags: ['voucher'],
+      invalidatesTags: ['voucher']
     }),
 
     updateVoucher: builder.mutation<any, IVoucher>({
       query: (voucher) => ({
         url: `/api/voucher/${voucher._id}`,
         method: 'PUT',
-        body: { code: voucher.code, discount: voucher.discount, sale: voucher.sale },
+        body: { code: voucher.code, discount: voucher.discount, sale: voucher.sale }
       }),
-      invalidatesTags: ['voucher'],
-    }),
-  }),
-});
+      invalidatesTags: ['voucher']
+    })
+  })
+})
 
-export const {
-  useGetAllVouchersQuery,
-  useAddVoucherMutation,
-  useDeleteVoucherMutation,
-  useUpdateVoucherMutation,
-} = ApiVoucher;
-export default ApiVoucher;
+export const { useGetAllVouchersQuery, useAddVoucherMutation, useDeleteVoucherMutation, useUpdateVoucherMutation } =
+  ApiVoucher
+export default ApiVoucher

@@ -1,8 +1,7 @@
-import { Header } from '../../components';
-import { Outlet } from 'react-router-dom';
-type Props = {};
+import { Header } from '../../components'
+import { Outlet } from 'react-router-dom'
 
-const ClientLayout = (props: Props) => {
+const ClientLayout = () => {
   return (
     <>
       <Header />
@@ -10,7 +9,7 @@ const ClientLayout = (props: Props) => {
         <Outlet />
       </main>
     </>
-  );
-};
+  )
+}
 
-export default ClientLayout;
+export default ClientLayout

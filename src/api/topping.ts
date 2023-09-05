@@ -1,7 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
-import { ITopping, IToppingResList } from '../interfaces/topping.type';
-import { baseQueryWithReauth } from './Auth';
+import { ITopping, IToppingResList } from '../interfaces/topping.type'
+
+import { baseQueryWithReauth } from './Auth'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const ToppingAPI = createApi({
   // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
@@ -15,43 +15,39 @@ export const ToppingAPI = createApi({
         if (result) {
           const final = [
             ...result.data.map(({ _id }) => ({ type: 'Topping' as const, _id })),
-            { type: 'Topping' as const, id: 'LIST' },
-          ];
-          return final;
+            { type: 'Topping' as const, id: 'LIST' }
+          ]
+          return final
         }
 
-        return [{ type: 'Topping', id: 'LIST' }];
-      },
+        return [{ type: 'Topping', id: 'LIST' }]
+      }
     }),
     createTopping: builder.mutation({
       query: (body: Pick<ITopping, 'name' | 'price'>) => ({
         url: '/api/topping',
         body: { name: body.name, price: body.price },
-        method: 'POST',
+        method: 'POST'
       }),
-      invalidatesTags: () => [{ type: 'Topping', id: 'LIST' }],
+      invalidatesTags: () => [{ type: 'Topping', id: 'LIST' }]
     }),
     updateTopping: builder.mutation({
       query: (body: Pick<ITopping, 'name' | 'price' | '_id'>) => ({
         url: `/api/topping/${body._id}`,
         body: { name: body.name, price: body.price },
-        method: 'PUT',
+        method: 'PUT'
       }),
-      invalidatesTags: (result, error, body) => [{ type: 'Topping', id: 'LIST' }],
+      invalidatesTags: () => [{ type: 'Topping', id: 'LIST' }]
     }),
     deleteTopping: builder.mutation({
       query: (id: string) => ({
         url: `/api/topping/${id}`,
-        method: 'DElETE',
+        method: 'DElETE'
       }),
-      invalidatesTags: (result, error, body) => [{ type: 'Topping', id: 'LIST' }],
-    }),
-  }),
-});
+      invalidatesTags: () => [{ type: 'Topping', id: 'LIST' }]
+    })
+  })
+})
 
-export const {
-  useGetAllToppingQuery,
-  useCreateToppingMutation,
-  useDeleteToppingMutation,
-  useUpdateToppingMutation,
-} = ToppingAPI;
+export const { useGetAllToppingQuery, useCreateToppingMutation, useDeleteToppingMutation, useUpdateToppingMutation } =
+  ToppingAPI

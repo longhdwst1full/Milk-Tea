@@ -1,104 +1,102 @@
-import { Breadcrumb, Button, Label, TextInput } from 'flowbite-react';
-import type { FC } from 'react';
-import { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiTrash } from 'react-icons/hi';
-import AddProductModal from '../../../components/CrudProduct/addProduct';
-import ProductsTable from '../../../components/CrudProduct/listProduct';
+import { Breadcrumb, Button, Label, TextInput, Tooltip } from 'flowbite-react'
+import { HiCog, HiDotsVertical, HiExclamationCircle, HiHome, HiTrash } from 'react-icons/hi'
+
+import AddProductModal from '../../../components/CrudProduct/addProduct'
+import type { FC } from 'react'
+import { FaPlus } from 'react-icons/fa'
+import ProductsTable from '../../../components/CrudProduct/listProduct'
+import { useState } from 'react'
 
 const ProductsList = () => {
-  const [isOpenModalAdd, setOpenModalAdd] = useState(false);
+  const [isOpenModalAdd, setOpenModalAdd] = useState(false)
 
   return (
     <>
-      <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
-        <div className="mb-1 w-full">
-          <div className="mb-4">
-            <Breadcrumb className="mb-4">
-              <Breadcrumb.Item href="#">
-                <div className="flex items-center gap-x-3">
-                  <HiHome className="text-xl" />
-                  <span className="dark:text-white">Home</span>
+      <div className='block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex'>
+        <div className='mb-1 w-full'>
+          <div className='mb-4'>
+            <Breadcrumb className='mb-4'>
+              <Breadcrumb.Item href='#'>
+                <div className='flex items-center gap-x-3'>
+                  <HiHome className='text-xl' />
+                  <span className='dark:text-white'>Home</span>
                 </div>
               </Breadcrumb.Item>
-              <Breadcrumb.Item href="/e-commerce/products">E-commerce</Breadcrumb.Item>
+              <Breadcrumb.Item href='/e-commerce/products'>E-commerce</Breadcrumb.Item>
               <Breadcrumb.Item>Products</Breadcrumb.Item>
             </Breadcrumb>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-              All products
-            </h1>
+            <h1 className='text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl'>Danh sách sản phẩm</h1>
           </div>
-          <div className="block items-center sm:flex">
+          <div className='block items-center sm:flex'>
             <SearchForProducts />
-            <div className="hidden space-x-1 border-l border-gray-100 pl-2 dark:border-gray-700 md:flex">
+            <div className='hidden space-x-1 border-l border-gray-100 pl-2 dark:border-gray-700 md:flex'>
               <a
-                href="#"
-                className="inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                href='#'
+                className='inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
               >
-                <span className="sr-only">Configure</span>
-                <HiCog className="text-2xl" />
+                <span className='sr-only'>Configure</span>
+                <HiCog className='text-2xl' />
               </a>
               <a
-                href="#"
-                className="inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                href='#'
+                className='inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
               >
-                <span className="sr-only">Delete</span>
-                <HiTrash className="text-2xl" />
+                <span className='sr-only'>Delete</span>
+                <HiTrash className='text-2xl' />
               </a>
               <a
-                href="#"
-                className="inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                href='#'
+                className='inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
               >
-                <span className="sr-only">Purge</span>
-                <HiExclamationCircle className="text-2xl" />
+                <span className='sr-only'>Purge</span>
+                <HiExclamationCircle className='text-2xl' />
               </a>
               <a
-                href="#"
-                className="inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                href='#'
+                className='inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
               >
-                <span className="sr-only">Settings</span>
-                <HiDotsVertical className="text-2xl" />
+                <span className='sr-only'>Settings</span>
+                <HiDotsVertical className='text-2xl' />
               </a>
             </div>
-            <div className="flex w-full items-center sm:justify-end">
-              <Button color="primary" onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
-                <FaPlus className="mr-3 text-sm" />
-                Add product
-              </Button>
-              {isOpenModalAdd ? (
-                <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} />
-              ) : (
-                ''
-              )}
+            <div className='flex w-full items-center sm:justify-end'>
+              <Tooltip content='Thêm sản phẩm'>
+                <Button color='primary' onClick={() => setOpenModalAdd(!isOpenModalAdd)}>
+                  <FaPlus className='mr-3 text-sm' />
+                  Thêm sản phẩm
+                </Button>
+              </Tooltip>
+
+              {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''}
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col">
-        <div className="overflow-x-auto">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden shadow">
+      <div className='flex flex-col'>
+        <div className='overflow-x-auto'>
+          <div className='inline-block min-w-full align-middle'>
+            <div className='overflow-hidden shadow'>
               <ProductsTable />
             </div>
           </div>
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
 const SearchForProducts: FC = function () {
   return (
-    <form className="mb-4 sm:mb-0 sm:pr-3" action="#" method="GET">
-      <Label htmlFor="products-search" className="sr-only">
+    <form className='mb-4 sm:mb-0 sm:pr-3' action='#' method='GET'>
+      <Label htmlFor='products-search' className='sr-only'>
         Search
       </Label>
-      <div className="relative mt-1 lg:w-64 xl:w-96">
-        <TextInput id="products-search" name="products-search" placeholder="Search for products" />
+      <div className='relative mt-1 lg:w-64 xl:w-96'>
+        <TextInput id='products-search' name='products-search' placeholder='Search for products' />
       </div>
     </form>
-  );
-};
+  )
+}
 
 // const AddProductModal = ({
 //   isOpen,
@@ -505,4 +503,4 @@ const SearchForProducts: FC = function () {
 //   );
 // };
 
-export default ProductsList;
+export default ProductsList

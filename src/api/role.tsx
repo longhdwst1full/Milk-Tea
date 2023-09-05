@@ -1,7 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReAuth from './requestRefresh';
-import { IRole, IRoleDocs } from '../interfaces/role.type';
-import { baseQueryWithReauth } from './Auth';
+import { IRole, IRoleDocs } from '../interfaces/role.type'
+
+import { baseQueryWithReauth } from './Auth'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 const RoleApi = createApi({
   reducerPath: 'Role',
@@ -11,42 +11,37 @@ const RoleApi = createApi({
   endpoints: (builder) => ({
     getAllRoles: builder.query<IRoleDocs, void>({
       query: () => '/api/roles',
-      providesTags: ['role'],
+      providesTags: ['role']
     }),
 
     deleteRole: builder.mutation({
       query: (id: string) => ({
         url: `/api/role/${id}`,
-        method: 'DELETE',
+        method: 'DELETE'
       }),
-      invalidatesTags: ['role'],
+      invalidatesTags: ['role']
     }),
 
     addRole: builder.mutation({
       query: (role: IRole) => ({
         url: '/api/role',
         method: 'POST',
-        body: role,
+        body: role
       }),
-      invalidatesTags: ['role'],
+      invalidatesTags: ['role']
     }),
 
     updateRole: builder.mutation({
       query: (role: IRole) => ({
         url: `/api/role/${role._id}`,
         method: 'PUT',
-        body: { name: role.name },
+        body: { name: role.name }
       }),
-      invalidatesTags: ['role'],
-    }),
-  }),
-});
+      invalidatesTags: ['role']
+    })
+  })
+})
 
-export const {
-  useGetAllRolesQuery,
-  useDeleteRoleMutation,
-  useAddRoleMutation,
-  useUpdateRoleMutation,
-} = RoleApi;
+export const { useGetAllRolesQuery, useDeleteRoleMutation, useAddRoleMutation, useUpdateRoleMutation } = RoleApi
 
-export default RoleApi;
+export default RoleApi

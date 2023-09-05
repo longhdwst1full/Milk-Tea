@@ -1,13 +1,12 @@
-import { CartItemState } from './cart.type';
-import { IProduct } from '../../../interfaces/products.type';
-import { IRole } from '../../../interfaces/role.type';
-import { ITopping } from '../../../interfaces/topping.type';
+import { CartItemState } from './cart.type'
+import { IProduct } from '../../../interfaces/products.type'
+import { ITopping } from '../../../interfaces/topping.type'
 
 interface inforOrderShipping {
-  name: string;
-  phone: string;
-  address: string;
-  noteShipping: string;
+  name: string
+  phone: string
+  address: string
+  noteShipping: string
 }
 
 export enum StatusOrder {
@@ -15,65 +14,65 @@ export enum StatusOrder {
   CONFIRMED = 'confirmed',
   DELIVERED = 'delivered',
   DONE = 'done',
-  CANCELED = 'canceled',
+  CANCELED = 'canceled'
 }
 
 enum PaymentMethod {
   COD = 'cod',
   MOMO = 'momo',
-  ZALO = 'zalo',
+  ZALO = 'zalo'
 }
 export interface IOrderCheckout {
-  user: string;
-  items: Omit<CartItemState, 'total'>[] | number[];
-  total: number;
-  priceShipping: number;
-  noteOrder: string | undefined;
-  paymentMethodId: string;
-  inforOrderShipping: inforOrderShipping;
+  user: string
+  items: Omit<CartItemState, 'total'>[] | number[]
+  total: number
+  priceShipping: number
+  noteOrder: string | undefined
+  paymentMethodId: string
+  inforOrderShipping: inforOrderShipping
 }
 
 export interface dataDocsOrderRes {
-  _id: string;
-  inforOrderShipping: inforOrderShipping;
+  _id: string
+  inforOrderShipping: inforOrderShipping
   user: {
-    _id: string;
-    username: string;
-    avatar: string;
-    account: string;
-    googleId?: string;
-  };
+    _id: string
+    username: string
+    avatar: string
+    account: string
+    googleId?: string
+  }
   items: {
-    _id: string;
+    _id: string
     size: {
-      name: string;
-      price: number;
-    };
-    product: IProduct;
-    toppings: Pick<ITopping, '_id' | 'name' | 'price'>[];
-    quantity: number;
-    price: number;
-  }[];
-  status: StatusOrder;
-  total: number;
-  priceShipping: number;
-  paymentMethodId: PaymentMethod;
-  is_active: boolean;
-  createdAt: string;
-  updatedAt: string;
-  noteOrder: string;
+      name: string
+      price: number
+    }
+    product: IProduct
+    toppings: Pick<ITopping, '_id' | 'name' | 'price'>[]
+    quantity: number
+    price: number
+  }[]
+  status: StatusOrder
+  total: number
+  priceShipping: number
+  paymentMethodId: PaymentMethod
+  is_active: boolean
+  createdAt: string
+  updatedAt: string
+  noteOrder: string
 }
 export interface IDocsTypeOrder {
-  docs: dataDocsOrderRes[];
-  totalDocs: number;
-  limit: number;
-  totalPages: number;
-  page: number;
-  pagingCounter: number;
-  hasPrevPage: boolean;
-  hasNextPage: boolean;
-  prevPage: null | number;
-  nextPage: null | number;
+  docs: dataDocsOrderRes[]
+  totalDocs: number
+  limit: number
+  totalPages: number
+  page: number
+  pagingCounter: number
+  hasPrevPage: boolean
+  hasNextPage: boolean
+  prevPage: null | number
+  nextPage: null | number
 }
 
 // enum StatusOrder {
@@ -92,61 +91,61 @@ export interface IDocsTypeOrder {
 
 export interface IOrder {
   inforOrderShipping: {
-    name: string;
-    address: string;
-    phone: string;
-    noteShipping: string;
-  };
-  _id: string;
+    name: string
+    address: string
+    phone: string
+    noteShipping: string
+  }
+  _id: string
   user: {
-    _id: string;
-    googleId: string;
-    username: string;
-    avatar: string;
-  };
+    _id: string
+    googleId: string
+    username: string
+    avatar: string
+  }
   items: [
     {
       size: {
-        name: string;
-        price: number;
-      };
+        name: string
+        price: number
+      }
       product: {
-        _id: string;
-        name: string;
-        sale: number;
-      };
-      image: string;
-      quantity: number;
-      price: number;
+        _id: string
+        name: string
+        sale: number
+      }
+      image: string
+      quantity: number
+      price: number
       toppings: [
         {
-          name: string;
-          price: number;
-          _id: string;
+          name: string
+          price: number
+          _id: string
         }
-      ];
-      _id: string;
+      ]
+      _id: string
     }
-  ];
-  status: StatusOrder;
-  noteOrder: string;
-  total: number;
-  priceShipping: number;
-  paymentMethodId: PaymentMethod;
-  is_active: true;
-  createdAt: string;
-  updatedAt: string;
+  ]
+  status: StatusOrder
+  noteOrder: string
+  total: number
+  priceShipping: number
+  paymentMethodId: PaymentMethod
+  is_active: true
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IDocsTypeOrderS {
-  docs: IOrder[];
-  totalDocs: number;
-  limit: number;
-  totalPages: number;
-  page: number;
-  pagingCounter: number;
-  hasPrevPage: boolean;
-  hasNextPage: boolean;
-  prevPage: null | number;
-  nextPage: null | number;
+  docs: IOrder[]
+  totalDocs: number
+  limit: number
+  totalPages: number
+  page: number
+  pagingCounter: number
+  hasPrevPage: boolean
+  hasNextPage: boolean
+  prevPage: null | number
+  nextPage: null | number
 }

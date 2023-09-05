@@ -1,16 +1,17 @@
-import { IDocsTypeOrder, IOrderCheckout } from './types/order.type';
-import { IOrder, IOrderDetailResponse } from '../../interfaces/order.type';
+import { IDocsTypeOrder, IOrderCheckout } from './types/order.type'
 
-import baseQueryWithReAuth from '../../api/requestRefresh';
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { IOrderDetailResponse } from '../../interfaces/order.type'
+import baseQueryWithReAuth from '../../api/requestRefresh'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const OrderAPI = createApi({
   reducerPath: 'Order',
   tagTypes: ['Order'],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
-    getAllOrder: builder.query<IDocsTypeOrder, void>({
-      query: () => '/api/orders',
+    //get all orders
+    getAllOrder: builder.query<IDocsTypeOrder, number | string>({
+      query: (page) => `/api/orders?_page=${page}`
       // providesTags: (result) => {
       // if (result) {
       //   const final = [
@@ -23,80 +24,107 @@ export const OrderAPI = createApi({
       // return [{ type: 'Order', id: 'LIST' }];
       // },
     }),
+
+    //get order by id
     getOrderByid: builder.query<IOrderDetailResponse, string>({
       query: (id) => ({
-        url: `/api/order/${id}`,
+        url: `/api/order/${id}`
       }),
-      providesTags: ['Order'],
+      providesTags: ['Order']
     }),
 
+    //create new order
     createOrder: builder.mutation({
       query: (body: IOrderCheckout) => ({
         url: '/api/create-order',
         body: body,
-        method: 'POST',
-      }),
+        method: 'POST'
+      })
       // invalidatesTags: () => [{ type: 'Order', id: 'LIST' }],
     }),
+
+    //update order status = confirm
     confirmOrder: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/confirmed/${id}`,
-        method: 'PUT',
+        method: 'PUT'
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order']
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
+
+    //update order status = delivered
     deliveredOrder: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/delivered/${id}`,
-        method: 'PUT',
+        method: 'PUT'
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order']
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
+
+    //update order status = done
     doneOrder: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/done/${id}`,
-        method: 'PUT',
+        method: 'PUT'
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order']
 
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
+
+    //update order status = canceled
     canceledOrder: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/canceled/${id}`,
-        method: 'PUT',
+        method: 'PUT'
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order']
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
 
     /* get all order done */
-    getAllOrderDone: builder.query<IDocsTypeOrder, void>({
-      query: () => '/api/order-done',
+    getAllOrderDone: builder.query<IDocsTypeOrder, number | string>({
+      query: (page) => `/api/order-done?_page=${page}`,
+      providesTags: ['Order']
     }),
 
     /* get all order cancel */
-    getAllOrderCancel: builder.query<IDocsTypeOrder, void>({
-      query: () => '/api/order-canceled',
+    getAllOrderCancel: builder.query<IDocsTypeOrder, number | string>({
+      query: (page) => `/api/order-canceled?_page=${page}`,
+      providesTags: ['Order']
     }),
 
     /* get all order delivery */
-    getAllOrderDelivery: builder.query<IDocsTypeOrder, void>({
-      query: () => '/api/order-delivered',
+    getAllOrderDelivery: builder.query<IDocsTypeOrder, number | string>({
+      query: (page) => `/api/order-delivered?_page=${page}`,
+      providesTags: ['Order']
     }),
 
+    //update order status = pending
     orderPending: builder.mutation({
       query: (id: string) => ({
         url: `/api/order/pending/${id}`,
-        method: 'PUT',
+        method: 'PUT'
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ['Order']
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
     }),
-  }),
-});
+
+    //get all pending orders
+    getAllOrdersPending: builder.query<IDocsTypeOrder, number | string>({
+      query: (page) => `/api/order-pending?_page=${page}`,
+      providesTags: ['Order']
+    }),
+
+    //get all order comfirmed
+    getAllOrderComfirmed: builder.query<IDocsTypeOrder, number | string>({
+      query: (page) => `/api/order-confirmed?_page=${page}`,
+      providesTags: ['Order']
+    })
+  })
+})
 // console.log(ToppingAPI);
 
 export const {
@@ -112,4 +140,6 @@ export const {
   useGetAllOrderDoneQuery,
   useGetAllOrderCancelQuery,
   useGetAllOrderDeliveryQuery,
-} = OrderAPI;
+  useGetAllOrdersPendingQuery,
+  useGetAllOrderComfirmedQuery
+} = OrderAPI

@@ -1,14 +1,14 @@
-import { AnyObject, ArraySchema, Maybe } from 'yup';
+import { AnyObject, ArraySchema, Maybe } from 'yup'
 declare module 'yup' {
   interface StringSchema<
     TType extends Maybe<string> = string,
     TContext extends AnyObject = AnyObject,
     TOut extends TType = TType
   > extends yup.BaseSchema<TType, TContext, TOut> {
-    regexMatch(message: string): StringSchema<TType, TContext>;
-    checkLength(message: string): StringSchema<TType, TContext>;
-    checkEmpty(message: string): StringSchema<TType, TContext>;
-    typeError(message: string): StringSchema<TType, TContext>;
+    regexMatch(message: string): StringSchema<TType, TContext>
+    checkLength(message: string): StringSchema<TType, TContext>
+    checkEmpty(message: string): StringSchema<TType, TContext>
+    typeError(message: string): StringSchema<TType, TContext>
   }
 
   interface ArraySchema<
@@ -16,6 +16,6 @@ declare module 'yup' {
     TContext extends AnyObject = AnyObject,
     TOut extends TType = TType
   > extends yup.BaseSchema<TType, TContext, TOut> {
-    typeError(message: string): ArraySchema<TType, TContext>;
+    typeError(message: string): ArraySchema<TType, TContext>
   }
 }

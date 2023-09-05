@@ -1,95 +1,123 @@
-import { memo, useState } from 'react';
-import { Button, Card, Textarea } from 'flowbite-react';
-import { Box, CardContent, CardHeader, Typography } from '@mui/material';
-import Modal from '@mui/material/Modal';
-import { AiFillEye } from 'react-icons/ai';
-import { IProduct } from '../../interfaces/products.type';
-import { formatCurrency } from '../../utils/formatCurrency';
-import { v4 as uuidv4 } from 'uuid';
+import { memo, useState } from 'react'
+
+import { AiFillEye } from 'react-icons/ai'
+import { BiSolidDiscount } from 'react-icons/bi'
+import { Button, Tooltip } from 'flowbite-react'
+import { IProduct } from '../../interfaces/products.type'
+import { Modal } from 'antd'
+import Slider from 'react-slick'
+import { Table } from 'antd'
+import { formatCurrency } from '../../utils/formatCurrency'
+import parse from 'html-react-parser'
+import { saleCaculator } from '../../utils/saleCaculator'
+import { v4 as uuidv4 } from 'uuid'
 
 interface Props {
-  product: IProduct;
+  product: IProduct
 }
 
 const ShowProduct = ({ product }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    cssEase: 'linear'
+  }
+  const [isOpen, setIsOpen] = useState(false)
+  const handleCancel = () => {
+    setIsOpen(false)
+  }
+
+  const columns = [
+    {
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      dataIndex: 'price',
+      key: 'price',
+      width: 200,
+      render: (price: number) => <span className='max-w-[200px]'>{formatCurrency(price)}</span>
+    }
+  ]
 
   return (
     <div>
-      <Button className="bg-yellow-500" onClick={() => setIsOpen(true)}>
-        <AiFillEye />
-      </Button>
+      <Tooltip content='Xem trước sản phẩm'>
+        <Button className='bg-yellow-500' onClick={() => setIsOpen(true)}>
+          <AiFillEye />
+        </Button>
+      </Tooltip>
       <Modal
+        footer={null}
+        title='Sản phẩm chi tiết'
+        width={1000}
+        style={{ top: 20 }}
         open={isOpen}
-        onClose={() => setIsOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="h-full overflow-y-auto no-scrollbar"
+        onCancel={handleCancel}
       >
-        <Box
-          sx={{
-            width: '50rem',
-            margin: '0 auto',
-            backgroundColor: 'white',
-            borderRadius: '4px',
-            padding: '10px',
-          }}
-        >
-          <Typography className="p-6 bg-[#e2e8f0]" variant="h5" component="h3">
-            Show Product
-          </Typography>
-          <Box
-            sx={{ padding: '10px 0 10px 0', display: 'flex', flexDirection: 'column', gap: '20px' }}
-          >
-            <Box>
-              <Card>
-                <CardHeader title={product.name} />
-                <CardContent className="flex gap-2">
-                  {product.images.map((url) => (
-                    <Box key={url.publicId} className="flex flex-wrap gap-3">
-                      <img src={url.url} width={300} alt="" />
-                    </Box>
-                  ))}
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Box sx={{ fontWeight: 'bold' }}>
-                      Category: <Button className="bg-green-400">{product.category.name}</Button>
-                    </Box>
-                    <Box sx={{ fontWeight: 'bold' }}>
-                      Sizes:
-                      <Box sx={{ display: 'flex', gap: '10px' }}>
-                        {product.sizes.map((item) => (
-                          <Button key={uuidv4()} className="bg-orange-400">
-                            {item.name}: {formatCurrency(item.price)}
-                          </Button>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box sx={{ fontWeight: 'bold' }}>
-                      Toppings:
-                      <Box sx={{ display: 'flex', gap: '10px' }}>
-                        {product.toppings.map((item) => (
-                          <Button key={uuidv4()+"io"} className="bg-purple-400">
-                            {item.name}: {formatCurrency(item.price)}
-                          </Button>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box sx={{ fontWeight: 'bold' }}>
-                      Sales:
-                      <Button className="bg-red-400">{formatCurrency(Number(product.sale))}</Button>
-                    </Box>
-                  </Box>
-                </CardContent>
-                <CardContent>
-                  <Textarea readOnly>{product.description}</Textarea>
-                </CardContent>
-              </Card>
-            </Box>
-          </Box>
-        </Box>
+        <div className='flex gap-4'>
+          <div className='w-[40%]'>
+            <Slider {...settings}>
+              {product.images.map((url) => (
+                <div key={url.url}>
+                  <img src={url.url} alt={product.name} className='w-full' />
+                </div>
+              ))}
+            </Slider>
+          </div>
+          <div className='flex-1'>
+            <div className='flex flex-col'>
+              <h1 className='text-2xl font-bold capitalize flex gap-2 flex-wrap items-center'>
+                <span className='text-2xl font-bold'>{product.name}</span>{' '}
+                {product.sale && (
+                  <span className='text-2xl font-bold flex items-center'>
+                    <span className='mt-[2px]'>
+                      <BiSolidDiscount />
+                    </span>
+                    <span className=''>{saleCaculator(product.sizes[0].price, product.sale)}%</span>
+                  </span>
+                )}
+              </h1>
+              <span className=''>
+                {product.category.name} - {`Sale: ${formatCurrency(product.sale)}`}
+              </span>
+              <div className='mt-5'>
+                <h2 className='font-semibold text-lg'>Description</h2>
+                <span className=''>{parse(product.description)}</span>
+              </div>
+              <div className='mt-14 relative'>
+                <div className='absolute -top-4 left-0 w-full bg-gray-200 h-[1px] z-10'></div>
+                <div className='absolute -top-8 z-10 left-4 bg-white px-4'>
+                  <h2 className='font-semibold text-lg'>Size</h2>
+                </div>
+                <Table
+                  dataSource={product.sizes.map((item) => ({ ...item, key: uuidv4() }))}
+                  columns={columns}
+                  pagination={false}
+                />
+              </div>
+              <div className='mt-14 relative'>
+                <div className='absolute -top-4 left-0 w-full bg-gray-200 h-[1px] z-10'></div>
+                <div className='absolute -top-8 z-10 left-4 bg-white px-4'>
+                  <h2 className='font-semibold text-lg'>Topping</h2>
+                </div>
+                <Table
+                  dataSource={product.toppings.map((item) => ({ ...item, key: uuidv4() }))}
+                  columns={columns}
+                  pagination={false}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default memo(ShowProduct);
+export default memo(ShowProduct)

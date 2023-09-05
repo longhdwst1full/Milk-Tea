@@ -1,14 +1,14 @@
 function convertToBase64(file: any) {
   return new Promise<any>((resolve, reject) => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
+    const fileReader = new FileReader()
+    fileReader.readAsDataURL(file)
     fileReader.onload = () => {
-      resolve(fileReader.result);
-    };
+      resolve(fileReader.result)
+    }
     fileReader.onerror = (error) => {
-      reject(error);
-    };
-  });
+      reject(error)
+    }
+  })
 }
 
-export default convertToBase64;
+export default convertToBase64

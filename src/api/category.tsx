@@ -1,6 +1,6 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { ICategory, ICategoryDocs } from '../interfaces/category.type';
-import { baseQueryWithReauth } from './Auth';
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { ICategory, ICategoryDocs } from '../interfaces/category.type'
+import { baseQueryWithReauth } from './Auth'
 
 const CategoryApi = createApi({
   reducerPath: 'CategoryApi',
@@ -11,45 +11,38 @@ const CategoryApi = createApi({
       query: () => '/api/categories',
       providesTags: (result) =>
         result?.docs
-          ? [
-              ...result.docs.map(({ _id }) => ({ type: 'category' as const, _id })),
-              { type: 'category', id: 'List' },
-            ]
-          : [{ type: 'category', id: 'List' }],
+          ? [...result.docs.map(({ _id }) => ({ type: 'category' as const, _id })), { type: 'category', id: 'List' }]
+          : [{ type: 'category', id: 'List' }]
     }),
 
     deleteCategory: builder.mutation({
       query: (id: string) => ({
         url: `/api/size/${id}`,
-        method: 'DELETE',
+        method: 'DELETE'
       }),
-      invalidatesTags: ['category'],
+      invalidatesTags: ['category']
     }),
 
     addCategory: builder.mutation({
       query: (size: ICategory) => ({
         url: '/api/size',
         method: 'POST',
-        body: size,
+        body: size
       }),
-      invalidatesTags: ['category'],
+      invalidatesTags: ['category']
     }),
 
     updateCategory: builder.mutation<any, ICategory>({
       query: ({ ...rest }) => ({
         url: `/api/size/${rest._id}`,
         method: 'PUT',
-        body: rest,
+        body: rest
       }),
-      invalidatesTags: ['category'],
-    }),
-  }),
-});
+      invalidatesTags: ['category']
+    })
+  })
+})
 
-export const {
-  useGetAllCategoryQuery,
-  useDeleteCategoryMutation,
-  useAddCategoryMutation,
-  useUpdateCategoryMutation,
-} = CategoryApi;
-export default CategoryApi;
+export const { useGetAllCategoryQuery, useDeleteCategoryMutation, useAddCategoryMutation, useUpdateCategoryMutation } =
+  CategoryApi
+export default CategoryApi

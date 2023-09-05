@@ -1,38 +1,46 @@
-import GuardAuth, { GuardAccount, GuardSign } from './guardRoute';
-import { MyInfor, MyOrder, MyVoucher } from './components';
+import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
+import { MyInfor, MyOrder, MyVoucher } from './components'
 
-import AccountLayout from './layouts/AccountLayout/accountLayout';
-import AdminLayout from './layouts/admin';
-import Categories from './pages/admin/Categories/Categories';
-import Checkout from './pages/Checkout/Checkout';
-import ClientLayout from './layouts/client';
-import Dashboard from './pages/admin/Dashboard/Dashboard';
-import HomePage from './pages/Home/HomePage';
-import NotFound from './pages/Not-Found/NotFound';
-import OrderDetail from './pages/admin/Order-Detail/OrderDetail';
-import Orders from './pages/admin/Orders/Orders';
-import ProductsList from './pages/admin/Products/Products';
-import ProductsPage from './pages/Products/Products';
-import Role from './pages/admin/Role/Role';
-import Signin from './pages/Sign-in/Signin';
-import Signup from './pages/Sign-up/Signup';
-import Topping from './pages/admin/Toppings/Topping';
-import UserList from './pages/admin/Users/Users';
-import Voucher from './pages/admin/Voucher/Voucher';
-import { createBrowserRouter } from 'react-router-dom';
+import AccountLayout from './layouts/AccountLayout/accountLayout'
+import AdminLayout from './layouts/admin'
+import Categories from './pages/admin/Categories/Categories'
+import Checkout from './pages/Checkout/Checkout'
+import ClientLayout from './layouts/client'
+import Dashboard from './pages/admin/Dashboard/Dashboard'
+import HomePage from './pages/Home/HomePage'
+import NotFound from './pages/Not-Found/NotFound'
+import OrderDetail from './pages/admin/Order-Detail/OrderDetail'
+import Orders from './pages/admin/Orders/Orders'
+import ProductsList from './pages/admin/Products/Products'
+import ProductsPage from './pages/Products/Products'
+import Role from './pages/admin/Role/Role'
+import Signin from './pages/Sign-in/Signin'
+import Signup from './pages/Sign-up/Signup'
+import Topping from './pages/admin/Toppings/Topping'
+import UserList from './pages/admin/Users/Users'
+import Voucher from './pages/admin/Voucher/Voucher'
+import { createBrowserRouter } from 'react-router-dom'
+import StaffLayout from './layouts/Staff/StaffLayout'
+import List from './components/Staff/CrudProducts/List'
+import Introduce from './components/Introduce/Introduce'
+import Achievement from './components/Achievement/Achievement'
+import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
+import News from './components/Blogs/News/News'
+import BrandStory from './components/Blogs/BrandStory/BrandStory'
+import Events from './components/Blogs/Events/Events'
 
 const routes = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <HomePage />
   },
   {
     path: '/signin',
-    element: <GuardSign JSX={Signin} />,
+    element: <GuardSign JSX={Signin} />
   },
   {
     path: '/signup',
-    element: <GuardSign JSX={Signup} />,
+    element: <GuardSign JSX={Signup} />
   },
   {
     path: '/products',
@@ -40,13 +48,40 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <ProductsPage />,
+        element: <ProductsPage />
       },
       {
         path: 'checkout',
-        element: <Checkout />,
+        element: <Checkout />
+      }
+    ]
+  },
+  {
+    path: 'about',
+    element: <Introduce />
+  },
+  {
+    path: 'achievement',
+    element: <Achievement />
+  },
+  {
+    path: 'blogs',
+    element: <LayoutBlog />,
+    children: [
+      {
+        index: true,
+        path: 'tin-tuc-khuyen-mai',
+        element: <News />
       },
-    ],
+      {
+        path: 'cau-chuyen-thuong-hieu',
+        element: <BrandStory />
+      },
+      {
+        path: 'su-kien',
+        element: <Events />
+      }
+    ]
   },
   {
     path: '/account-layout',
@@ -54,17 +89,17 @@ const routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <MyInfor />,
+        element: <MyInfor />
       },
       {
         path: 'my-order',
-        element: <MyOrder />,
+        element: <MyOrder />
       },
       {
         path: 'my-voucher',
-        element: <MyVoucher />,
-      },
-    ],
+        element: <MyVoucher />
+      }
+    ]
   },
   {
     path: '/admin',
@@ -75,48 +110,86 @@ const routes = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Dashboard />,
+            element: <Dashboard />
           },
           {
             path: 'users',
-            element: <UserList />,
+            element: <UserList />
           },
           {
             path: 'categories',
-            element: <Categories />,
+            element: <Categories />
           },
           {
             path: 'products',
-            element: <ProductsList />,
+            element: <ProductsList />
           },
           {
             path: 'orders',
-            element: <Orders />,
+            element: <Orders />
           },
           {
             path: 'orders/:id',
-            element: <OrderDetail />,
+            element: <OrderDetail />
           },
           {
             path: 'toppings',
-            element: <Topping />,
+            element: <Topping />
           },
           {
             path: 'role',
-            element: <Role />,
+            element: <Role />
           },
           {
             path: 'voucher',
-            element: <Voucher />,
-          },
-        ],
+            element: <Voucher />
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/staff',
+    element: <StaffLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />
       },
-    ],
+      {
+        path: 'dashboard',
+        element: <Dashboard />
+      },
+      {
+        path: 'categories',
+        element: <Categories />
+      },
+      {
+        path: 'products',
+        element: <List />
+      },
+      {
+        path: 'orders',
+        element: <Orders />
+      },
+      {
+        path: 'orders/:id',
+        element: <OrderDetail />
+      },
+      {
+        path: 'toppings',
+        element: <Topping />
+      },
+      {
+        path: 'voucher',
+        element: <Voucher />
+      }
+    ]
   },
   {
     path: '*',
-    element: <NotFound />,
-  },
-]);
+    element: <NotFound />
+  }
+])
 
-export default routes;
+export default routes

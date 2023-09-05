@@ -1,24 +1,19 @@
-import {
-  BaseQueryFn,
-  FetchArgs,
-  FetchBaseQueryError,
-  fetchBaseQuery,
-} from '@reduxjs/toolkit/dist/query';
-import { RootState } from '../store/store';
-import { refreshUser } from '../store/slices/Auth.slice';
+import { BaseQueryFn, FetchArgs, FetchBaseQueryError, fetchBaseQuery } from '@reduxjs/toolkit/dist/query'
+import { RootState } from '../store/store'
+import { refreshUser } from '../store/slices/Auth.slice'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken;
+    const accessToken = (getState() as RootState).persistedReducer.auth.user?.accessToken
 
     if (accessToken) {
-      headers.set('authorization', `Bearer ${accessToken}`);
+      headers.set('authorization', `Bearer ${accessToken}`)
     }
-    return headers;
-  },
-});
+    return headers
+  }
+})
 
 // const baseQueryWithReAuth = async (args: any, api: any, extraOptions: any) => {
 //   const result = await baseQuery(args, api, extraOptions);
@@ -40,17 +35,17 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   api,
   extraOptions
 ) => {
-  const result = await baseQuery(args, api, extraOptions);
+  const result = await baseQuery(args, api, extraOptions)
   if (result.meta?.response?.status === 403) {
     // try to get a new token
-    const refreshToken = await baseQuery('/api/refreshToken', api, extraOptions); // Request refreshToken
+    const refreshToken = await baseQuery('/api/refreshToken', api, extraOptions) // Request refreshToken
     if (refreshToken.data) {
       // store the new token
-      const { user } = (api.getState() as RootState).persistedReducer.auth;
-      api.dispatch(refreshUser({ ...refreshToken.data, user })); // Cấp lại AccessToken
+      const { user } = (api.getState() as RootState).persistedReducer.auth
+      api.dispatch(refreshUser({ ...refreshToken.data, user })) // Cấp lại AccessToken
     }
   }
-  return result;
-};
+  return result
+}
 
-export default baseQueryWithReauth;
+export default baseQueryWithReauth

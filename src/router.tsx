@@ -2,32 +2,39 @@ import GuardAuth, { GuardAccount, GuardSign } from './guardRoute'
 import { MyInfor, MyOrder, MyVoucher } from './components'
 
 import AccountLayout from './layouts/AccountLayout/accountLayout'
+import Achievement from './components/Achievement/Achievement'
 import AdminLayout from './layouts/admin'
+import BrandStory from './components/Blogs/BrandStory/BrandStory'
 import Categories from './pages/admin/Categories/Categories'
 import Checkout from './pages/Checkout/Checkout'
 import ClientLayout from './layouts/client'
 import Dashboard from './pages/admin/Dashboard/Dashboard'
+import Events from './components/Blogs/Events/Events'
 import HomePage from './pages/Home/HomePage'
+import Introduce from './components/Introduce/Introduce'
+import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
+import List from './components/Staff/CrudProducts/List'
+import MyAddress from './components/My-address'
+import News from './components/Blogs/News/News'
 import NotFound from './pages/Not-Found/NotFound'
 import OrderDetail from './pages/admin/Order-Detail/OrderDetail'
 import Orders from './pages/admin/Orders/Orders'
 import ProductsList from './pages/admin/Products/Products'
 import ProductsPage from './pages/Products/Products'
-import Role from './pages/admin/Role/Role'
+// import Role from './pages/admin/Manager-Staff-Shipper/Role'
 import Signin from './pages/Sign-in/Signin'
 import Signup from './pages/Sign-up/Signup'
+import StaffLayout from './layouts/Staff/StaffLayout'
 import Topping from './pages/admin/Toppings/Topping'
 import UserList from './pages/admin/Users/Users'
 import Voucher from './pages/admin/Voucher/Voucher'
 import { createBrowserRouter } from 'react-router-dom'
-import StaffLayout from './layouts/Staff/StaffLayout'
-import List from './components/Staff/CrudProducts/List'
-import Introduce from './components/Introduce/Introduce'
-import Achievement from './components/Achievement/Achievement'
-import LayoutBlog from './components/Blogs/Layout/LayoutBlog'
-import News from './components/Blogs/News/News'
-import BrandStory from './components/Blogs/BrandStory/BrandStory'
-import Events from './components/Blogs/Events/Events'
+import TrashCan from './pages/admin/Trash-can/TrashCan'
+import SizeList from './pages/admin/Size/Size'
+import Manager from './pages/admin/Manager-Staff-Shipper/Manager'
+import Staff from './pages/admin/Manager-Staff-Shipper/Staff'
+import Shipper from './pages/admin/Manager-Staff-Shipper/Shipper'
+import Banner from './pages/admin/Banner/Banner'
 
 const routes = createBrowserRouter([
   {
@@ -87,18 +94,10 @@ const routes = createBrowserRouter([
     path: '/account-layout',
     element: <GuardAccount JSX={AccountLayout} />,
     children: [
-      {
-        index: true,
-        element: <MyInfor />
-      },
-      {
-        path: 'my-order',
-        element: <MyOrder />
-      },
-      {
-        path: 'my-voucher',
-        element: <MyVoucher />
-      }
+      { index: true, element: <MyInfor /> },
+      { path: 'my-order', element: <MyOrder /> },
+      { path: 'my-voucher', element: <MyVoucher /> },
+      { path: 'my-address', element: <MyAddress /> }
     ]
   },
   {
@@ -137,12 +136,34 @@ const routes = createBrowserRouter([
             element: <Topping />
           },
           {
-            path: 'role',
-            element: <Role />
+            path: 'manager',
+            element: <Manager />,
+            children: [
+              {
+                path: 'staff',
+                element: <Staff />
+              },
+              {
+                path: 'Shipper',
+                element: <Shipper />
+              }
+            ]
+          },
+          {
+            path: 'size',
+            element: <SizeList />
           },
           {
             path: 'voucher',
             element: <Voucher />
+          },
+          {
+            path: 'banners',
+            element: <Banner />
+          },
+          {
+            path: 'trash-can',
+            element: <TrashCan />
           }
         ]
       }

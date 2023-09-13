@@ -9,9 +9,9 @@ import { IProduct } from '../../../interfaces/products.type'
 import type { InputRef } from 'antd'
 import { Link } from 'react-router-dom'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
-import Skeleton from 'react-loading-skeleton'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import qs from 'qs'
+import { AtomSpinner } from 'react-epic-spinners'
 
 interface DataType extends IProduct {
   key: string | React.Key | undefined
@@ -230,19 +230,6 @@ const List = () => {
       // width: '25%',
       ...getColumnSearchProps('category')
     },
-    // {
-    //   title: 'price',
-    //   dataIndex: 'sale',
-    //   key: 'sale',
-    //   width: '20%',
-    //   ...getColumnSearchProps('images'),
-    //   sorter: (a, b) => {
-    //     const saleA = a.sale || 0
-    //     const saleB = b.sale || 0
-    //     return saleA - saleB
-    //   },
-    //   sortDirections: ['descend', 'ascend']
-    // },
     {
       title: 'ACTION',
       key: 'action',
@@ -297,7 +284,8 @@ const List = () => {
         </Button>
       </div>
       {isLoading ? (
-        <Skeleton />
+        // <Skeleton />
+        <AtomSpinner color='red' className='mx-auto mt-[10%]'></AtomSpinner>
       ) : (
         <div>
           <div>

@@ -1,16 +1,7 @@
-import { Breadcrumb, Button, Checkbox, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Breadcrumb, Button, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
-import {
-  HiCog,
-  HiDocumentDownload,
-  HiDotsVertical,
-  HiExclamationCircle,
-  HiHome,
-  HiOutlinePencilAlt,
-  HiPlus,
-  HiTrash
-} from 'react-icons/hi'
+import { HiDocumentDownload, HiHome, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useAddUserMutation,
   useDeleteImageUserMutation,
@@ -32,6 +23,7 @@ import { useAppSelector } from '../../../store/hooks'
 import UserUpload from '../../../components/Upload/UserUpload'
 import { IImage } from '../../../interfaces/image.type'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const UserList: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -42,16 +34,7 @@ const UserList: FC = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
-            <Breadcrumb className='mb-4'>
-              <Breadcrumb.Item href='#'>
-                <div className='gap-x-3 flex items-center'>
-                  <HiHome className='text-xl' />
-                  <span className='dark:text-white'>Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item href='/users/list'>Users</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-            </Breadcrumb>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All users</h1>
           </div>
           <div className='sm:flex'>
@@ -64,36 +47,6 @@ const UserList: FC = () => {
                   <TextInput id='users-search' name='users-search' placeholder='Search for users' />
                 </div>
               </form>
-              <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Configure</span>
-                  <HiCog className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Delete</span>
-                  <HiTrash className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Purge</span>
-                  <HiExclamationCircle className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Settings</span>
-                  <HiDotsVertical className='text-2xl' />
-                </a>
-              </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
               <Tooltip content='Thêm người dùng'>
@@ -173,98 +126,69 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
   if (isLoading) return <Loading />
   if (isError) return <div>Loi roi</div>
   return (
-    <Table className='min-w-full  divide-y divide-gray-200 dark:divide-gray-600'>
-      <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-        <Table.HeadCell>
-          <Label htmlFor='select-all' className='sr-only'>
-            Select all
-          </Label>
-          <Checkbox id='select-all' name='select-all' />
-        </Table.HeadCell>
-        <Table.HeadCell>User Name</Table.HeadCell>
-        <Table.HeadCell>Address</Table.HeadCell>
-        <Table.HeadCell>Position</Table.HeadCell>
-        <Table.HeadCell>Deleted</Table.HeadCell>
-        <Table.HeadCell>Status</Table.HeadCell>
-        <Table.HeadCell>Actions</Table.HeadCell>
-      </Table.Head>
-      <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
-        {users?.docs &&
-          users?.docs.map((user) => (
-            <Table.Row
-              key={user._id}
-              className={`  hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                currentUser._id === user._id
-                  ? 'bg-green-300 dark:bg-green-600 dark:hover:bg-green-500 hover:bg-green-200 '
-                  : ''
-              }`}
-            >
-              <Table.Cell className='w-4 p-4'>
-                <div className='flex items-center'>
-                  <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                  <label htmlFor='checkbox-1' className='sr-only'>
-                    checkbox
-                  </label>
-                </div>
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap lg:mr-0 flex items-center p-4 mr-12 space-x-6'>
-                <img
-                  className='w-10 h-10 rounded-full'
-                  src={user.avatar || `https://api.multiavatar.com/${user.username}.png`}
-                  alt={user.username}
-                />
-                <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
-                  <div className='dark:text-white text-base font-semibold text-gray-900'>{user.username}</div>
-                  <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
-                    {user?.account || user?.email}
-                  </div>
-                </div>
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                {user.address ? user.address : 'Unknow'}
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                {user?.role?.name}
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium text-white capitalize'>
-                <span
-                  className={`${user?.deleted === true ? 'bg-red-400 ' : 'bg-green-400 '} rounded inline-block px-2`}
-                >
-                  {user?.deleted === true ? 'true' : 'false'}
-                </span>
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-normal text-gray-900'>
-                <div className='flex items-center capitalize'>
-                  <div
-                    className={`mr-2 h-2.5 w-2.5 rounded-full  ${
-                      user?.role?.status === 'active' ? 'bg-green-400' : 'bg-red-400'
-                    }`}
-                  ></div>
-                  {user?.role?.status || 'Not Active'}
-                </div>
-              </Table.Cell>
-              <Table.Cell>
-                <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                  <Tooltip content='Chỉnh sửa người dùng'>
-                    <EditUserModal user={user} />
-                  </Tooltip>
-                  <Tooltip content='Xóa người dùng'>
-                    <Button color='failure' onClick={() => handleDelete(user._id!)}>
-                      <div className='gap-x-2 flex items-center'>
-                        {isDeleting ? (
-                          <AiOutlineLoading3Quarters className='rotate text-lg' />
-                        ) : (
-                          <HiTrash className='text-lg' />
-                        )}
+    <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
+      <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
+        <Table.Head className='dark:bg-gray-700 bg-gray-100'>
+          <Table.HeadCell>#</Table.HeadCell>
+          <Table.HeadCell>User Name</Table.HeadCell>
+          <Table.HeadCell>Address</Table.HeadCell>
+          <Table.HeadCell>Position</Table.HeadCell>
+          <Table.HeadCell>Actions</Table.HeadCell>
+        </Table.Head>
+        <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
+          {users?.docs &&
+            users?.docs.map((user, index) => (
+              <Table.Row key={user._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700`}>
+                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                <Table.Cell className='whitespace-nowrap lg:mr-0  p-4 mr-12 space-x-6'>
+                  <div className='flex items-center gap-x-4'>
+                    <img
+                      className='w-10 h-10 rounded-full'
+                      src={user.avatar || `https://api.multiavatar.com/${user.username}.png`}
+                      alt={user.username}
+                    />
+                    <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
+                      <div className='dark:text-white text-base font-semibold text-gray-900'>{user.username}</div>
+                      <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
+                        {user?.account || user?.email}
                       </div>
-                    </Button>
-                  </Tooltip>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-      </Table.Body>
-    </Table>
+                    </div>
+                  </div>
+                </Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
+                  {user.address ? user.address : 'Unknow'}
+                </Table.Cell>
+                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
+                  {user?.role?.name}
+                </Table.Cell>
+
+                <Table.Cell>
+                  <div className='gap-x-3 whitespace-nowrap flex items-center'>
+                    <Tooltip content='Chỉnh sửa người dùng'>
+                      <EditUserModal user={user} />
+                    </Tooltip>
+                    <Tooltip content='Xóa người dùng'>
+                      <Button
+                        disabled={currentUser._id === user._id}
+                        color='failure'
+                        onClick={() => handleDelete(user._id!)}
+                      >
+                        <div className='gap-x-2 flex items-center'>
+                          {isDeleting ? (
+                            <AiOutlineLoading3Quarters className='rotate text-lg' />
+                          ) : (
+                            <HiTrash className='text-lg' />
+                          )}
+                        </div>
+                      </Button>
+                    </Tooltip>
+                  </div>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+        </Table.Body>
+      </Table>
+    </div>
   )
 }
 
@@ -340,7 +264,7 @@ const AddUserModal: FC = function () {
           <strong>Add new user</strong>
         </Modal.Header>
         <form action='' onSubmit={handleSubmit(onHandleSubmit)}>
-          <Modal.Body className='h-[500px]'>
+          <Modal.Body className='h-[500px] hidden-scroll-bar'>
             <div className='sm:grid-cols-2 grid grid-cols-1 gap-6'>
               <div>
                 <Label htmlFor='firstName'>Username</Label>
@@ -386,14 +310,14 @@ const AddUserModal: FC = function () {
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.role && errors.role.message}</span>
               </div>
-
-              <UserUpload
-                urlAvatar={urlAvatar}
-                setUrlAvatar={setUrlAvatar}
-                upLoadAvartaUser={upLoadAvartaUser}
-                deleteImageUser={deleteImageUser}
-              />
             </div>
+
+            <UserUpload
+              urlAvatar={urlAvatar}
+              setUrlAvatar={setUrlAvatar}
+              upLoadAvartaUser={upLoadAvartaUser}
+              deleteImageUser={deleteImageUser}
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button disabled={isUpLoading || isDeleting} color='primary' type='submit'>
@@ -479,13 +403,13 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.address && errors.address.message}</span>
               </div>
-              <div>
+              {/* <div>
                 <Label htmlFor='account'>Account</Label>
                 <div className='mt-1'>
                   <TextInput readOnly id='account' {...register('account')} placeholder='Your email or phone number' />
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.account && errors.account.message}</span>
-              </div>
+              </div> */}
               {/* <div>
                 <Label htmlFor="password">Password</Label>
                 <div className="mt-1">
@@ -512,14 +436,13 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
                 </div>
                 <span className='block my-2 text-sm text-red-500'>{errors.role && errors.role.message}</span>
               </div>
-
-              <UserUpload
-                urlAvatar={urlAvatar}
-                setUrlAvatar={setUrlAvatar}
-                upLoadAvartaUser={upLoadAvartaUser}
-                deleteImageUser={deleteImageUser}
-              />
             </div>
+            <UserUpload
+              urlAvatar={urlAvatar}
+              setUrlAvatar={setUrlAvatar}
+              upLoadAvartaUser={upLoadAvartaUser}
+              deleteImageUser={deleteImageUser}
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button disabled={isUploading || isDeleting} color='primary' type='submit'>

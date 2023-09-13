@@ -1,8 +1,8 @@
 import { CartItem, CartLists } from './types/cart.type'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import _ from 'lodash'
 import { CartDBAPI } from '../../api/cartDB'
+import _ from 'lodash'
 
 interface CartState {
   items: CartLists[]
@@ -18,6 +18,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const product = action.payload
+      console.log('🚀 ~ file: cart.slice.ts:21 ~ product:', product)
       // /* check xem đã có sản phẩm nào tồn tại bên trong giỏ hàng chưa */
       const products = [...state.items]
       const productIndex = products.findIndex((item) => item.name === product.name)

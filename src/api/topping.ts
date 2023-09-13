@@ -4,7 +4,6 @@ import { baseQueryWithReauth } from './Auth'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const ToppingAPI = createApi({
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   reducerPath: 'Topping',
   tagTypes: ['Topping'],
   baseQuery: baseQueryWithReauth,

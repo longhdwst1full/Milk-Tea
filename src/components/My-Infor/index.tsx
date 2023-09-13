@@ -17,7 +17,10 @@ const MyInfor = () => {
   const [birthday, setBirthday] = useState<Date | null>(user.birthday!)
   const [errDate, setErrDate] = useState('')
   const [updateInfor, { isLoading: isUpdateInfor }] = useUpdateInforMutation()
-  const [avatar, setAvatar] = useState<{ file: any; base64: string }>({ file: '', base64: '' })
+  const [avatar, setAvatar] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
+    file: undefined,
+    base64: ''
+  })
   const [uploadAvatar, { isLoading: isUpdateAvatar }] = useUpLoadAvartaUserMutation()
   const {
     register,
@@ -37,7 +40,7 @@ const MyInfor = () => {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    await convertToBase64(file).then((data) => {
+    await convertToBase64(file!).then((data) => {
       setAvatar({
         file: file,
         base64: data
@@ -83,6 +86,8 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
+    console.log(dateUpdate)
+
     if (!errDate) {
       if (avatar.file) {
         const form = new FormData()
@@ -105,7 +110,7 @@ const MyInfor = () => {
           <div className='account-avatar absolute -top-[60px] left-[calc(50%-60px)] h-[120px] w-[120px] bg-[#fff] rounded-full border-[5px] border-white'>
             <div className='avatar'>
               <div>
-                <img className='w-full rounded-full' src={avatar.base64 || user?.avatar} />
+                <img className='w-full rounded-full' src={String(avatar.base64) || user?.avatar} />
               </div>
               <div className='image-upload'>
                 <label className='btn-change-photo' htmlFor='file-input'></label>
@@ -124,7 +129,6 @@ const MyInfor = () => {
           </div>
 
           <div className='profile mt-[90px] px-[20px] h-[30rem] text-sm relative'>
-            {/* {isLoading} */}
             <form action='' onSubmit={handleSubmit(onInfor)} className='h-full'>
               {isUpdateInfor || isUpdateAvatar ? (
                 <Box
@@ -237,10 +241,6 @@ const MyInfor = () => {
                       </label>
                     </div>
                     <span className='text-red-500'>{errors.gender && errors.gender.message}</span>
-                    {/* <input
-                    className="w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none"
-                    type="text"
-                  /> */}
                   </div>
                   <div className='item-profile w-[50%] my-3'>
                     <label className='block py-2 text-[#959393]'>Địa chỉ mặc định</label>

@@ -1,11 +1,11 @@
 import { AiOutlineLine, AiOutlinePlus } from 'react-icons/ai'
-import { decreamentQuantity, increamentQuantity } from '../../store/slices/cart.slice'
-
 import { CartItemState, CartLists } from '../../store/slices/types/cart.type'
-import { formatCurrency } from '../../utils/formatCurrency'
+import { decreamentQuantity, increamentQuantity } from '../../store/slices/cart.slice'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { v4 as uuidv4 } from 'uuid'
 import { useDeleteCartDBMutation, useUpdateCartDBMutation } from '../../api/cartDB'
+
+import { formatCurrency } from '../../utils/formatCurrency'
+import { v4 as uuidv4 } from 'uuid'
 
 type CardOrderProps = {
   product: CartLists
@@ -15,7 +15,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
   const dispatch = useAppDispatch()
   const [updateCartDbFn, updateCartDbRes] = useUpdateCartDBMutation()
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
-  const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
+  const [_, deleteCartDBRes] = useDeleteCartDBMutation()
 
   const handleUpdateQuantity = async (action: string, item: CartItemState, index: number) => {
     console.log('vafo k')
@@ -63,6 +63,8 @@ const CardOrder = ({ product }: CardOrderProps) => {
       })
     }
   }
+  console.log(product)
+
   return (
     <div className='card flex justify-between items-center border border-transparent border-b-[#f1f1f1] tracking-tight '>
       <div className='py-3'>
@@ -71,10 +73,10 @@ const CardOrder = ({ product }: CardOrderProps) => {
           product?.items?.map((item, index) => (
             <div className='flex items-center gap-1' key={uuidv4()}>
               <div>
-                <p className='text-sm text-[#adaeae] truncate'>{item.size.name}</p>
+                <p className='text-sm text-[#adaeae] truncate'>{item.size?.name}</p>
                 <div className='customize text-[#adaeae] truncate w-[182px]' key={uuidv4()}>
                   <span className='overflow-hidden truncate'>
-                    {item.toppings?.map((topping) => topping.name).join(', ')}
+                    {item.toppings?.map((topping) => topping?.name).join(', ')}
                   </span>
                 </div>
                 <div className='total text-[#8a733f]'>

@@ -8,7 +8,7 @@ const AdminLayout = () => {
       <Navbar />
       <div className='flex items-start pt-16'>
         <Sidebar />
-        <main className='relative min-h-[100vh] w-full overflow-y-auto bg-gray-50 dark:bg-gray-900 lg:ml-64'>
+        <main className='relative min-h-screen w-full bg-gray-50 dark:bg-gray-900 lg:ml-64 pt-4'>
           <Outlet />
         </main>
       </div>

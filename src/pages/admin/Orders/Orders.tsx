@@ -26,12 +26,18 @@ const Orders = () => {
   //   }
   // }, [data])
   const hanleUpdateOrderCancel = (id: string) => {
-    updateOrderCancel(id)
-      .unwrap()
-      .then(() => {
-        toast.success('Cập nhật thành công')
-      })
-      .catch(() => toast.error('Cập nhật thất bại'))
+    const textReason = prompt('Làm ơn điền lý do hủy đơn hàng')
+    console.log(textReason)
+    if (id && textReason != '' && textReason) {
+      updateOrderCancel({ id, reasonCancelOrder: textReason })
+        .unwrap()
+        .then(() => {
+          toast.success('Cập nhật thành công')
+        })
+        .catch(() => toast.error('Cập nhật thất bại'))
+    } else {
+      toast.error('Delete failed!')
+    }
   }
   return (
     <div className='p-2'>

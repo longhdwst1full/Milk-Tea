@@ -18,7 +18,7 @@ const CheckoutItem = ({ dataCartCheckout }: Props) => {
           <div className='content-item'>
             <div className='title pb-[5px]'>
               <h4 className='font-bold text-sm '>
-                {dataCartCheckout.name}({item.size.name})
+                {dataCartCheckout?.name}({item.size?.name})
               </h4>
             </div>
             <div className='cutoms pl-[5px] '>

@@ -1,11 +1,13 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom'
-import { AiFillHome, AiOutlineUser, AiFillCreditCard } from 'react-icons/ai'
-import { GrLogout } from 'react-icons/gr'
-import { MdShoppingCart } from 'react-icons/md'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { items, rootSubmenuKeys } from './components'
+
 import { Header } from '../../components'
-import { useLogoutMutation } from '../../api/Auth'
+import { Menu } from 'antd'
+import type { MenuProps } from 'antd'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import { useLogoutMutation } from '../../api/Auth'
+import { useState } from 'react'
 
 const AccountLayout = () => {
   const [logout] = useLogoutMutation()
@@ -27,39 +29,22 @@ const AccountLayout = () => {
       }
     })
   }
+  const [openKeys, setOpenKeys] = useState(['sub2'])
+
+  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)
+    if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
+      setOpenKeys(keys)
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
+    }
+  }
   return (
     <>
       <Header />
       <div className='container mx-auto p-[20px] flex'>
         <div className='list-sidebar w-[250px] max-w-[250px] mr-[20px] flex-shrink-0'>
-          <div className='menu text-[14px]'>
-            <div className='menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px] cu'>
-              <AiFillHome className='text-[14px] mr-2 ' />
-              <Link to='/'>Trang chủ</Link>
-            </div>
-
-            <div className='menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]'>
-              <AiOutlineUser className='text-[14px] mr-2 ' />
-              <Link to='/account-layout'>Thông tin tài khoản</Link>
-            </div>
-
-            <div className='menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]'>
-              <MdShoppingCart className='text-[14px] mr-2 ' />
-              <Link to='my-order'>Đơn hàng của tôi</Link>
-            </div>
-
-            <div className='menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]'>
-              <AiFillCreditCard className='text-[14px] mr-2 ' />
-              <Link to='my-voucher'>Mã khuyến mại</Link>
-            </div>
-
-            <div className='menu-item flex items-center border border-transparent border-b-[#f1f1f1] p-[15px]'>
-              <GrLogout className='text-[14px] mr-2 ' />
-              <p onClick={onLogout} className='cursor-pointer'>
-                Đăng xuất
-              </p>
-            </div>
-          </div>
+          <Menu mode='inline' openKeys={openKeys} onOpenChange={onOpenChange} items={items({ onLogout })} />
         </div>
         <Outlet />
         {/* <div className="my-account grow ">

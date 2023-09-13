@@ -1,10 +1,15 @@
 import type { FC } from 'react'
 import AdminChart from '../../../components/admin/Chart'
+import DonutChart from '../../../components/admin/DonutChart'
 
 const Dashboard = () => {
   return (
     <div className='px-4 pt-6'>
       <AdminChart />
+      <div className='mt-6 flex items-center gap-x-3'>
+        <DonutChart />
+        <DonutChart />
+      </div>
       <div className='my-6'>
         <LatestCustomers />
       </div>

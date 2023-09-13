@@ -1,13 +1,5 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import {
-  HiCog,
-  HiDocumentDownload,
-  HiDotsVertical,
-  HiExclamationCircle,
-  HiPencil,
-  HiPlus,
-  HiTrash
-} from 'react-icons/hi'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiDocumentDownload, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import { VoucherForm, VoucherSchema } from '../../../validate/Form'
 import {
   useAddVoucherMutation,
@@ -28,19 +20,14 @@ import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import isExpiredVoucher from '../../../utils/isExpiredVoucher'
-import Pagination from '../../../components/admin/Pagination'
+import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Voucher = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(currentPage)
   const [data] = useState<any>([])
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => prev + 1)
-  }
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => prev - 1)
-  }
   useEffect(() => {
     const rows = vouchers?.data?.docs?.map((item: IVoucher) => [
       item.code,
@@ -59,6 +46,7 @@ const Voucher = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All Vouchers</h1>
           </div>
           <div className='sm:flex'>
@@ -71,7 +59,7 @@ const Voucher = () => {
                   <TextInput id='users-search' name='users-search' placeholder='Search for users' />
                 </div>
               </form>
-              <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
+              {/* <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
                 <a
                   href='#'
                   className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
@@ -100,7 +88,7 @@ const Voucher = () => {
                   <span className='sr-only'>Settings</span>
                   <HiDotsVertical className='text-2xl' />
                 </a>
-              </div>
+              </div> */}
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
               <Tooltip content='Thêm voucher'>
@@ -121,20 +109,18 @@ const Voucher = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <VouchersTable vouchers={vouchers!} isLoading={isLoading} />
+              <VouchersTable vouchers={vouchers as IVoucherDocs} isLoading={isLoading} />
             </div>
           </div>
         </div>
+        {vouchers && (
+          <PaginateNumber
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPage={vouchers.data.totalPages}
+          />
+        )}
       </div>
-      {vouchers && vouchers.data.totalPages > 1 && (
-        <Pagination
-          nextPage={handleNextPage}
-          prevPage={handlePrevPage}
-          hasNext={vouchers.data.hasNextPage!}
-          hasPrev={vouchers.data.hasPrevPage!}
-          totalDocs={vouchers.data.totalDocs}
-        />
-      )}
     </>
   )
 }
@@ -187,15 +173,10 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
   }
   if (isLoading) return <Loading />
   return (
-    <>
-      <Table className='min-w-full min-h-[100vh] divide-y divide-gray-200 dark:divide-gray-600'>
+    <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'>
+      <Table className='min-w-full min-h-[500px] divide-y divide-gray-200 dark:divide-gray-600'>
         <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-          <Table.HeadCell>
-            <Label htmlFor='select-all' className='sr-only'>
-              Select all
-            </Label>
-            <Checkbox id='select-all' name='select-all' />
-          </Table.HeadCell>
+          <Table.HeadCell>#</Table.HeadCell>
           <Table.HeadCell>Code</Table.HeadCell>
           <Table.HeadCell>Discount</Table.HeadCell>
           <Table.HeadCell>Sale</Table.HeadCell>
@@ -204,19 +185,12 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
           <Table.HeadCell>Expried</Table.HeadCell>
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
-        <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
+        <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200 max-h-[490px] overflow-y-scroll'>
           {vouchers &&
             vouchers.data.docs.length > 0 &&
-            vouchers.data.docs.map((item: IVoucher) => (
+            vouchers.data.docs.map((item: IVoucher, index: number) => (
               <Table.Row key={item._id} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-                <Table.Cell className='w-4 p-4'>
-                  <div className='flex items-center'>
-                    <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                    <label htmlFor='checkbox-1' className='sr-only'>
-                      checkbox
-                    </label>
-                  </div>
-                </Table.Cell>
+                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
                   {item.code}
                 </Table.Cell>
@@ -227,10 +201,10 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
                   {formatCurrency(item.sale)}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatDate(item.startDate!)}
+                  {formatDate(item.startDate ?? '')}
                 </Table.Cell>
                 <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  {formatDate(item.endDate!)}
+                  {formatDate(item?.endDate ?? '')}
                 </Table.Cell>
                 <Table.Cell
                   className={`
@@ -270,7 +244,7 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
             ))}
         </Table.Body>
       </Table>
-    </>
+    </div>
   )
 }
 

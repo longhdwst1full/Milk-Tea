@@ -21,7 +21,7 @@ const ApiVoucher = createApi({
       invalidatesTags: ['voucher']
     }),
 
-    deleteVoucher: builder.mutation<any, string>({
+    deleteVoucher: builder.mutation<void, string>({
       query: (id) => ({
         url: `/api/voucher/${id}`,
         method: 'DELETE'
@@ -29,7 +29,7 @@ const ApiVoucher = createApi({
       invalidatesTags: ['voucher']
     }),
 
-    updateVoucher: builder.mutation<any, IVoucher>({
+    updateVoucher: builder.mutation<void, IVoucher>({
       query: (voucher) => ({
         url: `/api/voucher/${voucher._id}`,
         method: 'PUT',

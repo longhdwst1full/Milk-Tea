@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button } from '@mui/material'
-// import { useFetchUserQuery } from '../../api/User';
 
 interface Props {
   bgColor: string // Màu là mã Hex

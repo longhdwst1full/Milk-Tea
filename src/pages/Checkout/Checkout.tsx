@@ -4,9 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { BiSolidUser } from 'react-icons/bi'
 import { CartItemState } from '../../store/slices/types/cart.type'
 import CheckoutItem from '../../components/Checkout-Item'
+import { IVoucher } from '../../interfaces/voucher.type'
+import ModalListVouchers from '../../components/ModalListVouchers'
 import { UserCheckoutSchema } from '../../validate/Form'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { resetAllCart } from '../../store/slices/cart.slice'
@@ -16,9 +19,8 @@ import { useCreateOrderMutation } from '../../store/slices/order'
 import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
-import ModalListVouchers from '../../components/ModalListVouchers'
-import { IVoucher } from '../../interfaces/voucher.type'
-import { AiOutlinePlusCircle } from 'react-icons/ai'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
+
 //
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
@@ -28,6 +30,7 @@ const Checkout = () => {
   const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
   const dispatch = useAppDispatch()
 
+  // const formIdRef = useRef<HTMLFormElement>(null)
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
   }
@@ -38,6 +41,7 @@ const Checkout = () => {
     setValue,
     reset
   } = useForm({
+    // mode: 'onSubmit',
     resolver: yupResolver(UserCheckoutSchema)
   })
 
@@ -103,52 +107,55 @@ const Checkout = () => {
     return moneyShipping + moneyPromotion + totalMoneyCheckout
   }, [moneyPromotion, moneyShipping, totalMoneyCheckout])
 
-  const handleFormInfoCheckout = handleSubmit(async (data) => {
-    if (!(dataInfoUser.user.accessToken && dataInfoUser.user._id)) {
-      return navigate('/sign')
+  const handleFormInfoCheckout = handleSubmit((data) => {
+    console.log('adf')
+    if (dataInfoUser.user.accessToken === '' && dataInfoUser.user._id == '') {
+      return navigate('/signin')
     } else {
       // const productOrder = getData('list')
       console.log(data)
-      const dataForm = {
-        user: dataInfoUser.user && dataInfoUser.user._id,
+      const dataForm: IOrderCheckout = {
+        user: dataInfoUser.user._id as string,
         items: getData('list'),
         total: totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
-        paymentMethodId: 'cod',
+        paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
-          name: data.nameOther != '' ? data.nameOther : data.name,
-          phone: data.phoneOther != '' ? data.phoneOther : data.phone,
-          address: data.shippingLocationOther != '' ? data.shippingLocationOther : data.shippingLocation,
+          name: data.nameOther != '' ? (data.nameOther as string) : data.name,
+          phone: data.phoneOther != '' ? (data.phoneOther as string) : data.phone,
+          address: data.shippingLocationOther != '' ? (data.shippingLocationOther as string) : data.shippingLocation,
           noteShipping: data.shippingNoteOther != '' ? data.shippingNoteOther : data.shippingNote
         }
       }
       console.log(dataForm)
-      orderAPIFn(dataForm as never).then((res: any) => {
-        if (res.error) {
-          return toast.error('Đặt hàng thất bại' + res.error.data.error)
-        } else {
-          reset()
-          dispatch(resetAllCart())
-          toast.success('Bạn đặt hàng thành công')
-          // alert(data.shippingNote)
-          // reset();
-          // dispatch(resetAllCart());
-          // navigate('http://localhost:4000/vnpay');
-          const returnUrl = 'http://localhost:5173' // url trả về
-          window.location.href =
-            'http://ketquaday99.com/vnpay/fast?amount=' +
-            dataForm.total +
-            '&txt_inv_mobile=' +
-            data.phone +
-            '&txt_billing_fullname=' +
-            data.name +
-            '&txt_ship_addr1=' +
-            data.shippingLocation +
-            '&returnUrl=' +
-            returnUrl
-        }
-      })
+      orderAPIFn(dataForm)
+        .unwrap()
+        .then((res) => {
+          if (res.error) {
+            return toast.error('Đặt hàng thất bại' + res.error.data.error)
+          } else {
+            reset()
+            dispatch(resetAllCart())
+            toast.success('Bạn đặt hàng thành công')
+            // alert(data.shippingNote)
+            // reset();
+            // dispatch(resetAllCart());
+            // navigate('http://localhost:4000/vnpay');
+            const returnUrl = 'http://localhost:5173' // url trả về
+            window.location.href =
+              'http://ketquaday99.com/vnpay/fast?amount=' +
+              dataForm.total +
+              '&txt_inv_mobile=' +
+              data.phone +
+              '&txt_billing_fullname=' +
+              data.name +
+              '&txt_ship_addr1=' +
+              data.shippingLocation +
+              '&returnUrl=' +
+              returnUrl
+          }
+        })
     }
   })
 
@@ -270,8 +277,6 @@ const Checkout = () => {
                 </div>
               </>
             )}
-
-            {/*  */}
           </div>
           <div className=' mt-8'>
             <div className='title mb-[7px] px-5'>
@@ -284,7 +289,7 @@ const Checkout = () => {
                   className='absolute opacity-0'
                   defaultChecked
                   type='radio'
-                  value='cold'
+                  value='cod'
                   {...register('paymentMethod')}
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>

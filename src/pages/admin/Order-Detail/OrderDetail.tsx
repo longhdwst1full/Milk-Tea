@@ -20,7 +20,7 @@ import { ITopping } from '../../../interfaces/topping.type'
 const OrderDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data: orderDetail, isLoading } = useGetOrderByidQuery(id!)
+  const { data: orderDetail, isLoading } = useGetOrderByidQuery(id as string)
   const [confirmOrder, { isError: isConfirmErr, isLoading: isConfirming }] = useConfirmOrderMutation()
   const [doneOrder, { isError: isDoneErr, isLoading: isDoning }] = useDoneOrderMutation()
   const [deliveredOrder, { isError: isDeliveredErr, isLoading: isDelivering }] = useDeliveredOrderMutation()
@@ -190,7 +190,7 @@ const OrderDetail = () => {
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
             <div className='overflow-hidden shadow'>
-              <OrderDetailTable orderDetail={orderDetail!} isLoading={isLoading} />
+              <OrderDetailTable orderDetail={orderDetail as IOrderDetailResponse} isLoading={isLoading} />
             </div>
           </div>
         </div>
@@ -313,45 +313,48 @@ const OrderDetailTable = ({ orderDetail, isLoading }: OrderDetailTableProps) => 
         </Table.Head>
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {orderDetail?.order &&
-            orderDetail?.order.items.map((order, index) => (
-              <Table.Row key={order._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
-                <Table.Cell className='w-4 p-4'>
-                  <div className='flex items-center'>
-                    <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                    <label htmlFor='checkbox-1' className='sr-only'>
-                      checkbox
-                    </label>
-                  </div>
-                </Table.Cell>
-                <Table.Cell>{index + 1}</Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                  <img src={order?.product.images[0].url} className='w-32' alt='' />
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {order.product.name}
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize text-center'>
-                  {order.quantity}
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
-                  {formatCurrency(order.price)}
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium capitalize'>
-                  {order.size.name}
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium capitalize'>
-                  {formatCurrency(order.size.price)}
-                </Table.Cell>
-                <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium capitalize'>
-                  {order.toppings.map((item: ITopping) => (
-                    <>
-                      <br />
-                      <span>{item.name}</span>
-                    </>
-                  ))}
-                </Table.Cell>
-              </Table.Row>
-            ))}
+            orderDetail?.order.items.map((order, index) => {
+              console.log(order, 'fdf')
+              return (
+                <Table.Row key={order._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
+                  <Table.Cell className='w-4 p-4'>
+                    <div className='flex items-center'>
+                      <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
+                      <label htmlFor='checkbox-1' className='sr-only'>
+                        checkbox
+                      </label>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>{index + 1}</Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                    <img src={order?.image} className='w-32' alt='' />
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
+                    {order.product?.name}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize text-center'>
+                    {order.quantity}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900 capitalize'>
+                    {formatCurrency(order.price)}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium capitalize'>
+                    {order.size.name}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium capitalize'>
+                    {formatCurrency(order.size.price)}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white  p-4 text-base font-medium capitalize'>
+                    {order.toppings.map((item: ITopping) => (
+                      <>
+                        <br />
+                        <span>{item.name}</span>
+                      </>
+                    ))}
+                  </Table.Cell>
+                </Table.Row>
+              )
+            })}
         </Table.Body>
       </Table>
       <div className='md:flex-row md:space-y-0 md:space-x-6 xl:space-x-8 flex flex-col items-stretch justify-center w-full space-y-4'>

@@ -5,7 +5,6 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 
 const RoleApi = createApi({
   reducerPath: 'Role',
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   baseQuery: baseQueryWithReauth,
   tagTypes: ['role'],
   endpoints: (builder) => ({
@@ -23,7 +22,7 @@ const RoleApi = createApi({
     }),
 
     addRole: builder.mutation({
-      query: (role: IRole) => ({
+      query: (role: Pick<IRole, 'name'>) => ({
         url: '/api/role',
         method: 'POST',
         body: role

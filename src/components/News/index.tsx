@@ -37,9 +37,6 @@ const News = () => {
                 </p>
               </div>
               <div className='btn mt-4'>
-                {/* <button className="py-1 px-4 text-[16px] mt-4 border border-[#d3b673] bg-[#d3b673] text-white uppercase">
-                  Xem thêm
-                </button> */}
                 <Button
                   size='medium'
                   shape='square'

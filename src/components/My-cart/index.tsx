@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 
 import CardOrder from '../Card-Order'
-import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../store/store'
 import Swal from 'sweetalert2'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { resetAllCart } from '../../store/slices/cart.slice'
-import { v4 as uuidv4 } from 'uuid'
 import { useDeleteCartDBMutation, useGetAllCartDBQuery } from '../../api/cartDB'
+import { useNavigate } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 
 const MyCart = () => {
   const navigate = useNavigate()
@@ -17,7 +17,6 @@ const MyCart = () => {
 
   const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getAllCart = useGetAllCartDBQuery()
 
   /* Tính tổng tiền và tổng số lượng quantity */

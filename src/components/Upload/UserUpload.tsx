@@ -32,7 +32,7 @@ const UserUpload = ({ urlAvatar, setUrlAvatar, upLoadAvartaUser, deleteImageUser
   }
   return (
     <>
-      <div className='lg:col-span-2'>
+      <div className='lg:col-span-2 mt-4'>
         <div className='flex items-center justify-center w-full'>
           <label className='h-28 hover:bg-gray-50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700 flex flex-col w-full border-2 border-gray-300 border-dashed rounded cursor-pointer'>
             <div className='flex flex-col items-center justify-center h-full pt-5 pb-6'>
@@ -51,9 +51,9 @@ const UserUpload = ({ urlAvatar, setUrlAvatar, upLoadAvartaUser, deleteImageUser
         </div>
       </div>
       {Object.keys(urlAvatar).length > 0 && (
-        <div className='flex items-center w-full mt-5'>
+        <div className='flex items-center justify-center w-full mt-5'>
           <div>
-            <img alt={urlAvatar.filename} src={urlAvatar.url} className='h-28 w-28 rounded-full' />
+            <img alt={urlAvatar.filename} src={urlAvatar.url} className='h-32 w-32 rounded-full' />
             <span className='cursor-pointer' onClick={() => handleDeleteUserImage(urlAvatar.publicId)}>
               <span className='sr-only'>Delete</span>
               <HiTrash className='-mt-5 text-2xl text-red-600' />

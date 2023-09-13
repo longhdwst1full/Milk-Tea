@@ -4,11 +4,8 @@ import { IResImage } from '../interfaces/image.type'
 import { baseQueryWithReauth } from './Auth'
 import { createApi } from '@reduxjs/toolkit/query/react'
 
-// import baseQueryWithReAuth from './requestRefresh';
-
 export const ApiUser = createApi({
   reducerPath: 'ApiUser',
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
   baseQuery: baseQueryWithReauth,
   tagTypes: ['user'],
   endpoints: (builder) => ({
@@ -21,7 +18,7 @@ export const ApiUser = createApi({
 
     //get all user
     getAllUsers: builder.query<IUserDocs, number>({
-      query: (page = 5) => `/api/users?_page=${page}`,
+      query: (page) => `/api/users?_page=${page}`,
       providesTags: ['user']
     }),
 

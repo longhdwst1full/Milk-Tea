@@ -3,6 +3,7 @@ import { IProduct } from '../../interfaces/products.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { saleCaculator } from '../../utils/saleCaculator'
 import { useNavigate } from 'react-router-dom'
+
 interface NewProductItemProps {
   product: IProduct
 }
@@ -28,8 +29,12 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
           </span>
         )}
       </div>
-      <div className='img'>
-        <img className='transition-all group-hover:scale-[1.2]' src={product.images[0]?.url} alt={product?.name} />
+      <div className='img h-[255px] w-[255px]'>
+        <img
+          className='transition-all group-hover:scale-[1.2] h-full w-full object-cover'
+          src={product.images[0]?.url}
+          alt={product?.name}
+        />
       </div>
       <div className='product-content relative top-[50px] flex flex-col items-center transition-all bg-[#f5f5f5] group-hover:top-0'>
         <div className='item-title w-full text-[16px] font-[700] px-2 mt-[18px] text-center'>

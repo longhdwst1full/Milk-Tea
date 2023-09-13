@@ -13,7 +13,11 @@ const ListProductItem = ({ product, fetchProductById }: ListProductItemProps) =>
       onClick={() => fetchProductById(product._id!)}
       className='select-none w-full  inline-block cursor-pointer hover:bg-[d3b673] product relative sidebar bg-[#fff] p-[15px] tracking-tight text-[14px] mb-3'
     >
-      <img className='align-middle w-[100%]' src={product?.images[0]?.url} alt={product?.name} />
+      <img
+        className='align-middle w-[100%] h-[141px] object-cover rounded-sm'
+        src={product?.images[0]?.url}
+        alt={product?.name}
+      />
       <div className='flex flex-col'>
         <div className='product-name  mt-[20px] mb-[10px] flex-1 line-clamp-2'>{product?.name}</div>
         <div className='product-price flex flex-shrink-0 gap-3 mt-auto'>

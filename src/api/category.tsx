@@ -1,6 +1,7 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
 import { ICategory, ICategoryDocs } from '../interfaces/category.type'
+
 import { baseQueryWithReauth } from './Auth'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 const CategoryApi = createApi({
   reducerPath: 'CategoryApi',

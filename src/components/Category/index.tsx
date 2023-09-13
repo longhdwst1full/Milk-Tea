@@ -3,15 +3,19 @@ import { Fragment, useState } from 'react'
 
 import { FaBars } from 'react-icons/fa'
 import { ICategory } from '../../interfaces/category.type'
-import { useAppDispatch } from '../../store/hooks'
+import NotFound from '../../pages/Not-Found/NotFound'
+import SKProduct from '../Skeleton/SKProduct'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
+import { useAppDispatch } from '../../store/hooks'
 
 interface SidebarCateProps {
   categories: ICategory[]
+  error: string
+  isLoading: boolean
 }
 
-const SidebarCate = ({ categories }: SidebarCateProps) => {
+const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
 
@@ -22,6 +26,14 @@ const SidebarCate = ({ categories }: SidebarCateProps) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  if (error) return <NotFound />
+  if (isLoading)
+    return (
+      <div className='sidebar select-none shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
+        <SKProduct amount={10} />
+      </div>
+    )
 
   return (
     <>

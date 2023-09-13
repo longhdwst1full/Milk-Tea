@@ -57,7 +57,7 @@ export const categoriesSlice = createSlice({
 
     //add size
 
-    builder.addCase(addCate.fulfilled, (state, action: any) => {
+    builder.addCase(addCate.fulfilled, (state, action) => {
       state.categories.unshift(action.payload)
     })
     builder.addCase(addCate.rejected, (state, action) => {

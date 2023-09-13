@@ -174,20 +174,6 @@ const AddProductModal = ({
                 </SelectMui>
                 <span className='block my-2 text-sm text-red-500'>{errors.toppings && errors.toppings.message}</span>
               </div>
-              {/* <div>
-                <Label htmlFor="price">Price</Label>
-                <TextInput
-                  id="price"
-                  type="number"
-                  placeholder="Price..."
-                  className="mt-1"
-                  {...register('price')}
-                  name="price"
-                />
-                <span className="block my-2 text-sm text-red-500">
-                  {errors.price && errors.price.message}
-                </span>
-              </div> */}
               <div>
                 <Label htmlFor='price'>Sale</Label>
                 <TextInput

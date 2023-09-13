@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 import { Link } from 'react-router-dom'
 import Loading from '../../../components/Loading'
-import { LuClipboardEdit } from 'react-icons/lu'
 import { TbMapPinCancel } from 'react-icons/tb'
 import { Tooltip } from '@mui/material'
 // import { dataDocsOrderRes } from '../../../store/slices/types/order.type'
@@ -11,6 +10,7 @@ import formatDate from '../../../utils/formatDate'
 import { v4 as uuid } from 'uuid'
 import { useGetAllOrderComfirmedQuery } from '../../../store/slices/order'
 import PaginateNumber from '../../../components/admin/PaginationWithNumber'
+import { AiFillEye } from 'react-icons/ai'
 
 interface IProps {
   // dataOrderCofirmed: dataDocsOrderRes[]
@@ -26,7 +26,8 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
 
   return (
     <>
-      <Table className='dark:divide-gray-600 min-w-full divide-y divide-gray-200'>
+      <div className='max-h-[calc(500px-45px)] overflow-y-scroll hidden-scroll-bar'></div>
+      <Table className='dark:divide-gray-600 min-h-[500px] min-w-full divide-y divide-gray-200'>
         <Table.Head className='dark:bg-gray-700 bg-gray-100'>
           {/* <Table.HeadCell>
           <Label htmlFor="select-all" className="sr-only">
@@ -43,7 +44,7 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {orderConfirmed &&
             orderConfirmed.docs.map(
-              (item, _) =>
+              (item) =>
                 item.status == 'confirmed' && (
                   <Table.Row key={uuid()} className={`  hover:bg-gray-100 dark:hover:bg-gray-700 `}>
                     {/* <Table.Cell className="w-4 p-4">
@@ -54,15 +55,17 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
                       </label>
                     </div>
                   </Table.Cell> */}
-                    <Table.Cell className='whitespace-nowrap lg:mr-0 flex items-center p-4 mr-12 space-x-6'>
-                      <img className='w-10 h-10 rounded-full' src={item.user.avatar} alt={item.user.username} />
-                      <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
-                        <div className='dark:text-white text-base font-semibold text-gray-900'>
-                          {item.inforOrderShipping.name}
-                        </div>
+                    <Table.Cell className='whitespace-nowrap lg:mr-0 p-4 mr-12 space-x-6'>
+                      <div className='flex items-center gap-x-2'>
+                        <img className='w-10 h-10 rounded-full' src={item.user.avatar} alt={item.user.username} />
                         <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
-                          {' '}
-                          {item.inforOrderShipping.phone}
+                          <div className='dark:text-white text-base font-semibold text-gray-900'>
+                            {item.inforOrderShipping.name}
+                          </div>
+                          <div className='dark:text-gray-400 text-sm font-normal text-gray-500'>
+                            {' '}
+                            {item.inforOrderShipping.phone}
+                          </div>
                         </div>
                       </div>
                     </Table.Cell>
@@ -89,7 +92,7 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
                       <div className='gap-x-3 whitespace-nowrap flex items-center'>
                         <Button color='primary'>
                           <Link to={`/admin/orders/${item._id}`} className='gap-x-3 flex items-center'>
-                            <LuClipboardEdit className='text-xl' />
+                            <AiFillEye className='text-xl' />
                           </Link>
                         </Button>
                         <Tooltip title='Hủy Đơn Hàng'>
@@ -105,7 +108,7 @@ const AllOrdersConfirmed = ({ hanleUpdateOrderCancel }: IProps) => {
             )}
         </Table.Body>
       </Table>
-      {orderConfirmed && orderConfirmed.totalPages > 1 && (
+      {orderConfirmed && (
         <PaginateNumber
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

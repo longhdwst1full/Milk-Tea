@@ -28,12 +28,16 @@ const flowbiteTheme: CustomFlowbiteTheme = {
     }
   },
   dropdown: {
+    arrowIcon: 'ml-2 h-4 w-5 text-black dark:text-white',
     floating: {
       base: 'z-10 w-fit rounded-xl divide-y divide-gray-100 shadow',
       content: 'rounded-xl text-sm text-gray-700 dark:text-gray-200',
-      target: 'w-fit dark:text-white'
+      target: 'w-fit dark:text-white',
+      item: {
+        icon: 'mr-2 h-5 w-5'
+      }
     },
-    content: ''
+    content: 'p-2'
   },
   modal: {
     content: {
@@ -50,7 +54,23 @@ const flowbiteTheme: CustomFlowbiteTheme = {
   },
   sidebar: {
     root: {
-      base: 'flex fixed top-0 left-0 z-20 flex-col flex-shrink-0 pt-16 h-full duration-75 border-r border-gray-200 lg:flex transition-width dark:border-gray-700'
+      base: 'flex fixed top-0 left-0 z-20 flex-col flex-shrink-0 pt-16 h-full duration-75 border-r border-gray-200 lg:flex transition-width dark:border-gray-700',
+      inner: 'h-full overflow-y-auto hidden-scroll-bar overflow-x-hidden rounded bg-gray-50 py-4 px-3 dark:bg-gray-800'
+    },
+
+    collapse: {
+      button:
+        'group flex w-full items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700',
+      icon: {
+        base: 'h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white',
+        open: {
+          off: '',
+          on: 'text-gray-900'
+        }
+      },
+      label: {
+        base: 'ml-3 flex-1 whitespace-nowrap text-left'
+      }
     }
   },
   textarea: {

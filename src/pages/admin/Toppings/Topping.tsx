@@ -1,5 +1,5 @@
-import { Button, Checkbox, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
-import { HiCog, HiDotsVertical, HiExclamationCircle, HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
+import { Button, Label, Modal, Table, TextInput, Tooltip } from 'flowbite-react'
+import { HiPencil, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useCreateToppingMutation,
   useDeleteToppingMutation,
@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Loading from '../../../components/Loading'
 import { formatCurrency } from '../../../utils/formatCurrency'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Topping = () => {
   return (
@@ -24,6 +25,7 @@ const Topping = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All toppings</h1>
           </div>
           <div className='sm:flex'>
@@ -36,36 +38,6 @@ const Topping = () => {
                   <TextInput id='users-search' name='users-search' placeholder='Search for users' />
                 </div>
               </form>
-              <div className='sm:mt-0 sm:pl-2 flex pl-0 mt-3 space-x-1'>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Configure</span>
-                  <HiCog className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Delete</span>
-                  <HiTrash className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Purge</span>
-                  <HiExclamationCircle className='text-2xl' />
-                </a>
-                <a
-                  href='#'
-                  className='hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer'
-                >
-                  <span className='sr-only'>Settings</span>
-                  <HiDotsVertical className='text-2xl' />
-                </a>
-              </div>
             </div>
             <div className='sm:space-x-3 flex items-center ml-auto space-x-2'>
               <Tooltip content='Thêm topping'>
@@ -117,55 +89,50 @@ const ToppingTable = () => {
   if (isLoading) return <Loading />
   if (isError) return <div>Loi roi</div>
   return (
-    <Table className='dark:divide-gray-600 min-w-full divide-y divide-gray-200'>
-      <Table.Head className='dark:bg-gray-700 bg-gray-100'>
-        <Table.HeadCell>
-          <Label htmlFor='select-all' className='sr-only'>
-            Select all
-          </Label>
-          <Checkbox id='select-all' name='select-all' />
-        </Table.HeadCell>
-        <Table.HeadCell>Name</Table.HeadCell>
-        <Table.HeadCell>Price</Table.HeadCell>
-        <Table.HeadCell>Actions</Table.HeadCell>
-      </Table.Head>
-      <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
-        {dataTopping?.data &&
-          dataTopping.data.map((item, index: number) => (
-            <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
-              <Table.Cell className='w-4 p-4'>
-                <div className='flex items-center'>
-                  <Checkbox aria-describedby='checkbox-1' id='checkbox-1' />
-                  <label htmlFor='checkbox-1' className='sr-only'>
-                    checkbox
-                  </label>
-                </div>
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                {item.name}
-              </Table.Cell>
-              <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
-                {formatCurrency(item.price)}
-              </Table.Cell>
+    <>
+      <div className='max-h-[500px] overflow-y-scroll hidden-scroll-bar'>
+        <Table className='dark:divide-gray-600 min-h-[500px] min-w-full divide-y divide-gray-200'>
+          <Table.Head className='dark:bg-gray-700 bg-gray-100'>
+            <Table.HeadCell>#</Table.HeadCell>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Price</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
+            {dataTopping?.data &&
+              dataTopping.data.map((item, index: number) => (
+                <Table.Row key={index} className='hover:bg-gray-100 dark:hover:bg-gray-700'>
+                  <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                    {item.name}
+                  </Table.Cell>
+                  <Table.Cell className='whitespace-nowrap dark:text-white p-4 text-base font-medium text-gray-900'>
+                    {formatCurrency(item.price)}
+                  </Table.Cell>
 
-              <Table.Cell>
-                <div className='gap-x-3 whitespace-nowrap flex items-center'>
-                  <Tooltip content='Chỉnh sửa topping'>
-                    <EditToppingModal dataTopping={item} />
-                  </Tooltip>
-                  <Tooltip content='Xóa topping'>
-                    <Button color='failure'>
-                      <div onClick={() => handleDeleteTopping(item._id!)} className='gap-x-2 flex items-center'>
-                        <HiTrash className='text-lg' />
-                      </div>
-                    </Button>
-                  </Tooltip>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-      </Table.Body>
-    </Table>
+                  <Table.Cell>
+                    <div className='gap-x-3 whitespace-nowrap flex items-center'>
+                      <Tooltip content='Chỉnh sửa topping'>
+                        <EditToppingModal dataTopping={item} />
+                      </Tooltip>
+                      <Tooltip content='Xóa topping'>
+                        <Button color='failure'>
+                          <div
+                            onClick={() => handleDeleteTopping(item._id as string)}
+                            className='gap-x-2 flex items-center'
+                          >
+                            <HiTrash className='text-lg' />
+                          </div>
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+      </div>
+    </>
   )
 }
 
@@ -180,7 +147,7 @@ const AddToppingModal: FC = function () {
     reset
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver<any>(SizeSchema)
+    resolver: yupResolver(SizeSchema)
   })
 
   const handleAdd = handleSubmit(async (data: Pick<ITopping, 'name' | 'price'>) => {
@@ -252,7 +219,7 @@ const EditToppingModal = function ({ dataTopping }: { dataTopping: ITopping }) {
     reset
   } = useForm<Pick<ITopping, 'name' | 'price'>>({
     mode: 'onChange',
-    resolver: yupResolver<any>(SizeSchema)
+    resolver: yupResolver(SizeSchema)
   })
 
   useEffect(() => {

@@ -1,5 +1,5 @@
-function convertToBase64(file: any) {
-  return new Promise<any>((resolve, reject) => {
+function convertToBase64(file: File) {
+  return new Promise<string | ArrayBuffer | null>((resolve, reject) => {
     const fileReader = new FileReader()
     fileReader.readAsDataURL(file)
     fileReader.onload = () => {

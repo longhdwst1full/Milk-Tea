@@ -1,33 +1,33 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
+import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
-import { Link, useLocation } from 'react-router-dom'
 import ListProductItem from '../List-ProductItem'
+import { Pagination } from 'antd'
+import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
-import http from '../../api/instance'
-import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
-import Paginate from '../Pagination'
 import SKProduct from '../Skeleton/SKProduct'
-import { useAppDispatch } from '../../store/hooks'
+import http from '../../api/instance'
 import { savePage } from '../../store/slices/product.slice'
+import { useAppDispatch } from '../../store/hooks'
+import { useSelector } from 'react-redux'
 
 interface ListProductsProps {
-  categoryName: string
-  products?: IProductDocs
+  products: IProductDocs
+  error: string
+  isLoading: boolean
 }
 
-const ListProducts = ({ categoryName, products }: ListProductsProps) => {
+const ListProducts = ({ products, isLoading }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
   const [product, setProduct] = useState<any>({})
   const { page } = useSelector((state: RootState) => state.persistedReducer.products)
   const dispatch = useAppDispatch()
   const { state } = useLocation()
-
-  const { products: ListProduct, isLoading } = useSelector((state: RootState) => state.persistedReducer.products)
 
   const handleTogglePopup = () => {
     setIsShowPopup(!isShowPopup)
@@ -50,6 +50,10 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
     orderRef.current?.classList.toggle('show_order')
   }
 
+  const onChange: PaginationProps['onChange'] = (pageNumber) => {
+    console.log('Page: ', pageNumber)
+  }
+
   useEffect(() => {
     setProduct(state)
     handleTogglePopup()
@@ -61,12 +65,12 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
         <div className='pb-[160px]'>
           <div className='category '>
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
-              <div className='text-lg capitalize select-none'>{categoryName || 'Tất cả sản phẩm'}</div>
+              <div className='text-lg capitalize select-none'>{'Tất cả sản phẩm'}</div>
               <div className='right'>
                 <FaAngleDown />
               </div>
             </div>
-            {ListProduct.docs && ListProduct.docs.length <= 0 ? (
+            {products && products.docs && products.docs.length <= 0 ? (
               <section className='flex flex-col justify-center bg-gray-100 items-center h-[70vh] font-bold my-5'>
                 <img
                   className='mx-auto'
@@ -90,7 +94,9 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               )}
             </div>
           </div>
-          <Paginate action={paginatePage} totalPages={product && (products?.totalPages as number)} currentPage={page} />
+          <div className='text-center'>
+            <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+          </div>
         </div>
 
         <div className='order-bottom bg-[#fff] fixed bottom-0 w-[100vw] flex flex-col border-t border-[#f1f1f1] lg:hidden'>
@@ -127,7 +133,6 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
               <span className='cart-ss2-four px-1'>0đ</span>
             </div>
             <div className='cart-ss3'>
-              {/* <div className="button-cart">Thanh toán</div> */}
               <Link to='checkout'>
                 <Button size='medium' type='paying' style='mx-[20px]'>
                   Thanh toán
@@ -142,7 +147,7 @@ const ListProducts = ({ categoryName, products }: ListProductsProps) => {
           </div>
         </div>
       </div>
-      {product && Object.keys(product).length !== 0 && (
+      {product && Object.keys(product).length > 0 && (
         <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product} />
       )}
     </>

@@ -11,18 +11,18 @@ export const OrderAPI = createApi({
   endpoints: (builder) => ({
     //get all orders
     getAllOrder: builder.query<IDocsTypeOrder, number | string>({
-      query: (page) => `/api/orders?_page=${page}`
-      // providesTags: (result) => {
-      // if (result) {
-      //   const final = [
-      //     ...result.data.map(({ _id }) => ({ type: 'Order' as const, _id })),
-      //     { type: 'Order' as const, id: 'LIST' },
-      //   ];
-      //   return final;
-      // }
+      query: (page) => `/api/orders?_page=${page}`,
+      providesTags: (result) => {
+        if (result) {
+          const final = [
+            ...result.docs.map(({ _id }) => ({ type: 'Order' as const, _id })),
+            { type: 'Order' as const, id: 'LIST' }
+          ]
+          return final
+        }
 
-      // return [{ type: 'Order', id: 'LIST' }];
-      // },
+        return [{ type: 'Order', id: 'LIST' }]
+      }
     }),
 
     //get order by id
@@ -39,8 +39,8 @@ export const OrderAPI = createApi({
         url: '/api/create-order',
         body: body,
         method: 'POST'
-      })
-      // invalidatesTags: () => [{ type: 'Order', id: 'LIST' }],
+      }),
+      invalidatesTags: () => [{ type: 'Order', id: 'LIST' }]
     }),
 
     //update order status = confirm
@@ -49,8 +49,8 @@ export const OrderAPI = createApi({
         url: `/api/order/confirmed/${id}`,
         method: 'PUT'
       }),
-      invalidatesTags: ['Order']
-      // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
+
+      invalidatesTags: () => [{ type: 'Order', id: 'LIST' }]
     }),
 
     //update order status = delivered
@@ -76,9 +76,10 @@ export const OrderAPI = createApi({
 
     //update order status = canceled
     canceledOrder: builder.mutation({
-      query: (id: string) => ({
-        url: `/api/order/canceled/${id}`,
-        method: 'PUT'
+      query: (data: { id: string; reasonCancelOrder: string }) => ({
+        url: `/api/order/canceled/${data.id}`,
+        method: 'PUT',
+        body: { reasonCancelOrder: data.reasonCancelOrder }
       }),
       invalidatesTags: ['Order']
       // invalidatesTags: (result, error, body) => [{ type: 'Order', id: 'LIST' }],
@@ -125,7 +126,6 @@ export const OrderAPI = createApi({
     })
   })
 })
-// console.log(ToppingAPI);
 
 export const {
   useConfirmOrderMutation,

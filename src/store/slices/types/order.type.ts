@@ -6,7 +6,7 @@ interface inforOrderShipping {
   name: string
   phone: string
   address: string
-  noteShipping: string
+  noteShipping?: string
 }
 
 export enum StatusOrder {

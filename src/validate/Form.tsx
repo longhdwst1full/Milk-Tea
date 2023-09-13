@@ -70,7 +70,7 @@ export type AddUserForm = Yup.InferType<typeof AddUserSchema>
 
 export const UpdateUserSchema = Yup.object({
   username: Yup.string().required('Username is required'),
-  account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
+  // account: Yup.string().required('Account is required').regexMatch('Email or Phone is not valid'),
   role: Yup.string().required('Role is required'),
   address: Yup.string().required('Address is required')
 })
@@ -78,34 +78,37 @@ export const UpdateUserSchema = Yup.object({
 export type UpdateUserForm = Yup.InferType<typeof UpdateUserSchema>
 
 export const UserCheckoutSchema = Yup.object({
-  name: Yup.string().required(),
-  phone: Yup.string().required(),
-  shippingLocation: Yup.string().required(),
+  name: Yup.string().required('Họ và tên không được để trống'),
+  phone: Yup.string()
+    .required('Số điện thoại không được để trống')
+    .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
+  shippingLocation: Yup.string().required('Địa chỉ không được để trống'),
 
   shippingNote: Yup.string(),
   paymentMethod: Yup.string().required(),
   askRefer: Yup.boolean(),
 
   nameOther: Yup.string()
-    .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
+    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
     .when('askRefer', {
       is: true,
       then: (schema) => schema.required()
     }),
   phoneOther: Yup.string()
-    .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
+    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
     .when('askRefer', {
       is: true,
       then: (schema) => schema.required()
     }),
   shippingLocationOther: Yup.string()
-    .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
+    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
     .when('askRefer', {
       is: true,
       then: (schema) => schema.required()
     }),
   shippingNoteOther: Yup.string()
 })
+export type IUserCheckout = Yup.InferType<typeof UserCheckoutSchema>
 
 export const InforFormSchema = Yup.object({
   _id: Yup.string().required('ID Không được để trống'),

@@ -1,32 +1,28 @@
-import { Sidebar, TextInput } from 'flowbite-react'
+import { Sidebar } from 'flowbite-react'
 import type { FC } from 'react'
 import { useState } from 'react'
-import { HiChartPie, HiClipboardCheck, HiCollection, HiSearch, HiShoppingBag, HiUsers, HiTicket } from 'react-icons/hi'
+import { HiChartPie, HiClipboardCheck, HiCollection, HiShoppingBag, HiUsers, HiTicket } from 'react-icons/hi'
 import { BiSolidCategoryAlt, BiSolidUserCheck } from 'react-icons/bi'
 import { MdOutlineWeb } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+import { FaTrashArrowUp } from 'react-icons/fa6'
+import { FaImages } from 'react-icons/fa'
 
 const AdminSidebar: FC = function () {
   const [currentPage, setCurrentPage] = useState('')
-  // const { pathname } = useLocation()
   const navigate = useNavigate()
   const handleRedirect = (path: string) => {
     navigate(path)
     setCurrentPage(path)
   }
-  // useEffect(() => {
-  //   // const newPage = window.location.pathname;
-  //   // console.log(pathname);
-  //   setCurrentPage(pathname);
-  // }, [currentPage]);
 
   return (
-    <Sidebar aria-label='Sidebar with multi-level dropdown example' className='hidden lg:block'>
-      <div className='flex flex-col justify-between h-full py-2'>
+    <Sidebar aria-label='Sidebar with multi-level dropdown example' className='hidden lg:block '>
+      <div className='flex flex-col justify-between h-full py-2 '>
         <div>
-          <form className='md:hidden pb-3'>
+          {/* <form className='md:hidden pb-3'>
             <TextInput icon={HiSearch} type='search' placeholder='Search' required size={32} />
-          </form>
+          </form> */}
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Item
@@ -55,6 +51,13 @@ const AdminSidebar: FC = function () {
                 Categories
               </Sidebar.Item>
               <Sidebar.Item
+                onClick={() => handleRedirect('/admin/size')}
+                icon={BiSolidCategoryAlt}
+                className={`cursor-pointer ${'/admin/size' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+              >
+                Sizes
+              </Sidebar.Item>
+              <Sidebar.Item
                 // href="/admin/users"
                 onClick={() => handleRedirect('/admin/users')}
                 icon={HiUsers}
@@ -78,14 +81,28 @@ const AdminSidebar: FC = function () {
               >
                 Toppings
               </Sidebar.Item>
-              <Sidebar.Item
-                // href="/admin/orders"
-                onClick={() => handleRedirect('/admin/role')}
-                icon={BiSolidUserCheck}
-                className={`cursor-pointer ${'/admin/role' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
-              >
-                Role
-              </Sidebar.Item>
+              <Sidebar.Collapse label='Manager' icon={BiSolidUserCheck}>
+                <Sidebar.Item
+                  // href="/admin/orders"
+                  onClick={() => handleRedirect('/admin/manager/staff')}
+                  icon={BiSolidUserCheck}
+                  className={`cursor-pointer ${
+                    '/admin/manager/staff' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                  }`}
+                >
+                  Staff
+                </Sidebar.Item>
+                <Sidebar.Item
+                  // href="/admin/orders"
+                  onClick={() => handleRedirect('/admin/manager/shipper')}
+                  icon={BiSolidUserCheck}
+                  className={`cursor-pointer ${
+                    '/admin/manager/shipper' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''
+                  }`}
+                >
+                  Shipper
+                </Sidebar.Item>
+              </Sidebar.Collapse>
               <Sidebar.Item
                 // href="/admin/orders"
                 onClick={() => handleRedirect('/admin/voucher')}
@@ -93,6 +110,14 @@ const AdminSidebar: FC = function () {
                 className={`cursor-pointer ${'/admin/voucher' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
               >
                 Voucher
+              </Sidebar.Item>
+              <Sidebar.Item
+                // href="/admin/orders"
+                onClick={() => handleRedirect('/admin/banners')}
+                icon={FaImages}
+                className={`cursor-pointer ${'/admin/banners' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+              >
+                Banners
               </Sidebar.Item>
               {/* <Sidebar.Item href="/authentication/sign-up" icon={HiPencil}>
                 Sign up
@@ -113,6 +138,13 @@ const AdminSidebar: FC = function () {
               </Sidebar.Item>
             </Sidebar.ItemGroup> */}
             <Sidebar.ItemGroup>
+              <Sidebar.Item
+                onClick={() => handleRedirect('/admin/trash-can')}
+                icon={FaTrashArrowUp}
+                className={`cursor-pointer ${'/admin/trash-can' === currentPage ? 'bg-gray-300 dark:bg-gray-700' : ''}`}
+              >
+                Trash Can
+              </Sidebar.Item>
               <Sidebar.Item onClick={() => handleRedirect('/')} icon={MdOutlineWeb} className='cursor-pointer'>
                 View Website
               </Sidebar.Item>

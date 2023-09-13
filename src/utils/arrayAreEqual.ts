@@ -1,4 +1,4 @@
-export const arraysAreEqual = (arr1: any[], arr2: any[]) => {
+export const arraysAreEqual = (arr1: string[], arr2: string[]) => {
   if (arr1.length !== arr2.length) {
     return false
   }

@@ -28,6 +28,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
       fileList.push(file[i])
     }
     const formData = new FormData()
+
     fileList.forEach((file: File) => {
       formData.append('images', file)
     })

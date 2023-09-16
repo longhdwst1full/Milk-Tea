@@ -59,7 +59,7 @@ export const ApiUser = createApi({
     }),
 
     //Upload image user
-    upLoadAvartaUser: builder.mutation<IResImage, any>({
+    upLoadAvartaUser: builder.mutation<IResImage, void>({
       query: (file) => ({
         url: '/api/uploadImages',
         method: 'POST',

@@ -24,7 +24,7 @@ const BannerApi = createApi({
     }),
 
     //upload banner
-    uploadBanner: builder.mutation<IResImage, any>({
+    uploadBanner: builder.mutation<IResImage, void>({
       query: (file) => ({
         url: '/api/upload-banner',
         method: 'POST',
@@ -43,8 +43,8 @@ const BannerApi = createApi({
     }),
 
     //delete banner
-    deleteBanner: builder.mutation<any, string>({
-      query: (id) => ({
+    deleteBanner: builder.mutation({
+      query: (id: string) => ({
         url: `/api/banner/${id}`,
         method: 'DELETE'
       }),

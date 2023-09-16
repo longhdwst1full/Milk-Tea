@@ -17,7 +17,7 @@ export const GuardSign = ({ JSX }: Props) => {
     } else if (user.role?.name === 'customer') {
       navigate('/')
     }
-  }, [user])
+  }, [navigate, user])
   return !user.role?.name ? <JSX /> : <Navigate to={'/'} />
 }
 

@@ -26,7 +26,7 @@ import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 const Voucher = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(currentPage)
-  const [data] = useState<any>([])
+  const [data] = useState<(string | undefined)[][]>([])
 
   useEffect(() => {
     const rows = vouchers?.data?.docs?.map((item: IVoucher) => [
@@ -131,7 +131,7 @@ type VouchersTableProps = {
 }
 const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
   // const { data: vouchers, isLoading } = useGetAllVouchersQuery()
-  const [_, setData] = useState<any>([])
+  const [_, setData] = useState<(string[] | (string | number | boolean | undefined)[][])[]>([])
   const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] = useDeleteVoucherMutation()
   useEffect(() => {
     const rows = [
@@ -212,10 +212,10 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
                 >
                   <span
                     className={`${
-                      isExpiredVoucher(item.endDate!) === true ? 'bg-red-400 ' : 'bg-green-400 '
+                      isExpiredVoucher(item.endDate ?? '') === true ? 'bg-red-400 ' : 'bg-green-400 '
                     } rounded inline-block px-2 text-white`}
                   >
-                    {isExpiredVoucher(item.endDate!) ? 'Expired' : 'Unexpired'}
+                    {isExpiredVoucher(item.endDate ?? '') ? 'Expired' : 'Unexpired'}
                   </span>
                 </Table.Cell>
 
@@ -225,9 +225,9 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
 
                     <Tooltip content='Xóa voucher'>
                       <Button
-                        disabled={!isExpiredVoucher(item.endDate!)}
+                        disabled={!isExpiredVoucher(item.endDate as string)}
                         color='failure'
-                        onClick={() => handleDelete(item._id!)}
+                        onClick={() => handleDelete(item._id as string)}
                       >
                         <div className='gap-x-2 flex items-center'>
                           {isDelteLoading ? (

@@ -17,7 +17,7 @@ import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Categories = () => {
   const { categories, error } = useAppSelector((state: RootState) => state.persistedReducer.category)
-  const [data, setData] = useState<any>([])
+  const [data, setData] = useState<(string | undefined)[][]>([])
   useEffect(() => {
     if (categories && Array.isArray(categories)) {
       const rows = [...categories.map((item) => [item._id, item.name, item.slug, item.createdAt, item.updatedAt])]

@@ -6,7 +6,7 @@ const Popup = () => {
   const [isShowPopup, setIsShowPopup] = useState<boolean>(true)
 
   useEffect(() => {
-    const closedTime = JSON.parse(localStorage.getItem('closedTime')!)
+    const closedTime = JSON.parse(localStorage.getItem('closedTime') as string)
     const now = new Date().getTime()
 
     if (closedTime && now - closedTime <= 10 * 60 * 1000) {

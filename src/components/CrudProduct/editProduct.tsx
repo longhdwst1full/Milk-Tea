@@ -40,11 +40,11 @@ const EditProductModal = ({ DataEdit }: { DataEdit: IProduct }) => {
     resolver: yupResolver(ProductSchema),
     defaultValues: {
       name: DataEdit.name,
-      price: DataEdit.price,
+      // price: DataEdit.price,
       sale: DataEdit.sale,
       description: DataEdit.description,
-      toppings: DataEdit.toppings.map((item) => item._id!)
-    } as any
+      toppings: DataEdit.toppings.map((item) => item._id)
+    }
   })
 
   // console.log(DataEdit.toppings.map((item) => item._id as any));

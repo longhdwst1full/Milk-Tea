@@ -3,13 +3,12 @@ import { BiSolidPlusCircle, BiFile, BiTrash } from 'react-icons/bi'
 import { IImage } from '../../interfaces/image.type'
 import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product'
 import { useEffect, useState } from 'react'
-import { memo } from 'react'
 import SKUpload from '../Skeleton/SKUpload'
 import { Link } from 'react-router-dom'
 
 interface Props {
   urls: IImage[]
-  setUrl: any
+  setUrl: React.Dispatch<React.SetStateAction<IImage[]>>
   setLoadingUpload: React.Dispatch<React.SetStateAction<boolean>>
   setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -21,7 +20,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
   const [deleteImages, { isLoading: deleting }] = useDeleteImagesProductMutation()
   const uploadHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = [] as File[]
-    const file = event.target.files!
+    const file = event.target.files as FileList
     setLenghtFiles(file.length)
     if (!file) return
     for (let i = 0; i < file.length; i++) {
@@ -40,7 +39,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
   useEffect(() => {
     setLoadingUpload(isLoading)
     setLoadingDelete(deleting)
-  }, [isLoading, deleting])
+  }, [isLoading, deleting, setLoadingUpload, setLoadingDelete])
 
   return (
     <>
@@ -118,17 +117,19 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
                   <BiFile />
                 </Box>
                 <Typography component='p' sx={{ fontSize: '20px' }}>
-                  <Link to={image.url!} target='_blank'>
+                  <Link to={image.url as string} target='_blank'>
                     {image.filename}
                   </Link>
                 </Typography>
                 <Box
                   sx={{ cursor: 'pointer', marginLeft: 'auto' }}
                   onClick={() => {
-                    deleteImages(image.publicId).then(({ data }: any) => {
-                      const filterFile = urls.filter((item) => item.publicId !== data.publicId)
-                      setUrl(filterFile)
-                    })
+                    deleteImages(image.publicId)
+                      .unwrap()
+                      .then(({ data }) => {
+                        const filterFile = urls.filter((item) => item.publicId !== data.publicId)
+                        setUrl(filterFile)
+                      })
                     setId(image.publicId)
                   }}
                 >
@@ -159,4 +160,4 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
   )
 }
 
-export default memo(BoxUpload)
+export default BoxUpload

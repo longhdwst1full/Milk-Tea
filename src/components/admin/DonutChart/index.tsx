@@ -1,8 +1,6 @@
 import Chart from 'react-apexcharts'
 
-type Props = {}
-
-const DonutChart = (props: Props) => {
+const DonutChart = () => {
   const options: ApexCharts.ApexOptions = {
     stroke: {
       curve: 'smooth'

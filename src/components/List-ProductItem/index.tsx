@@ -10,7 +10,7 @@ interface ListProductItemProps {
 const ListProductItem = ({ product, fetchProductById }: ListProductItemProps) => {
   return (
     <div
-      onClick={() => fetchProductById(product._id!)}
+      onClick={() => fetchProductById(product._id)}
       className='select-none w-full  inline-block cursor-pointer hover:bg-[d3b673] product relative sidebar bg-[#fff] p-[15px] tracking-tight text-[14px] mb-3'
     >
       <img
@@ -23,7 +23,7 @@ const ListProductItem = ({ product, fetchProductById }: ListProductItemProps) =>
         <div className='product-price flex flex-shrink-0 gap-3 mt-auto'>
           <p className='product-origin-price text-[#8a733f] mb-[20px]'>
             {product?.sale !== 0 && product.sizes
-              ? formatCurrency(product?.sizes[0]?.price - product.sale!)
+              ? formatCurrency(product?.sizes[0]?.price - product.sale)
               : formatCurrency(product.sizes && product?.sizes[0]?.price)}
           </p>
           {product?.sale !== 0 && (

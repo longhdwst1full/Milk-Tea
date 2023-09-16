@@ -63,7 +63,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
       })
     }
   }
-  console.log(product)
+  // console.log(product)
 
   return (
     <div className='card flex justify-between items-center border border-transparent border-b-[#f1f1f1] tracking-tight '>

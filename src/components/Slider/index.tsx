@@ -5,6 +5,7 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { useGetAllBannersQuery } from '../../api/banner'
+import { v4 as uuidv4 } from 'uuid'
 
 const SlickArrowLeft = ({ currentSlide, slideCount, ...props }: any) => (
   <FaChevronLeft
@@ -41,7 +42,7 @@ const Sliders = () => {
       <Slider {...settings}>
         {data?.banners &&
           data.banners.map((banner) => (
-            <div className='item relative'>
+            <div key={uuidv4()} className='item relative'>
               <div className={`${styles.overlay}`}></div>
               <img
                 src={banner.url}

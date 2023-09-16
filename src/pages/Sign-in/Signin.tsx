@@ -10,6 +10,7 @@ import { useLoginMutation } from '../../api/Auth'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useCreateCartDBMutation } from '../../api/cartDB'
 import { useAppSelector } from '../../store/hooks'
+import { RootState } from '../../store/store'
 
 // import { IUser } from '../../interfaces/user.type'
 
@@ -21,7 +22,7 @@ import { useAppSelector } from '../../store/hooks'
 const Signin = () => {
   const [loginUser] = useLoginMutation()
   const [addCartDbFn] = useCreateCartDBMutation()
-  const { items } = useAppSelector((state) => state.persistedReducer.cart)
+  const { items } = useAppSelector((state: RootState) => state.persistedReducer.cart)
   const {
     register,
     handleSubmit,

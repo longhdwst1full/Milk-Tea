@@ -40,24 +40,42 @@ const List = () => {
     page: params.pagination?.current,
     ...params
   })
-  const fetchData = () => {
-    setLoading(true)
-    fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results)
-        setLoading(false)
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination
-          }
-        })
-      })
-  }
+  // const fetchData = () => {
+  //   setLoading(true)
+  //   fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
+  //     .then((res) => res.json())
+  //     .then(({ results }) => {
+  //       setData(results)
+  //       setLoading(false)
+  //       setTableParams({
+  //         ...tableParams,
+  //         pagination: {
+  //           ...tableParams.pagination
+  //         }
+  //       })
+  //     })
+  // }
+  // useEffect(() => {
+  //   fetchData()
+  // }, [JSON.stringify(tableParams)])
+
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+
+      const response = await fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
+      const { results } = await response.json()
+      setData(results)
+      setTableParams((prevParams) => ({
+        ...prevParams,
+        pagination: {
+          ...prevParams.pagination
+        }
+      }))
+    }
     fetchData()
-  }, [JSON.stringify(tableParams)])
+  }, [tableParams])
+
   // console.log(productData);
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -99,7 +117,7 @@ const List = () => {
       price: item.price,
       sale: item.sale,
       category: item.category?.name,
-      sizes: item.sizes.map((size: any) => ({ name: size.name, price: size.price })),
+      sizes: item.sizes.map((size) => ({ name: size.name, price: size.price })),
       toppings: item.toppings,
       is_deleted: item.is_deleted,
       is_active: item.is_active,

@@ -268,8 +268,11 @@ const EditRoleModal = function ({ role }: EditRoleModalProps) {
     }
   })
 
-  const onHandleSubmit = async (data: any) => {
-    await updateRole(data)
+  const onHandleSubmit = async (data: RoleForm) => {
+    await updateRole({
+      ...data,
+      _id: role._id
+    })
     if (!isError) {
       toast.success(`Updated ${data.name} role`)
       setOpen(false)

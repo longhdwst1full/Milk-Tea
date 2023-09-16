@@ -33,7 +33,7 @@ const CategoryApi = createApi({
       invalidatesTags: ['category']
     }),
 
-    updateCategory: builder.mutation<any, ICategory>({
+    updateCategory: builder.mutation<void, ICategory>({
       query: ({ ...rest }) => ({
         url: `/api/size/${rest._id}`,
         method: 'PUT',

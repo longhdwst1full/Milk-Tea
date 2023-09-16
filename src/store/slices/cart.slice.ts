@@ -53,26 +53,24 @@ const cartSlice = createSlice({
           state.items[productIndex].items.push(newProduct)
         } else {
           /* nếu mà trùng size & trùng tên => không có topping => thêm mới sản phẩm */
-          if (product.toppings.length === 0 && product.quantity === 1) {
+          if (products[productIndex].items[productSizeIndex].toppings.length === 0 && product.toppings.length == 0) {
             console.log('th1')
             /* tăng số lượng lên */
             state.items[productIndex].items[productSizeIndex].quantity += product.quantity
             state.items[productIndex].items[productSizeIndex].total += product.total
           }
-          if (product.toppings.length === 0 && product.quantity > 1) {
-            console.log('th2')
-            /* tăng số lượng lên */
-            state.items[productIndex].items[productSizeIndex].quantity += product.quantity
-            state.items[productIndex].items[productSizeIndex].total += product.total
-          }
-          /* nếu mà trùng size & trùng tên => có topping => thêm mới sản phẩm */
-          if (product.toppings.length > 0) {
+
+          // }
+          /* TH chùng size name topping có */
+          else {
+            // TH1 check topping có chùng nhau k
             // && state.items[productIndex].items[productSizeIndex].quantity === 1
             console.log('th3')
             console.log(product)
             /* kiểm tra xem topping có trùng nhau hay không */
             /* nếu mà có trùng nhau hết thì tăng số lượng lên không thì tạo mới sản phẩn */
             for (let i = 0; i < state.items[productIndex].items.length; i++) {
+              // console.log(state.items[])
               const isEqual = _.isEqual(state.items[productIndex].items[i].toppings, product.toppings)
               if (isEqual === true) {
                 console.log(3.1)
@@ -81,6 +79,8 @@ const cartSlice = createSlice({
                 return
               }
             }
+            // TH2  topping không chùng nhau=> thêm mới
+
             /* nếu mà không có topping nào trùng nhau thì sẽ thêm sản phẩm mới */
             console.log(3.2)
             const newProduct = {
@@ -93,52 +93,7 @@ const cartSlice = createSlice({
               product: product.product
             }
             state.items[productIndex].items.push(newProduct)
-
-            // if (isEqual) {
-            //   console.log(3.1)
-            //   state.items[productIndex].items[productSizeIndex].quantity += product.quantity
-            //   state.items[productIndex].items[productSizeIndex].total += product.total
-            // } else {
-            //   console.log(3.2)
-            // const newProduct = {
-            //   image: product.image,
-            //   price: product.price,
-            //   quantity: product.quantity,
-            //   size: product.size,
-            //   toppings: product.toppings,
-            //   total: product.total,
-            //   product: product.product
-            // }
-            // state.items[productIndex].items.push(newProduct)
-            // }
           }
-          /* nếu mà trùng size & trùng tên => có topping => tăng số lượng lên */
-          // if (product.toppings.length > 0 && state.items[productIndex].items[productSizeIndex].quantity > 1) {
-          //   console.log(
-          //     '🚀 ~ file: cart.slice.ts:80 ~ state.items[productIndex].items[productSizeIndex].quantity:',
-          //     state.items[productIndex].items[productSizeIndex].quantity
-          //   )
-          //   console.log('th4')
-          //   const newProduct = {
-          //     image: product.image,
-          //     price: product.price,
-          //     quantity: product.quantity,
-          //     size: product.size,
-          //     toppings: product.toppings,
-          //     total: product.total,
-          //     product: product.product
-          //   }
-          /* nếu mà trùng size & trùng topping mà chưa có sản phẩm đố thì tăng số lượng */
-          // console.log(product)
-          // if (productToppingIndex >= 0) {
-          //   console.log('th5')
-          //   state.items[productIndex].items[productToppingIndex].quantity += product.quantity
-          //   state.items[productIndex].items[productToppingIndex].total += product.total
-          // } else {
-          //   console.log('th6')
-          //   state.items[productIndex].items.push(newProduct)
-          // }
-          // }
         }
       }
     },

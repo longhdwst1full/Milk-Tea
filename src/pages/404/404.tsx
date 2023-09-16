@@ -6,7 +6,7 @@ const PageNotFound = () => {
     startLoader()
   })
   function startLoader() {
-    const counterElement = document.querySelector('.counter')!
+    const counterElement = document.querySelector('.counter')
     let currentValue = 0
     function updateCounter() {
       if (currentValue === 100) {
@@ -17,7 +17,9 @@ const PageNotFound = () => {
         currentValue = 100
         window.history.back()
       }
-      counterElement.textContent = String(currentValue)
+      if (counterElement) {
+        counterElement.textContent = String(currentValue)
+      }
       const delay = Math.floor(Math.random() * 200) + 50
       setTimeout(updateCounter, delay)
     }

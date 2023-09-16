@@ -1,7 +1,7 @@
-import { Breadcrumb, Button, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
+import { Button, Label, Modal, Select, Table, TextInput, Tooltip } from 'flowbite-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
-import { HiDocumentDownload, HiHome, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
+import { HiDocumentDownload, HiOutlinePencilAlt, HiPlus, HiTrash } from 'react-icons/hi'
 import {
   useAddUserMutation,
   useDeleteImageUserMutation,
@@ -138,8 +138,11 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
         <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
           {users?.docs &&
             users?.docs.map((user, index) => (
-              <Table.Row key={user._id} className={`  hover:bg-gray-100 dark:hover:bg-gray-700`}>
-                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
+              <Table.Row
+                key={user._id}
+                className={`${currentUser._id === user._id && 'hidden'}  hover:bg-gray-100 dark:hover:bg-gray-700`}
+              >
+                <Table.Cell className='w-4 p-4'>{index}</Table.Cell>
                 <Table.Cell className='whitespace-nowrap lg:mr-0  p-4 mr-12 space-x-6'>
                   <div className='flex items-center gap-x-4'>
                     <img
@@ -171,7 +174,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                       <Button
                         disabled={currentUser._id === user._id}
                         color='failure'
-                        onClick={() => handleDelete(user._id!)}
+                        onClick={() => handleDelete(user._id ?? '')}
                       >
                         <div className='gap-x-2 flex items-center'>
                           {isDeleting ? (
@@ -218,7 +221,7 @@ const AddUserModal: FC = function () {
           setUrlAvatar({} as IImage)
           reset()
         })
-        .catch((err: any) => {
+        .catch((err) => {
           toast.error(`Create user failed. ${err.data.message}`)
         })
     }
@@ -352,7 +355,7 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
   } = useForm<UpdateUserForm>({
     mode: 'onChange',
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues: { ...user, role: user.role?._id, address: user.address || '' } as any
+    defaultValues: { ...user, role: user.role?._id, address: user.address || '' }
   })
 
   const onHandleSubmit = (data: any) => {

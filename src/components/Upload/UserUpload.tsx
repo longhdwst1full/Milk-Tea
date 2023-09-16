@@ -1,6 +1,7 @@
 import { HiTrash, HiUpload } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import { IImage } from '../../interfaces/image.type'
+import { AxiosError } from 'axios'
 
 type UserUploadProps = {
   urlAvatar: IImage
@@ -28,7 +29,7 @@ const UserUpload = ({ urlAvatar, setUrlAvatar, upLoadAvartaUser, deleteImageUser
         setUrlAvatar({} as IImage)
         toast.success('Delete image success')
       })
-      .catch((err: any) => toast.error(`Delete image failed ${err.message}`))
+      .catch((err: AxiosError) => toast.error(`Delete image failed ${err.message}`))
   }
   return (
     <>

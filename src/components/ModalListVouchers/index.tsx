@@ -54,7 +54,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
               value={voucherChecked}
               className='my-2'
             >
-              <Radio className='select-none' disabled={isExpiredVoucher(voucher?.endDate!)} value={voucher}>
+              <Radio className='select-none' disabled={isExpiredVoucher(voucher?.endDate as string)} value={voucher}>
                 <div className='flex items-center justify-center gap-x-2'>
                   <GiTicket className='text-2xl' /> {`${voucher.code} - ${formatCurrency(voucher.sale)}`}
                 </div>

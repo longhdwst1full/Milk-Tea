@@ -4,10 +4,10 @@ export interface IVoucherDocs {
     hasNextPage?: boolean
     hasPrevPage?: boolean
     limit?: number
-    nextPage?: null | any
+    nextPage?: null | number
     page?: number
     pagingCounter?: number
-    prevPage?: null | any
+    prevPage?: null | number
     totalDocs?: number
     totalPages: number
   }

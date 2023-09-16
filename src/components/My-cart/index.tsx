@@ -17,6 +17,7 @@ const MyCart = () => {
 
   const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getAllCart = useGetAllCartDBQuery()
 
   /* Tính tổng tiền và tổng số lượng quantity */

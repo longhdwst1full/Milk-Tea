@@ -40,8 +40,8 @@ export const ApiProducts = createApi({
       invalidatesTags: [{ type: 'product', id: 'List' }]
     }),
 
-    deleteRealProduct: builder.mutation<any, string>({
-      query: (id) => ({
+    deleteRealProduct: builder.mutation({
+      query: (id: string) => ({
         url: `/api/product/${id}`,
         method: 'DELETE'
       }),
@@ -64,16 +64,16 @@ export const ApiProducts = createApi({
       invalidatesTags: (_, __, id) => [{ type: 'product', id: id }]
     }),
 
-    uploadImagesProduct: builder.mutation<IResImage, any>({
-      query: (files) => ({
+    uploadImagesProduct: builder.mutation({
+      query: (files: IResImage) => ({
         url: '/api/uploadImages',
         method: 'POST',
         body: files
       })
     }),
 
-    deleteImagesProduct: builder.mutation<any, string>({
-      query: (publicId) => ({
+    deleteImagesProduct: builder.mutation({
+      query: (publicId: string) => ({
         url: `/api/deleteImages/${publicId}`,
         method: 'DELETE',
         body: publicId

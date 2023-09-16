@@ -70,7 +70,7 @@ export const Auth = createApi({
         credentials: 'include'
       })
     }),
-    updateInfor: builder.mutation<any, IUser>({
+    updateInfor: builder.mutation<void, IUser>({
       query: ({ _id, ...rest }) => ({
         url: `/api/updateInfor/${_id}`,
         method: 'PATCH',

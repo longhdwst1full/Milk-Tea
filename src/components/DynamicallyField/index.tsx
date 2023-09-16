@@ -1,5 +1,5 @@
 import { Button, TextInput } from 'flowbite-react'
-import React, { memo, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiMinus, BiPlusMedical } from 'react-icons/bi'
 
 interface Props {
@@ -55,7 +55,7 @@ const DynamicField = ({ setSubmit, setDynamic, dataSize }: Props) => {
     setField(field)
     setDynamic(field)
     console.log(field)
-  })
+  }, [field, setDynamic, setSubmit])
 
   return (
     <>
@@ -103,4 +103,4 @@ const DynamicField = ({ setSubmit, setDynamic, dataSize }: Props) => {
   )
 }
 
-export default memo(DynamicField)
+export default DynamicField

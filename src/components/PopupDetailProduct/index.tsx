@@ -8,6 +8,7 @@ import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './PopupDetailProduct.module.scss'
 import { useCreateCartDBMutation } from '../../api/cartDB'
 import { v4 as uuidv4 } from 'uuid'
+import { CartItem } from '../../store/slices/types/cart.type'
 
 type PopupDetailProductProps = {
   showPopup: boolean
@@ -24,7 +25,11 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [addCartDbFn] = useCreateCartDBMutation()
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
-  const [nameRadioInput, setNameRadioInput] = useState<any>(product.sizes[0])
+  const [nameRadioInput, setNameRadioInput] = useState<{
+    name: string
+    price: number
+    _id?: string
+  }>(product.sizes[0])
   const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number; _id: string }[]>([])
 
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
@@ -72,9 +77,9 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       toppings: checkedToppings,
       quantity,
       image: product.images[0]?.url ?? '',
-      price: nameRadioInput.price - product.sale!,
-      total: (price - product.sale!) * quantity,
-      product: product._id!
+      price: nameRadioInput.price - product.sale,
+      total: (price - product.sale) * quantity,
+      product: product._id
     }
 
     if (user._id != '' && user.accessToken != '') {
@@ -85,13 +90,13 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
           {
             ...rest,
             image: rest.image,
-            size: data.size?._id,
+            size: data.size?._id as string,
             toppings: data.toppings.map((item) => item?._id as string)
           }
         ]
       })
     } else {
-      dispatch(addToCart(data))
+      dispatch(addToCart(data as CartItem))
     }
   }
 

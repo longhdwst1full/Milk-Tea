@@ -14,7 +14,7 @@ const NotFound = () => {
     }, 1000)
 
     return () => clearInterval(intervalId)
-  }, [second])
+  }, [navigate, second])
 
   return (
     <section className='flex items-center p-16 dark:bg-gray-900 dark:text-gray-100 background-container h-[100vh]'>

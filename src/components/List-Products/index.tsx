@@ -1,7 +1,7 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
 import ListProductItem from '../List-ProductItem'
@@ -29,9 +29,9 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
   const dispatch = useAppDispatch()
   const { state } = useLocation()
 
-  const handleTogglePopup = () => {
+  const handleTogglePopup = useCallback(() => {
     setIsShowPopup(!isShowPopup)
-  }
+  }, [isShowPopup])
 
   const paginatePage = (page: number) => {
     dispatch(savePage(page))
@@ -57,7 +57,7 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
   useEffect(() => {
     setProduct(state)
     handleTogglePopup()
-  }, [])
+  }, [handleTogglePopup, state])
 
   return (
     <>

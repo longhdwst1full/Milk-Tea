@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { useState } from 'react'
 
 import { AiFillEye } from 'react-icons/ai'
 import { BiSolidDiscount } from 'react-icons/bi'
@@ -120,4 +120,4 @@ const ShowProduct = ({ product }: Props) => {
   )
 }
 
-export default memo(ShowProduct)
+export default ShowProduct

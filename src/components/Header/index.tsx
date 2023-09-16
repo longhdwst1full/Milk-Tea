@@ -26,7 +26,7 @@ const Header = () => {
         category: iDcategory
       })
     )
-  }, [debouncedSearchValue, iDcategory, page])
+  }, [debouncedSearchValue, dispatch, iDcategory, page, valueSearch])
 
   return (
     <div className='header flex items-center justify-between gap-2 px-4 py-2'>

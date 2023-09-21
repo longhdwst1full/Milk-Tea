@@ -15,6 +15,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
   const dispatch = useAppDispatch()
   const [updateCartDbFn, updateCartDbRes] = useUpdateCartDBMutation()
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, deleteCartDBRes] = useDeleteCartDBMutation()
 
   const handleUpdateQuantity = async (action: string, item: CartItemState, index: number) => {

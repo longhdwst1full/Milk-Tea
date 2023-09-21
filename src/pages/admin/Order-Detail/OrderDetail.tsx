@@ -64,13 +64,17 @@ const OrderDetail = () => {
 
   const handleSetCanceledStatus = () => {
     if (id) {
-      canceledOrder(id).then(() => {
-        if (!isCancelErr) {
-          toast.success('Change status success')
-        } else {
-          toast.error('Change status failed')
-        }
-      })
+      const textReason = prompt('Làm ơn điền lý do hủy đơn hàng')
+      console.log(textReason)
+      if (id && textReason != '' && textReason) {
+        canceledOrder({ id, reasonCancelOrder: textReason }).then(() => {
+          if (!isCancelErr) {
+            toast.success('Change status success')
+          } else {
+            toast.error('Change status failed')
+          }
+        })
+      }
     }
   }
   return (

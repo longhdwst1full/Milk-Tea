@@ -5,7 +5,7 @@ import { AxiosError } from 'axios'
 
 export const getAllCates = createAsyncThunk(
   'cate/getAllCate',
-  async ({ _page = 1, _limit = 10 }: { _page?: number; _limit?: number }) => {
+  async ({ _page = 1, _limit = 10 }: { _page?: number | string; _limit?: number | string }) => {
     try {
       const response = await http.get(`/categories?_page=${_page}&_limit=${_limit}`)
       if (response && response.status === 201) {

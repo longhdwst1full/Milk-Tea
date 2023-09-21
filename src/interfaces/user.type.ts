@@ -1,3 +1,4 @@
+import { AddUserForm } from '../validate/Form'
 import { IRole } from './role.type'
 
 export interface IUser {
@@ -39,4 +40,9 @@ export interface IUserDocs {
   hasNextPage: boolean
   prevPage: number | null
   nextPage: number | null
+}
+
+export interface IAddUser extends AddUserForm {
+  avatar?: string
+  _id: string
 }

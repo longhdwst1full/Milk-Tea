@@ -142,7 +142,7 @@ const AllUsersTable = function ({ users, isLoading, isError }: AllUsersTableProp
                 key={user._id}
                 className={`${currentUser._id === user._id && 'hidden'}  hover:bg-gray-100 dark:hover:bg-gray-700`}
               >
-                <Table.Cell className='w-4 p-4'>{index}</Table.Cell>
+                <Table.Cell className='w-4 p-4'>{index + 1}</Table.Cell>
                 <Table.Cell className='whitespace-nowrap lg:mr-0  p-4 mr-12 space-x-6'>
                   <div className='flex items-center gap-x-4'>
                     <img
@@ -211,7 +211,7 @@ const AddUserModal: FC = function () {
     // mode: 'onChange',
     resolver: yupResolver(AddUserSchema)
   })
-  const onHandleSubmit = (data: any) => {
+  const onHandleSubmit = (data: AddUserForm) => {
     if (data) {
       addUser({ ...data, avatar: urlAvatar.url })
         .unwrap()
@@ -358,8 +358,8 @@ const EditUserModal = function ({ user }: EditUserModalProps) {
     defaultValues: { ...user, role: user.role?._id, address: user.address || '' }
   })
 
-  const onHandleSubmit = (data: any) => {
-    updateUser({ ...data, avatar: urlAvatar.url })
+  const onHandleSubmit = (data: UpdateUserForm) => {
+    updateUser({ ...data, avatar: urlAvatar.url, _id: user._id as string })
       .unwrap()
       .then(() => {
         toast.success('Update user success')

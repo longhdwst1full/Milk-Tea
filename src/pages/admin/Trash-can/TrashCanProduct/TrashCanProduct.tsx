@@ -16,8 +16,11 @@ import './TrashCanProduct.module.scss'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
 
-interface DataType extends IProduct {
-  key: string | React.Key | undefined
+interface DataType extends Omit<IProduct, '_id' | 'images' | 'category'> {
+  key: string
+  images: string
+  _id?: string
+  category: string
 }
 type DataIndex = keyof DataType
 interface TableParams {
@@ -69,17 +72,17 @@ const TrashCanProduct = () => {
     onChange: onSelectChange
   }
   const hasSelected = selectedRowKeys.length > 0
-  let data: any[] = []
+  let data: DataType[] = []
   if (productData && productData.docs) {
     data = productData.docs.map((item: IProduct) => ({
-      key: item._id,
+      key: item?._id,
       name: item.name,
       images: item.images?.[0]?.url || '',
       description: item.description,
       price: item.price,
       sale: item.sale,
       category: item.category?.name,
-      sizes: item.sizes.map((size: any) => ({ name: size.name, price: size.price })),
+      sizes: item.sizes.map((size) => ({ name: size.name, price: size.price })),
       toppings: item.toppings,
       is_deleted: item.is_deleted,
       is_active: item.is_active,
@@ -218,7 +221,7 @@ const TrashCanProduct = () => {
       key: 'action',
       // width: '20%',
       className: 'dark:bg-gray-900 dark:text-[#ffffff]',
-      render: (_) => (
+      render: () => (
         <>
           <Space size='middle' className='hidden md:flex'>
             <Button className='bg-[#d46b08] sm:h-[35px] lg:h-[40px] '>

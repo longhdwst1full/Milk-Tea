@@ -86,7 +86,7 @@ const AddProductModal = ({
   useEffect(() => {
     getDataTopping()
     getCategory()
-  }, [DataCategory, getCategory, getDataTopping])
+  }, [DataCategory])
 
   return (
     <div>
@@ -133,12 +133,11 @@ const AddProductModal = ({
                   name='category'
                   defaultValue={''}
                 >
-                  {DataCategory &&
-                    DataCategory?.docs.map((item) => (
-                      <MenuItem key={item._id} value={item._id}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
+                  {DataCategory?.docs.map((item) => (
+                    <MenuItem key={item._id} value={item._id}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
                 </Select>
                 <span className='block my-2 text-sm text-red-500'>{errors.category && errors.category.message}</span>
               </div>

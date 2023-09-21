@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Modal, Table, Tooltip } from 'flowbite-react'
+import { Button, Modal, Table, Tooltip } from 'flowbite-react'
 import {
   useAddBannerMutation,
   useDeleteBannerMutation,
@@ -7,13 +7,14 @@ import {
   useUploadBannerMutation
 } from '../../../api/banner'
 import Loading from '../../../components/Loading'
-import { HiHome, HiPlus, HiTrash, HiUpload } from 'react-icons/hi'
+import { HiPlus, HiTrash, HiUpload } from 'react-icons/hi'
 import { useState } from 'react'
 import { IBanner } from '../../../interfaces/banner.type'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
 
 const Banner = () => {
   const { data, isLoading } = useGetAllBannersQuery()
@@ -43,15 +44,7 @@ const Banner = () => {
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>
         <div className='w-full mb-1'>
           <div className='mb-4'>
-            <Breadcrumb className='mb-4'>
-              <Breadcrumb.Item href='/admin'>
-                <div className='gap-x-3 flex items-center'>
-                  <HiHome className='text-xl' />
-                  <span className='dark:text-white'>Home</span>
-                </div>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>Banners</Breadcrumb.Item>
-            </Breadcrumb>
+            <BreadCrumb />
             <h1 className='dark:text-white sm:text-2xl text-xl font-semibold text-gray-900'>All Banners</h1>
           </div>
         </div>
@@ -74,7 +67,6 @@ const Banner = () => {
                       <Table.Head className='dark:bg-gray-700 bg-gray-100'>
                         <Table.HeadCell>#</Table.HeadCell>
                         <Table.HeadCell>Image</Table.HeadCell>
-
                         <Table.HeadCell>Actions</Table.HeadCell>
                       </Table.Head>
                       <Table.Body className='dark:divide-gray-700 dark:bg-gray-800 bg-white divide-y divide-gray-200'>
@@ -185,7 +177,7 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
 
   return (
     <>
-      <Button color='primary' onClick={() => setOpen(true)}>
+      <Button color='primary' onClick={() => setOpen(true)} className='w-max'>
         <div className='gap-x-3 flex items-center'>
           <HiPlus className='text-xl' />
           Add Banner

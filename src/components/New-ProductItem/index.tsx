@@ -29,7 +29,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
           </span>
         )}
       </div>
-      <div className='img h-[255px] w-[255px]'>
+      <div className='img md:h-[255px] md:w-[255px]'>
         <img
           className='transition-all group-hover:scale-[1.2] h-full w-full object-cover'
           src={product.images[0]?.url}

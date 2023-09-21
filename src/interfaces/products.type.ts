@@ -42,3 +42,10 @@ export interface IAddProduct {
   sizes: ISize[]
   toppings: ITopping[]
 }
+
+export interface ProductListConfig {
+  _page?: number | string
+  limit?: number | string
+  c?: string
+  searchName?: string
+}

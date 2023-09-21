@@ -41,7 +41,7 @@ const AuthSlice = createSlice({
         Auth.endpoints.updateInfor.matchFulfilled
       ),
       (state, { payload }) => {
-        if (payload.user) {
+        if (payload?.user) {
           state.user = payload.user
         }
       }

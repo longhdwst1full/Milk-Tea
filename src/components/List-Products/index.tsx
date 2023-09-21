@@ -1,6 +1,6 @@
 import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
 import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button } from '..'
@@ -8,42 +8,41 @@ import ListProductItem from '../List-ProductItem'
 import { Pagination } from 'antd'
 import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
-import { RootState } from '../../store/store'
 import SKProduct from '../Skeleton/SKProduct'
 import http from '../../api/instance'
-import { savePage } from '../../store/slices/product.slice'
-import { useAppDispatch } from '../../store/hooks'
-import { useSelector } from 'react-redux'
+import { AxiosError } from 'axios'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface ListProductsProps {
   products: IProductDocs
   error: string
   isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const ListProducts = ({ products, isLoading }: ListProductsProps) => {
+const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
-  const [product, setProduct] = useState<any>({})
-  const { page } = useSelector((state: RootState) => state.persistedReducer.products)
-  const dispatch = useAppDispatch()
-  const { state } = useLocation()
+  const [product, setProduct] = useState<IProduct | object>({})
+  // const { page } = useSelector((state: RootState) => state.persistedReducer.products)
 
+  const { state } = useLocation()
+  const navigate = useNavigate()
   const handleTogglePopup = useCallback(() => {
     setIsShowPopup(!isShowPopup)
   }, [isShowPopup])
 
-  const paginatePage = (page: number) => {
-    dispatch(savePage(page))
-  }
+  // const paginatePage = (page: number) => {
+  //   dispatch(savePage(page))
+  // }
 
   const fetchProductById = async (id: string | number) => {
     try {
       const { data } = await http.get(`/product/${id}`)
       setProduct(data.data)
       setIsShowPopup(true)
-    } catch (error: any) {
-      console.log(error.message)
+    } catch (error) {
+      console.log((error as AxiosError).message)
     }
   }
   const toggleOrder = () => {
@@ -52,11 +51,20 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
 
   const onChange: PaginationProps['onChange'] = (pageNumber) => {
     console.log('Page: ', pageNumber)
+    navigate({
+      pathname: '/products',
+      search: createSearchParams({
+        ...queryConfig,
+        _page: pageNumber.toString()
+      }).toString()
+    })
   }
 
   useEffect(() => {
     setProduct(state)
-    handleTogglePopup()
+    if (state && Object.keys(state)?.length > 0) {
+      handleTogglePopup()
+    }
   }, [handleTogglePopup, state])
 
   return (
@@ -148,7 +156,7 @@ const ListProducts = ({ products, isLoading }: ListProductsProps) => {
         </div>
       </div>
       {product && Object.keys(product).length > 0 && (
-        <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product} />
+        <PopupDetailProduct showPopup={isShowPopup} togglePopup={handleTogglePopup} product={product as IProduct} />
       )}
     </>
   )

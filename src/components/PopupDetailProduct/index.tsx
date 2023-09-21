@@ -106,7 +106,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
         showPopup ? 'opacity-1 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
-      <div className='popup w-[90vw] h-[100vw] md:w-[650px] md:h-[500px] fixed top-[20%] left-[5vw] md:top-[calc(50%-250px)] md:left-[calc(50%-325px)] shadow-[0px_2px_10px_0px_rgba(0,0,0,0.06)] rounded-[3px] pt-[10px] pb-[10px] flex justify-center z-[5] bg-[#fbfbfb]'>
+      <div className='popup w-[90vw] h-[100vw] md:w-[650px] md:h-[500px] fixed top-[20%] left-[5vw] md:top-[calc(50%-500px)] lg:top-[calc(50%-250px)] md:left-[calc(50%-325px)] shadow-[0px_2px_10px_0px_rgba(0,0,0,0.06)] rounded-[3px] pt-[10px] pb-[10px] flex justify-center z-[5] bg-[#fbfbfb]'>
         <div onClick={togglePopup} className='close-btn absolute top-2 right-2 cursor-pointer z-[6]'>
           <FaTimes className='text-2xl font-[900] transition-all hover:scale-[1.2]' />
         </div>

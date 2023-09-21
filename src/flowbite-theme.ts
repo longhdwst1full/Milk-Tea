@@ -55,14 +55,20 @@ const flowbiteTheme: CustomFlowbiteTheme = {
   sidebar: {
     root: {
       base: 'flex fixed top-0 left-0 z-20 flex-col flex-shrink-0 pt-16 h-full duration-75 border-r border-gray-200 lg:flex transition-width dark:border-gray-700',
-      inner: 'h-full overflow-y-auto hidden-scroll-bar overflow-x-hidden rounded bg-gray-50 py-4 px-3 dark:bg-gray-800'
+      inner: 'h-full overflow-y-auto hidden-scroll-bar overflow-x-hidden bg-gray-50 py-4 px-3 dark:bg-gray-800'
+    },
+    item: {
+      base: 'flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-[#2563EB]',
+      icon: {
+        base: 'h-6 w-6 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white'
+      }
     },
 
     collapse: {
       button:
         'group flex w-full items-center rounded-lg p-2 text-base font-normal text-gray-900 transition duration-75 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700',
       icon: {
-        base: 'h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white',
+        base: 'h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white ',
         open: {
           off: '',
           on: 'text-gray-900'

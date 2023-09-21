@@ -9,7 +9,7 @@ const BreadCrumb = () => {
     <Breadcrumb className='mb-4'>
       <HiHome className='text-xl mr-[7px]' />
       {breadCrumbItem?.map((item, index) => (
-        <Breadcrumb.Item key={index} className='capitalize dark:text-white font-[600]'>
+        <Breadcrumb.Item key={index} className='capitalize  font-[600] da'>
           <Link to={`/${breadCrumbItem.slice(0, index + 1).join('/')}`}>{item}</Link>
         </Breadcrumb.Item>
       ))}

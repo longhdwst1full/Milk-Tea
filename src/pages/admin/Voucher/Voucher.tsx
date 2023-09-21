@@ -131,6 +131,7 @@ type VouchersTableProps = {
 }
 const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
   // const { data: vouchers, isLoading } = useGetAllVouchersQuery()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<(string[] | (string | number | boolean | undefined)[][])[]>([])
   const [deleteVoucher, { isError: isDeleteErr, isLoading: isDelteLoading }] = useDeleteVoucherMutation()
   useEffect(() => {
@@ -225,7 +226,7 @@ const VouchersTable = ({ vouchers, isLoading }: VouchersTableProps) => {
 
                     <Tooltip content='Xóa voucher'>
                       <Button
-                        disabled={!isExpiredVoucher(item.endDate as string)}
+                        // disabled={!isExpiredVoucher(item.endDate as string)}
                         color='failure'
                         onClick={() => handleDelete(item._id as string)}
                       >

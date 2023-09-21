@@ -23,16 +23,18 @@ const NotFound = () => {
           <h2 className='mb-8 font-extrabold text-9xl text-[#D3B673] '>
             <span className='sr-only'>Error</span>404
           </h2>
-          <p className='text-2xl font-semibold text-white md:text-3xl'>Sorry, we couldn't find this page.</p>
+          <p className='text-2xl font-semibold text-white md:text-3xl'>
+            Xin lỗi, chúng tôi không thể tìm thấy trang này.
+          </p>
           <p className='mt-4 mb-10 text-white  dark:text-gray-400'>
-            But dont worry, you can find plenty of other things on our homepage.
+            Nhưng đừng lo lắng, bạn có thể tìm thấy nhiều thứ khác trên trang chủ của chúng tôi.
           </p>
           <Link
             rel='noopener noreferrer'
             to='/'
             className='px-8 py-5 font-bold rounded bg-[#D3B673] text-white dark:bg-violet-400  hover:bg-white hover:text-[#D3B673] transition-all'
           >
-            Go back after {second}s
+            Quay lại sau {second}s
           </Link>
         </div>
       </div>

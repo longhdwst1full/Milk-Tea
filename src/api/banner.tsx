@@ -24,7 +24,7 @@ const BannerApi = createApi({
     }),
 
     //upload banner
-    uploadBanner: builder.mutation<IResImage, void>({
+    uploadBanner: builder.mutation<IResImage, any>({
       query: (file) => ({
         url: '/api/upload-banner',
         method: 'POST',

@@ -8,14 +8,17 @@ import SKProduct from '../Skeleton/SKProduct'
 import { getIdCate } from '../../store/slices/categories'
 import { savePage } from '../../store/slices/product.slice'
 import { useAppDispatch } from '../../store/hooks'
+import { Link, createSearchParams } from 'react-router-dom'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface SidebarCateProps {
   categories: ICategory[]
   error: string
   isLoading: boolean
+  queryConfig: IQueryConfig
 }
 
-const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
+const SidebarCate = ({ categories, error, isLoading, queryConfig }: SidebarCateProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const dispatch = useAppDispatch()
 
@@ -44,7 +47,21 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
             onClick={() => dispatch(getIdCate(''))}
             className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
           >
-            <div className='cat-name capitalize'>All</div>
+            <div className='cat-name capitalize'>
+              <Link
+                className='block'
+                to={{
+                  pathname: '/products',
+                  search: createSearchParams({
+                    ...queryConfig,
+                    searchName: '',
+                    c: 'all'
+                  }).toString()
+                }}
+              >
+                All
+              </Link>
+            </div>
           </div>
           {categories &&
             categories?.length > 0 &&
@@ -57,7 +74,20 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
                 key={category._id}
                 className='cursor-pointer hover:bg-gray-100 transition-all duration-300 px-[16px] flex justify-between border border-transparent border-b-[#f1f1f1] py-[8px] last:border-none'
               >
-                <div className='cat-name capitalize'>{category.name}</div>
+                <div className='cat-name capitalize'>
+                  <Link
+                    className='block'
+                    to={{
+                      pathname: '/products',
+                      search: createSearchParams({
+                        ...queryConfig,
+                        c: category._id as string
+                      }).toString()
+                    }}
+                  >
+                    {category.name}
+                  </Link>
+                </div>
                 <div className='cat-amount text-[#8a733f]'>{category.products?.length}</div>
               </div>
             ))}

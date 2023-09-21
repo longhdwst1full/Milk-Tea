@@ -102,7 +102,7 @@
   .voucher-item {
     // display: flex;
     // flex-direction: column;
-    background-color: #d0a151;
+    background-color: #feef6e;
     width: calc(25% - 15px);
     padding: 6px 12px;
     margin: 0 15px 15px 0;
@@ -111,7 +111,12 @@
     box-shadow: 2px 2px 2px 0px #e0e0e0;
     cursor: pointer;
   }
-
+  // .list-voucher:hover .voucher-item:not(:hover){
+  //   filter: blur(3px);
+  // }
+  .voucher-item:hover {
+    background-color: #fff59a;
+  }
   .center-slider {
     position: absolute;
     left: 50%;

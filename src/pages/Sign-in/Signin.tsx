@@ -75,6 +75,7 @@ const Signin = () => {
               name='account'
               register={register}
               error={errors.account?.message}
+              typeInput='text'
             />
             <Input
               type='auth'
@@ -84,7 +85,9 @@ const Signin = () => {
               register={register}
               typeInput='password'
             />
-            <div className='text-right mt-4 font-bold text-[#d4b774] text-sm'>Quên mật khẩu?</div>
+            <div className='text-right mt-4 font-bold text-[#d4b774] text-sm'>
+              <Link to={'/forgot-password'}>Quên mật khẩu?</Link>
+            </div>
             <Button type='auth' size='large' shape='circle'>
               Đăng nhập
             </Button>

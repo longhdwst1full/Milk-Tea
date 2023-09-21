@@ -1,4 +1,3 @@
-import { type FC } from 'react'
 import { DarkThemeToggle, Navbar, Avatar, Dropdown } from 'flowbite-react'
 import { BiLogOut } from 'react-icons/bi'
 import { useLogoutMutation } from '../../../api/Auth'
@@ -8,7 +7,12 @@ import { toast } from 'react-toastify'
 import { RootState } from '../../../store/store'
 import { useAppSelector } from '../../../store/hooks'
 import { FaBell } from 'react-icons/fa'
-const AdminNavbar: FC = function () {
+import { AiOutlineMenu } from 'react-icons/ai'
+
+type AdminNavbarProps = {
+  toggleSideBar: () => void
+}
+const AdminNavbar = function ({ toggleSideBar }: AdminNavbarProps) {
   const [logout] = useLogoutMutation()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
 
@@ -28,14 +32,18 @@ const AdminNavbar: FC = function () {
       }
     })
   }
+
   return (
     <Navbar fluid>
       <div className='w-full p-3 lg:px-5 lg:pl-3'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center'>
             <Navbar.Brand href='/admin'>
-              <img alt='' src='/logo_removebg.png' className='mr-3 h-6uu sm:h-8' />
+              <img alt='' src='/logo_removebg.png' className='mr-3 md:h-6 h-10' />
             </Navbar.Brand>
+            <div className='block lg:hidden cursor-pointer' onClick={toggleSideBar}>
+              <AiOutlineMenu className='dark:text-white text-2xl text-black' />
+            </div>
           </div>
           <div className='flex items-center gap-y-3 gap-x-4'>
             <DarkThemeToggle accessKey='' about='' />

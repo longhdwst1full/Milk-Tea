@@ -2,7 +2,7 @@ import { Box, Button, Paper, Stack, Typography, CircularProgress } from '@mui/ma
 import { BiSolidPlusCircle, BiFile, BiTrash } from 'react-icons/bi'
 import { IImage } from '../../interfaces/image.type'
 import { useDeleteImagesProductMutation, useUploadImagesProductMutation } from '../../api/Product'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import SKUpload from '../Skeleton/SKUpload'
 import { Link } from 'react-router-dom'
 
@@ -39,7 +39,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
   useEffect(() => {
     setLoadingUpload(isLoading)
     setLoadingDelete(deleting)
-  }, [isLoading, deleting, setLoadingUpload, setLoadingDelete])
+  }, [isLoading, deleting])
 
   return (
     <>
@@ -160,4 +160,4 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
   )
 }
 
-export default BoxUpload
+export default memo(BoxUpload)

@@ -15,9 +15,21 @@ type Props = {
   error?: string
   setText?: React.Dispatch<React.SetStateAction<any>>
   searchValue?: string
+  autoFocus?: boolean
 }
 
-const Input = ({ placeholder, type, prefix, name, typeInput, register, error, setText, searchValue }: Props) => {
+const Input = ({
+  placeholder,
+  type,
+  prefix,
+  name,
+  typeInput,
+  register,
+  error,
+  setText,
+  searchValue,
+  autoFocus
+}: Props) => {
   const dispatch = useAppDispatch()
   return (
     <div
@@ -35,7 +47,7 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error, se
             'w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem]'
           }`}
           autoComplete='off'
-          autoFocus
+          autoFocus={autoFocus}
           placeholder={placeholder && placeholder}
           type={typeInput}
           {...register?.(name)}
@@ -44,7 +56,6 @@ const Input = ({ placeholder, type, prefix, name, typeInput, register, error, se
             if (setText) {
               setText(e.target.value)
               dispatch(saveValueSearch(e.target.value))
-              dispatch(savePage(1))
             }
           }}
           name={name}

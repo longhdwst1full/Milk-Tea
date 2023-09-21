@@ -21,7 +21,7 @@ const News = () => {
             <Meta
               avatar={<Avatar src='/logo_icon.png' />}
               title='“Back to School” cùng Kem dâu tây ngon quên lối về của ToCoToCo'
-              description='Khúc biến tấu của kem dâu tây vừa ra mắt của ToCoToCo với 
+              description='Khúc biến tấu của kem dâu tây vừa ra mắt của ToCoToCo với
           nhiều cung bậc khác nhau đã đem đến những trải nghiệm mới mẻ cho các bạn trẻ […]'
             />
           </Card>

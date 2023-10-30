@@ -23,9 +23,9 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
         {product?.sale !== 0 && product.sizes && (
           <span
             className='flex items-center justify-center h-10 w-10 font-bold
-      bg-[#282828] text-[#d3b673] rounded-[50%]'
+      bg-[#282828] text-[#d3b673] rounded-[50%]  p-6'
           >
-            {saleCaculator(product.sizes[0]?.price, product.sale as number)}%
+            -{saleCaculator(product.sale, product.sizes[0].price)}
           </span>
         )}
       </div>
@@ -43,7 +43,11 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
         <div className='flex items-center mt-6 item-price gap-x-2'>
           <span className='text-[#8a733f] text-sm font-[700] '>
             {product.sale && product.sizes
-              ? formatCurrency(product.sizes[0].price - product.sale)
+              ? formatCurrency(
+                  product.sale
+                    ? product?.sizes[0]?.price * ((100 - product.sale) / 100)
+                    : product?.sizes[0]?.price - product.sale
+                )
               : formatCurrency(product.sizes && product.sizes[0].price)}
           </span>
           {product?.sale !== 0 && (

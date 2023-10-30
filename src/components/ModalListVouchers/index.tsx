@@ -46,6 +46,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
       // style={{ top: 0 }}
       onCancel={onCancel}
       centered
+      width={660}
       footer={
         vouchers &&
         vouchers?.data?.docs.length > 0 && [
@@ -63,7 +64,7 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
         ]
       }
     >
-      <Row className='flex gap-y-3 justify-between max-h-[450px] overflow-y-auto hidden-scroll-bar'>
+      <Row className='list-voucher flex items-center justify-center md:justify-start gap-3 max-h-[450px] overflow-y-auto hidden-scroll-bar'>
         {vouchers && vouchers?.data?.docs.length > 0 ? (
           vouchers?.data?.docs?.map((voucher) => (
             <Radio.Group
@@ -76,8 +77,10 @@ const ModalListVouchers = ({ isOpen, toggleModal, voucherChecked, setVoucherChec
               className='my-2 '
             >
               <Radio className='select-none' disabled={isExpiredVoucher(voucher?.endDate as string)} value={voucher}>
-                <div className='flex flex-col text-center items-center justify-center gap-x-2'>
-                  <GiTicket className='text-2xl' /> {`${voucher.code}  ${formatCurrency(voucher.sale)}`}
+                <div className='flex flex-col text-center items-center justify-center'>
+                  <GiTicket className='text-2xl' />
+                  <span>Mã: {voucher.code}</span>
+                  <span> Giảm: {formatCurrency(voucher.sale)}</span>
                 </div>
               </Radio>
             </Radio.Group>

@@ -40,12 +40,13 @@ const MyInfor = () => {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    await convertToBase64(file!).then((data) => {
-      setAvatar({
-        file: file,
-        base64: data
-      })
-    })
+    file &&
+      (await convertToBase64(file).then((data) => {
+        setAvatar({
+          file: file,
+          base64: data
+        })
+      }))
   }
 
   const handleDateChange = (selectedDates: Date[]) => {
@@ -86,17 +87,17 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
-    console.log(dateUpdate)
+    // console.log(dateUpdate)
 
     if (!errDate) {
       if (avatar.file) {
         const form = new FormData()
         form.append('images', avatar.file)
         uploadAvatar(form).then(({ data: { urls } }: any) => {
-          ChangeInfor({ ...dateUpdate, birthday: birthday!, avatar: urls[0].url })
+          ChangeInfor({ ...dateUpdate, birthday: birthday, avatar: urls[0].url })
         })
       } else {
-        ChangeInfor({ ...dateUpdate, birthday: birthday! })
+        ChangeInfor({ ...dateUpdate, birthday: birthday })
       }
     }
   }
@@ -156,6 +157,20 @@ const MyInfor = () => {
                       readOnly
                     />
                   </div>
+                  {['admin', 'Shipper', 'Staff'].includes(user.role) ? (
+                    <div className='item-profile w-[50%] my-3 '>
+                      <label className='block py-2 text-[#959393]'>Chức vụ</label>
+                      <input
+                        className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
+                        type='text'
+                        name='grade'
+                        defaultValue={user.role}
+                        readOnly
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
                   <div className='item-profile w-[50%] my-3 '>
                     <label className='block py-2 text-[#959393]'>Điểm</label>
                     <input
@@ -215,7 +230,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Nam</span>
+                        <span>Nam</span>
                       </label>
                       <label htmlFor='' className='flex items-center'>
                         <input
@@ -226,7 +241,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Nữ</span>
+                        <span>Nữ</span>
                       </label>
                       <label htmlFor='' className='flex items-center'>
                         <input
@@ -237,7 +252,7 @@ const MyInfor = () => {
                           id=''
                           className='cursor-pointer'
                         />
-                        <span>:Khác</span>
+                        <span>Khác</span>
                       </label>
                     </div>
                     <span className='text-red-500'>{errors.gender && errors.gender.message}</span>

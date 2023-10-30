@@ -19,10 +19,7 @@ const CardOrder = ({ product }: CardOrderProps) => {
   const [_, deleteCartDBRes] = useDeleteCartDBMutation()
 
   const handleUpdateQuantity = async (action: string, item: CartItemState, index: number) => {
-    console.log('vafo k')
-
     if (!user._id && !user.accessToken) {
-      console.log('1')
       if (action === 'decreamentQuantity') {
         return dispatch(
           decreamentQuantity({
@@ -51,11 +48,6 @@ const CardOrder = ({ product }: CardOrderProps) => {
       let quantity: number = item.quantity
       action === 'decreamentQuantity' && quantity--
       action === 'increamentQuantity' && quantity++
-      // if (item.quantity == 1 && action === 'decreamentQuantity') {
-      //   return deleteCartDBFn(product._id as string)
-      // }
-      // console.log('2')
-
       return updateCartDbFn({
         quantity: item.quantity == 1 && action === 'decreamentQuantity' ? 0 : quantity,
         _id: product._id as string,
@@ -64,7 +56,6 @@ const CardOrder = ({ product }: CardOrderProps) => {
       })
     }
   }
-  // console.log(product)
 
   return (
     <div className='card flex justify-between items-center border border-transparent border-b-[#f1f1f1] tracking-tight '>

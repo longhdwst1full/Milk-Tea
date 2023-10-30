@@ -1,5 +1,3 @@
-'use client'
-
 import 'react-toastify/dist/ReactToastify.css'
 import { Flowbite } from 'flowbite-react'
 import { RouterProvider } from 'react-router-dom'

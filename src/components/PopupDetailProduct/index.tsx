@@ -2,13 +2,13 @@ import { FaAngleDown, FaTimes } from 'react-icons/fa'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useEffect, useState } from 'react'
 
+import { CartItem } from '../../store/slices/types/cart.type'
 import { IProduct } from '../../interfaces/products.type'
 import { addToCart } from '../../store/slices/cart.slice'
 import { formatCurrency } from '../../utils/formatCurrency'
 import styles from './PopupDetailProduct.module.scss'
 import { useCreateCartDBMutation } from '../../api/cartDB'
 import { v4 as uuidv4 } from 'uuid'
-import { CartItem } from '../../store/slices/types/cart.type'
 
 type PopupDetailProductProps = {
   showPopup: boolean
@@ -23,13 +23,14 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
   const [quantity, setQuantity] = useState<number>(1)
   const [totalToppingPrice, setTotalToppingPrice] = useState<number>(0)
   const [addCartDbFn] = useCreateCartDBMutation()
+  const [sizes, setSizes] = useState<{ name: string; price: number }[]>([])
 
   // const [nameRadioInput, setNameRadioInput] = useState<string>(product.sizes[0].name);
   const [nameRadioInput, setNameRadioInput] = useState<{
     name: string
     price: number
     _id?: string
-  }>(product.sizes[0])
+  }>()
   const [checkedToppings, setCheckedToppings] = useState<{ name: string; price: number; _id: string }[]>([])
 
   const { user } = useAppSelector((state) => state.persistedReducer.auth)
@@ -53,21 +54,24 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     }
   }
   // const handleGetInfoPrd = (data: any) => {
-  //   console.log(data)
+
   // }
 
   useEffect(() => {
-    setPrice(product.sizes[0]?.price)
+    if (product.sizes) {
+      setPrice(product?.sizes[0]?.price ?? 0)
+      setNameRadioInput(product?.sizes[0] ?? { name: '', price: 0 })
+      setSizes([...product.sizes])
+    }
     setQuantity(1)
     setTotalToppingPrice(0)
     setCheckedToppings([])
     // setNameRadioInput(product.sizes[0].name);
-    setNameRadioInput(product.sizes[0])
 
     //reset checkbox when popup close
     // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     // checkboxes.forEach((item: any) => (item.checked = false));
-  }, [product.sizes, showPopup])
+  }, [product])
 
   const handleAddToCart = () => {
     togglePopup()
@@ -77,8 +81,10 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       toppings: checkedToppings,
       quantity,
       image: product.images[0]?.url ?? '',
-      price: nameRadioInput.price - product.sale,
-      total: (price - product.sale) * quantity,
+      price: (product.sale
+        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
+        : nameRadioInput && nameRadioInput?.price - product.sale) as number,
+      total: product.sale ? price * ((100 - product.sale) / 100) * quantity : (price - product.sale) * quantity,
       product: product._id
     }
 
@@ -121,69 +127,70 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                   alt='product image'
                 />
               </div>
-              <div className='right flex-1 md:flex-none ml-4'>
+              <div className='right md:flex-none flex-1 ml-4'>
                 <div className='title mr-4'>
-                  <h4 className='text-lg font-semibold line-clamp-2'>{product.name}</h4>
+                  <h4 className='line-clamp-2 text-lg font-semibold'>{product.name}</h4>
                 </div>
                 <div className='price flex items-end mt-4'>
                   <span className='new-price pr-[10px] text-[#8a733f] font-semibold text-sm'>
-                    {product.sale && product.sale > 0 ? formatCurrency(price - product?.sale) : formatCurrency(price)}
+                    {product.sale > 0
+                      ? formatCurrency(
+                          product.sale &&
+                            // ? price * ((100 - product.sale) / 100) * quantity
+                            (price - product.sale) * quantity
+                        )
+                      : formatCurrency(price * quantity)}
                   </span>
-                  {product.sale ? <span className='old-price text-xs line-through'>{formatCurrency(price)}</span> : ''}
+                  {product.sale ? (
+                    <span className='old-price text-xs line-through'>{formatCurrency(price * quantity)}</span>
+                  ) : (
+                    ''
+                  )}
+                  {/* {product.sale ? <span className='old-price text-xs line-through'>{formatCurrency(price)}</span> : ''} */}
                 </div>
-                <div className='quantity flex items-start md:items-center gap-y-2 flex-col md:flex-row mt-5'>
+                <div className='quantity md:items-center gap-y-2 md:flex-row flex flex-col items-start mt-5'>
                   <div className='change-quantity flex'>
                     <div
                       onClick={() => (quantity === 1 ? setQuantity(1) : setQuantity((prev) => prev - 1))}
-                      className='decrease text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[15px] text-[26px] font-semibold text-center cursor-pointer select-none'
+                      className='decrease text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[19px] text-[26px] font-semibold  text-center cursor-pointer select-none '
                     >
                       -
                     </div>
                     <div className='amount select-none px-[10px] text-sm'>{quantity}</div>
                     <div
                       onClick={() => setQuantity((prev) => prev + 1)}
-                      className='increase text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[15px] text-[26px] font-semibold text-center cursor-pointer select-none'
+                      className='increase text-white bg-[#799dd9] w-5 h-5 rounded-[50%] leading-[20px] text-[26px] font-semibold  text-center cursor-pointer select-none'
                     >
                       +
                     </div>
                   </div>
                   <button
+                    // onClick={() => {
+                    //   handleAddToCart()
+                    // }}
+                    className='cursor-auto btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
+                  >
+                    +
+                    {product.sale > 0
+                      ? formatCurrency(
+                          product.sale &&
+                            // ? price * ((100 - product.sale) / 100) * quantity
+                            (price - product.sale) * quantity
+                        )
+                      : formatCurrency(price * quantity)}
+                  </button>
+                  <button
                     onClick={() => {
                       handleAddToCart()
                     }}
-                    className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[30px] text-sm'
+                    className='btn-price bg-[#d8b979] text-white px-5 h-8 rounded-[32px] leading-[32px] md:ml-[10px] text-sm'
                   >
-                    +
-                    {product.sale && product.sale > 0
-                      ? formatCurrency((price - product.sale) * quantity)
-                      : formatCurrency(price * quantity)}
+                    Thêm vào giỏ
                   </button>
                 </div>
               </div>
             </div>
             <div className={`customize h-1/2 overflow-y-scroll p-5 grow mb-5 ${styles.popup_body}`}>
-              {/* <div className="custom-type mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn loại</div>
-                  <div className="right">
-                    <FaAngleDown />
-                  </div>
-                </div>
-                <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded">
-                  <label className={`${styles.container_radio} block w-full group`}>
-                    <span>Lạnh</span>
-                    <input
-                      className="absolute opacity-0"
-                      defaultChecked
-                      type="radio"
-                      name="type"
-                      value="cold"
-                    />
-                    <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-                  </label>
-                </div>
-              </div> */}
-
               <div className='custom-size mb-2'>
                 <div className='title flex items-center justify-between px-5 mb-2'>
                   <div className='left text-base font-semibold'>Chọn size</div>
@@ -193,12 +200,12 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                 </div>
                 <div className='custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0px_rgba(0,0,0,.05)] rounded'>
                   {product &&
-                    product?.sizes.map((item) => {
+                    product.sizes &&
+                    sizes.map((item) => {
                       return (
                         <label
                           onChange={() => {
                             setPrice(item.price + totalToppingPrice)
-                            // setNameRadioInput(item.name);
                             setNameRadioInput(item)
                           }}
                           key={uuidv4()}
@@ -207,7 +214,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                           <span className='block'>Size {item.name}</span>
                           <input
                             className='absolute opacity-0'
-                            defaultChecked={product.sizes[0].price === item.price ? true : false}
+                            defaultChecked={nameRadioInput?.price === item.price ? true : false}
                             type='radio'
                             name='size'
                             value={item.price}
@@ -218,30 +225,6 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
                     })}
                 </div>
               </div>
-
-              {/* <div className="custom-sugar mb-2">
-                <div className="title flex items-center justify-between px-5 mb-2">
-                  <div className="left text-base font-semibold">Chọn đường</div>
-                  <div className="right">
-                    <FaAngleDown />
-                  </div>
-                </div>
-                <div className="custom-content flex px-5 bg-white flex-wrap shadow-[0px_0px_12px_0_rgba(0,0,0,.05)] rounded">
-                  {[0, 1, 2, 3, 4, 5]?.map((_, index: number) => (
-                    <label key={index} className={`${styles.container_radio} block w-1/2 group`}>
-                      <span>Size 1 LÍT</span>
-                      <input
-                        className="absolute opacity-0"
-                        defaultChecked
-                        type="radio"
-                        name="sug"
-                        value="cold"
-                      />
-                      <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-                    </label>
-                  ))}
-                </div>
-              </div> */}
 
               <div className='custom-topping'>
                 <div className='title flex items-center justify-between px-5 mb-2'>

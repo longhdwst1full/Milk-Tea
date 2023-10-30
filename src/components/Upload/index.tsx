@@ -31,7 +31,7 @@ const BoxUpload = ({ urls, setUrl, setLoadingUpload, setLoadingDelete }: Props) 
     fileList.forEach((file: File) => {
       formData.append('images', file)
     })
-    uploadImages(formData).then(({ data }: any) => {
+    uploadImages(formData as any).then(({ data }: any) => {
       setUrl((pre: IImage[]) => [...pre, ...data.urls])
     })
   }

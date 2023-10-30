@@ -13,7 +13,7 @@ const NewProducts = () => {
   const { products } = useAppSelector((state: RootState) => state.persistedReducer.products)
 
   useEffect(() => {
-    dispatch(getAllProducts({ page: 1, limit: 4 }))
+    dispatch(getAllProducts({ page: 1, limit: 8 }))
   }, [dispatch])
   return (
     <section className='pt-[50px] pb-[60px] mx-auto sm:w-full  max-w-[1140px]'>

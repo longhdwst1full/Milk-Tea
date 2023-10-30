@@ -54,7 +54,6 @@ const cartSlice = createSlice({
         } else {
           /* nếu mà trùng size & trùng tên => không có topping => thêm mới sản phẩm */
           if (products[productIndex].items[productSizeIndex].toppings.length === 0 && product.toppings.length == 0) {
-            console.log('th1')
             /* tăng số lượng lên */
             state.items[productIndex].items[productSizeIndex].quantity += product.quantity
             state.items[productIndex].items[productSizeIndex].total += product.total
@@ -65,15 +64,14 @@ const cartSlice = createSlice({
           else {
             // TH1 check topping có chùng nhau k
             // && state.items[productIndex].items[productSizeIndex].quantity === 1
-            console.log('th3')
-            console.log(product)
+
             /* kiểm tra xem topping có trùng nhau hay không */
             /* nếu mà có trùng nhau hết thì tăng số lượng lên không thì tạo mới sản phẩn */
             for (let i = 0; i < state.items[productIndex].items.length; i++) {
               // console.log(state.items[])
               const isEqual = _.isEqual(state.items[productIndex].items[i].toppings, product.toppings)
               if (isEqual === true) {
-                console.log(3.1)
+                // console.log(3.1)
                 state.items[productIndex].items[i].quantity += product.quantity
                 state.items[productIndex].items[i].total += product.total
                 return
@@ -82,7 +80,7 @@ const cartSlice = createSlice({
             // TH2  topping không chùng nhau=> thêm mới
 
             /* nếu mà không có topping nào trùng nhau thì sẽ thêm sản phẩm mới */
-            console.log(3.2)
+            // console.log(3.2)
             const newProduct = {
               image: product.image,
               price: product.price,

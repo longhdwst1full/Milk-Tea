@@ -1,10 +1,9 @@
 import { Button, Input } from '../../components'
-import { FaAngleDown, FaMapMarkerAlt, FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
+import { FaAngleDown, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { AiOutlinePlusCircle } from 'react-icons/ai'
 import { BiSolidUser } from 'react-icons/bi'
 import { CartItemState } from '../../store/slices/types/cart.type'
 import CheckoutItem from '../../components/Checkout-Item'
@@ -20,19 +19,31 @@ import { useForm } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
+import YaSuoMap from '../../components/map/YaSuoMap'
+import YasuoGap from '../../components/map/YasuoGap'
+import ListStore from '../../interfaces/Map.type'
+import { message } from 'antd'
+import { useDeleteCartDBMutation } from '../../api/cartDB'
 
 //
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-
   const [orderAPIFn] = useCreateOrderMutation()
-  const [btnShipOrder, setBtnShipOrder] = useState<boolean>(false)
-  const dispatch = useAppDispatch()
 
-  // const formIdRef = useRef<HTMLFormElement>(null)
+  const [gapStore, setGapStore] = useState<ListStore[]>([])
+  const dispatch = useAppDispatch()
+  const [OpenGapStore, setOpenGapStore] = useState(false)
+  const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
+  const [pickGapStore, setPickGapStore] = useState({} as ListStore)
+  const [deleteCartDBFn] = useDeleteCartDBMutation()
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
+  }
+
+  const toggleOpenGapStore = () => {
+    setOpenGapStore(false)
   }
   const {
     register,
@@ -41,7 +52,6 @@ const Checkout = () => {
     setValue,
     reset
   } = useForm({
-    // mode: 'onSubmit',
     resolver: yupResolver(UserCheckoutSchema)
   })
 
@@ -49,11 +59,20 @@ const Checkout = () => {
   const dataInfoUser = useAppSelector((state) => state.persistedReducer.auth)
   const textNoteOrderRef = useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setValue('shippingLocation', address ?? '')
+  }, [address, setValue])
+  useEffect(() => {
+    dataCartCheckout.items.length < 1 && navigate('/products/checkout/payment-result', { state: 'success' })
+  }, [dataCartCheckout.items, navigate])
+
   useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
       dataInfoUser.user.address && setValue('shippingLocation', dataInfoUser.user.address)
     }
+    // YaSuoMap();
   }, [dataInfoUser.user, dataInfoUser.user.address, dataInfoUser.user.username, setValue])
 
   const getData = useCallback(
@@ -64,7 +83,7 @@ const Checkout = () => {
         item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { total, ...rest } = data
+            const { total, _id, ...rest } = data
             arrTotal.push(rest)
           } else {
             let value: number | undefined
@@ -85,15 +104,27 @@ const Checkout = () => {
     [dataCartCheckout.items]
   )
 
-  const moneyShipping = useMemo(() => 117000, [])
-  const moneyPromotion = useMemo(() => 0 as number, [])
+  const moneyShipping = useMemo(() => {
+    if (pickGapStore.value) {
+      return (pickGapStore.value - 2000) * 2
+    } else if ((gapStore[0]?.value as number) > 0) {
+      return ((gapStore[0]?.value as number) - 2000) * 2
+    }
+    return 0
+  }, [gapStore, pickGapStore])
+  // total khuyen mai
+  const moneyPromotion = useMemo(() => voucherChecked.sale ?? 0, [voucherChecked])
+
+  // tong 1 san pham
   const totalMoneyCheckout = useMemo(() => {
     const all = getData('total') as number[]
+
     return all.reduce((acc: number, curent: number) => {
       const a = acc + curent
       return a
     }, 0)
   }, [getData])
+
   const totalQuantity = useMemo(() => {
     const all = getData('quantity') as number[]
 
@@ -103,17 +134,15 @@ const Checkout = () => {
     return a
   }, [getData])
 
+  // tong cong tien
   const totalAllMoneyCheckOut = useMemo(() => {
-    return moneyShipping + moneyPromotion + totalMoneyCheckout
+    return moneyShipping + totalMoneyCheckout - moneyPromotion
   }, [moneyPromotion, moneyShipping, totalMoneyCheckout])
 
   const handleFormInfoCheckout = handleSubmit((data) => {
-    console.log('adf')
     if (dataInfoUser.user.accessToken === '' && dataInfoUser.user._id == '') {
       return navigate('/signin')
     } else {
-      // const productOrder = getData('list')
-      console.log(data)
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
         items: getData('list'),
@@ -122,13 +151,13 @@ const Checkout = () => {
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
         paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
-          name: data.nameOther != '' ? (data.nameOther as string) : data.name,
-          phone: data.phoneOther != '' ? (data.phoneOther as string) : data.phone,
-          address: data.shippingLocationOther != '' ? (data.shippingLocationOther as string) : data.shippingLocation,
-          noteShipping: data.shippingNoteOther != '' ? data.shippingNoteOther : data.shippingNote
+          name: data.name,
+          phone: data.phone,
+          address: data.shippingLocation,
+          noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
         }
       }
-      console.log(dataForm)
+
       orderAPIFn(dataForm)
         .unwrap()
         .then((res) => {
@@ -136,24 +165,29 @@ const Checkout = () => {
             return toast.error('Đặt hàng thất bại' + res.error.data.error)
           } else {
             reset()
+            dataCartCheckout.items.length &&
+              dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
             dispatch(resetAllCart())
             toast.success('Bạn đặt hàng thành công')
+
             // alert(data.shippingNote)
-            // reset();
+
             // dispatch(resetAllCart());
             // navigate('http://localhost:4000/vnpay');
-            const returnUrl = 'http://localhost:5173' // url trả về
-            window.location.href =
-              'http://ketquaday99.com/vnpay/fast?amount=' +
-              dataForm.total +
-              '&txt_inv_mobile=' +
-              data.phone +
-              '&txt_billing_fullname=' +
-              data.name +
-              '&txt_ship_addr1=' +
-              data.shippingLocation +
-              '&returnUrl=' +
-              returnUrl
+            if (data.paymentMethod == 'vnpay') {
+              const returnUrl = 'http://localhost:5173' // url trả về
+              window.location.href =
+                'http://ketquaday99.com/vnpay/fast?amount=' +
+                dataForm.total +
+                '&txt_inv_mobile=' +
+                data.phone +
+                '&txt_billing_fullname=' +
+                data.name +
+                '&txt_ship_addr1=' +
+                data.shippingLocation +
+                '&returnUrl=' +
+                returnUrl
+            }
           }
         })
     }
@@ -162,7 +196,7 @@ const Checkout = () => {
   return (
     <div className='w-auto lg:w-[1200px] max-w-[1200px] my-0 mx-auto'>
       <div className='detail gap-y-10 lg:gap-y-0 lg:flex-row flex flex-col justify-between mt-6'>
-        <form id='form_info_checkout' className='left w-full lg:w-[60%]' method='get' action='.pay'>
+        <form id='form_info_checkout' className='left w-full lg:w-[60%]'>
           <div className='title flex justify-between items-center px-5 mb-[7px] '>
             <div>
               <h2 className='text-sm font-bold'>Thông tin giao hàng</h2>
@@ -171,7 +205,7 @@ const Checkout = () => {
               <FaAngleDown />
             </div>
           </div>
-          <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5'>
+          <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] p-5'>
             <div className='py-[10px]'>
               <Input
                 name='name'
@@ -195,15 +229,22 @@ const Checkout = () => {
               <div className='title pt-[10px] text-sm'>
                 <h2>Giao đến</h2>
               </div>
-              <div className='py-[10px]'>
-                <Input
+              <div>
+                <div id='geocoder' className='flex flex-row gap-3'>
+                  <i className='fa-solid fa-location-dot'></i>
+                </div>
+                {errors.shippingLocation && (
+                  <span className='text-red-500 text-[13px] self-start'>Địa chỉ nhận hàng là bắt buộc</span>
+                )}
+              </div>
+              {/* <Input
                   prefix={<FaMapMarkerAlt />}
                   placeholder='Địa chỉ người nhận'
-                  name='shippingLocation'
+                  name='address'
                   error={errors.shippingLocation?.message}
                   register={register}
-                />
-              </div>
+                /> */}
+              {/* </div> */}
             </div>
             <div className='py-[10px]'>
               <Input
@@ -214,70 +255,12 @@ const Checkout = () => {
                 register={register}
               />
             </div>
+            <div>
+              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} />
+              <div id='map'></div>
+            </div>
           </div>
-          <div className='title mb-[7px] px-5'>
-            <button type='button' className='py-[10px]   my-2   ' onClick={() => setBtnShipOrder(!btnShipOrder)}>
-              <label className='flex items-center gap-2' htmlFor='askRefer'>
-                <AiOutlinePlusCircle />
-                <span> {!btnShipOrder ? 'Thêm' : 'Xóa'} người nhận</span>
-              </label>
-            </button>
-            <input type='checkbox' id='askRefer' className='hidden' {...register('askRefer')} />
-          </div>
-          <div className='mt-8'>
-            {/* info order shipping other */}
-            {btnShipOrder && (
-              <>
-                <div className='title mb-[7px] px-5'>
-                  <h2 className='font-semibold text-sm'>Thông tin người nhận mới</h2>
-                </div>
-                <div className=' shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] bg-white p-5'>
-                  <div className='py-[10px]'>
-                    <Input
-                      name='nameOther'
-                      register={register}
-                      error={errors.nameOther?.message}
-                      prefix={<BiSolidUser />}
-                      placeholder='Tên người nhận'
-                    />
-                  </div>
-                  <div className='py-[10px]'>
-                    <Input
-                      prefix={<FaPhoneAlt />}
-                      placeholder='Số điện thoại người nhận'
-                      name='phoneOther'
-                      register={register}
-                      error={errors.phoneOther?.message}
-                    />
-                  </div>
 
-                  <div className='location'>
-                    <div className='title pt-[10px] text-sm'>
-                      <h2>Giao đến</h2>
-                    </div>
-                    <div className='py-[10px]'>
-                      <Input
-                        prefix={<FaMapMarkerAlt />}
-                        placeholder='Địa chỉ người nhận'
-                        name='shippingLocationOther'
-                        error={errors.shippingLocationOther?.message}
-                        register={register}
-                      />
-                    </div>
-                  </div>
-                  <div className='py-[10px]'>
-                    <Input
-                      prefix={<FaStickyNote />}
-                      placeholder='Ghi chú địa chỉ...'
-                      name='shippingNoteOther'
-                      error={errors.shippingNoteOther?.message}
-                      register={register}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
           <div className=' mt-8'>
             <div className='title mb-[7px] px-5'>
               <h2 className='font-semibold text-sm'>Phương thức thanh toán</h2>
@@ -324,19 +307,32 @@ const Checkout = () => {
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
-            {/* <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
+            <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
               <h3 className='text-sm'>Chọn cửa hàng</h3>
-              <div className=' flex items-center justify-between cursor-pointer'>
+              <div
+                className=' flex items-center justify-between cursor-pointer'
+                onClick={() => {
+                  if (gapStore.length <= 0) {
+                    message.error('Vui lòng điền địa chỉ giao hàng', 2)
+                  } else {
+                    setOpenGapStore(true)
+                  }
+                }}
+              >
                 <div className='gap-x-2 flex items-center'>
                   <FaStore />
-                  <span className='text-sm'>MilkTea - 93 Hoàng Công</span>
+                  <span className='text-sm'>
+                    {pickGapStore.highName ? pickGapStore.highName : gapStore[0]?.highName}
+                  </span>
                 </div>
                 <div className='gap-x-2 flex items-center'>
-                  <span className='text-sm'>20.45km</span>
+                  <span className='text-sm'>
+                    {pickGapStore.text ? pickGapStore.text : gapStore.length > 0 && gapStore[0].text}
+                  </span>
                   <FaAngleDown className='text-[#adaeae]' />
                 </div>
               </div>
-            </div> */}
+            </div>
             <div className='list'>
               {dataCartCheckout.items &&
                 dataCartCheckout.items.map((item) => <CheckoutItem key={uuidv4()} dataCartCheckout={item} />)}
@@ -385,8 +381,6 @@ const Checkout = () => {
             <div className='note'>
               <textarea
                 ref={textNoteOrderRef}
-                name=''
-                id=''
                 placeholder='Thêm ghi chú...'
                 className='w-full text-sm border-none outline-none'
               ></textarea>
@@ -408,6 +402,12 @@ const Checkout = () => {
         </div>
       </div>
 
+      <YasuoGap
+        isOpen={OpenGapStore}
+        gapStore={gapStore}
+        setPickGapStore={setPickGapStore}
+        toggleModal={toggleOpenGapStore}
+      />
       <ModalListVouchers
         isOpen={isModalOpen}
         voucherChecked={voucherChecked}

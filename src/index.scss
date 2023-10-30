@@ -5,6 +5,9 @@
 @import 'flatpickr/dist/themes/material_green.css';
 
 @layer {
+  * {
+    font-family: 'Roboto', sans-serif;
+  }
   //signin, signup
   .background-container {
     display: flex;
@@ -134,6 +137,20 @@
   body::-webkit-scrollbar,
   .hidden-scroll-bar::-webkit-scrollbar {
     display: none !important;
+  }
+
+  #scrollSize::-webkit-scrollbar {
+    width: 1px;
+  }
+
+  #scrollSize::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px white;
+    border-radius: 10px;
+  }
+
+  #scrollSize::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 10px;
   }
 
   //slider

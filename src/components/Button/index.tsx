@@ -15,7 +15,7 @@ const Button = ({ children, type, size, shape, style, onClick, disabled }: Props
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`bg-[#d8b979] mb-1 text-sm  uppercase
+      className={`bg-[#d8b979] mb-1 text-sm  uppercase ${disabled && 'bg-opacity-[0.5] pointer-events-none select-none'}
       ${type === 'auth' || type === 'checkout' || type === 'paying' || !type ? 'text-white' : ''}
       ${type === 'auth' || type === 'checkout' || !type ? 'uppercase' : 'capitalize'}
       ${type === 'checkout' && 'bg-[#ee4d2d]'}

@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import StaffSidebar from '../../components/Staff/Sidebar'
 import NavbarStaff from '../../components/Staff/Navbar/NavbarStaff'
 // const { Search } = Input
-// const onSearch = (value: string) => console.log(value)
+
 const { Header, Content, Footer } = Layout
 const StaffLayout = () => {
   const {

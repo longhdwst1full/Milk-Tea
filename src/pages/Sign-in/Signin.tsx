@@ -11,13 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useCreateCartDBMutation } from '../../api/cartDB'
 import { useAppSelector } from '../../store/hooks'
 import { RootState } from '../../store/store'
-
-// import { IUser } from '../../interfaces/user.type'
-
-// type Login = {
-//   account: string;
-//   password: string;
-// };
+import Loader from '../../components/Loader'
 
 const Signin = () => {
   const [loginUser] = useLoginMutation()
@@ -62,79 +56,82 @@ const Signin = () => {
   }
 
   return (
-    <div className='background-container'>
-      <div className='flex items-center justify-center h-full'>
-        <div className='content background-content bg-white w-[90vw] md:w-[500px] h-[600px] mx-6 md:px-[100px] py-6 flex justify-center items-center flex-col rounded'>
-          <div className='logo'>
-            <img src='/logo.png' alt='' className='w-[200px] mb-5' />
-          </div>
-          <form action='' className='flex flex-col' onSubmit={handleSubmit(onLogin)}>
-            <Input
-              type='auth'
-              placeholder='Nhập SDT hoặc email của bạn'
-              name='account'
-              register={register}
-              error={errors.account?.message}
-              typeInput='text'
-            />
-            <Input
-              type='auth'
-              placeholder='Nhập mật khẩu của bạn'
-              name='password'
-              error={errors.password?.message}
-              register={register}
-              typeInput='password'
-            />
-            <div className='text-right mt-4 font-bold text-[#d4b774] text-sm'>
-              <Link to={'/forgot-password'}>Quên mật khẩu?</Link>
+    <>
+      <Loader />
+      <div className='background-container'>
+        <div className='flex items-center justify-center h-full'>
+          <div className='content background-content bg-white w-[90vw] md:w-[500px] h-[600px] mx-6 md:px-[100px] py-6 flex justify-center items-center flex-col rounded'>
+            <div className='logo'>
+              <img src='/logo.png' alt='' className='w-[200px] mb-5' />
             </div>
-            <Button type='auth' size='large' shape='circle'>
-              Đăng nhập
-            </Button>
-            <div className='flex justify-center gap-1'>
-              <CardSigin
-                bgColor='#dc2626'
-                color='#fafafa'
-                icon={<BiLogoGoogle />}
-                colorHover='#fef2f2'
-                bgColorHover='#991b1b'
-                LoginIn='google'
+            <form action='' className='flex flex-col' onSubmit={handleSubmit(onLogin)}>
+              <Input
+                type='auth'
+                placeholder='Nhập SDT hoặc email của bạn'
+                name='account'
+                register={register}
+                error={errors.account?.message}
+                typeInput='text'
               />
-              <CardSigin
-                bgColor='#0369a1'
-                color='#fafafa'
-                icon={<BiLogoFacebookSquare />}
-                colorHover='#fef2f2'
-                bgColorHover='#075985'
-                LoginIn='facebook'
+              <Input
+                type='auth'
+                placeholder='Nhập mật khẩu của bạn'
+                name='password'
+                error={errors.password?.message}
+                register={register}
+                typeInput='password'
               />
-              <CardSigin
-                bgColor='#0891b2'
-                color='#fafafa'
-                icon={<BiLogoTwitter />}
-                colorHover='#fef2f2'
-                bgColorHover='#075985'
-                LoginIn='twitter'
-              />
-            </div>
-            <div className='gap-x-2 flex items-center justify-center my-5 text-sm'>
-              <div>Bạn chưa có tài khoản?</div>
-              <div className=' font-semibold'>
-                <Link to='/signup' className='text-[#d4b774]'>
-                  Tạo tài khoản
-                </Link>
+              <div className='text-right mt-4 font-bold text-[#d4b774] text-sm'>
+                <Link to={'/forgot-password'}>Quên mật khẩu?</Link>
               </div>
+              <Button type='auth' size='large' shape='circle'>
+                Đăng nhập
+              </Button>
+              <div className='flex justify-center gap-1'>
+                <CardSigin
+                  bgColor='#dc2626'
+                  color='#fafafa'
+                  icon={<BiLogoGoogle />}
+                  colorHover='#fef2f2'
+                  bgColorHover='#991b1b'
+                  LoginIn='google'
+                />
+                <CardSigin
+                  bgColor='#0369a1'
+                  color='#fafafa'
+                  icon={<BiLogoFacebookSquare />}
+                  colorHover='#fef2f2'
+                  bgColorHover='#075985'
+                  LoginIn='facebook'
+                />
+                <CardSigin
+                  bgColor='#0891b2'
+                  color='#fafafa'
+                  icon={<BiLogoTwitter />}
+                  colorHover='#fef2f2'
+                  bgColorHover='#075985'
+                  LoginIn='twitter'
+                />
+              </div>
+              <div className='gap-x-2 flex items-center justify-center my-5 text-sm'>
+                <div>Bạn chưa có tài khoản?</div>
+                <div className=' font-semibold'>
+                  <Link to='/signup' className='text-[#d4b774]'>
+                    Tạo tài khoản
+                  </Link>
+                </div>
+              </div>
+            </form>
+            <div>
+              <Link to='/' className='text-sm text-[#007bff] hover:underline'>
+                Quay lại màn hình chính
+              </Link>
             </div>
-          </form>
-          <div>
-            <Link to='/' className='text-sm text-[#007bff] hover:underline'>
-              Quay lại màn hình chính
-            </Link>
           </div>
         </div>
+        {/* <ToastContainer /> */}
       </div>
-      {/* <ToastContainer /> */}
-    </div>
+    </>
   )
 }
 

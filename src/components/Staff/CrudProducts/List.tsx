@@ -21,7 +21,7 @@ interface TableParams {
   pagination?: TablePaginationConfig
   sortField?: string
   sortOrder?: string
-  filters?: Record<string, FilterValue>
+  filters?: Record<string, FilterValue | null>
 }
 const List = () => {
   const { data: productData, isLoading } = useFetchProductsQuery(0)
@@ -40,24 +40,6 @@ const List = () => {
     page: params.pagination?.current,
     ...params
   })
-  // const fetchData = () => {
-  //   setLoading(true)
-  //   fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-  //     .then((res) => res.json())
-  //     .then(({ results }) => {
-  //       setData(results)
-  //       setLoading(false)
-  //       setTableParams({
-  //         ...tableParams,
-  //         pagination: {
-  //           ...tableParams.pagination
-  //         }
-  //       })
-  //     })
-  // }
-  // useEffect(() => {
-  //   fetchData()
-  // }, [JSON.stringify(tableParams)])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,8 +61,8 @@ const List = () => {
   // console.log(productData);
   const handleTableChange = (
     pagination: TablePaginationConfig,
-    filters: Record<string, FilterValue>,
-    sorter: SorterResult<DataType>
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<DataType> | SorterResult<DataType>[]
   ) => {
     setTableParams({
       pagination,
@@ -99,7 +81,6 @@ const List = () => {
     }, 1000)
   }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -291,7 +272,6 @@ const List = () => {
       )
     }
   ]
-  // console.log(productData);
 
   return (
     <>

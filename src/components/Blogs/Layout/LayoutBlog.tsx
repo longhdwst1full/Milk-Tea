@@ -3,6 +3,7 @@ import HeaderHomePage from '../../Header-HomePage'
 import FooterHomePage from '../../Footer-HomePage'
 import { Outlet, useLocation } from 'react-router-dom'
 import SiderbarBlog from '../Sidebar'
+import Loader from '../../Loader'
 // import { useEffect, useState } from 'react'
 
 const LayoutBlog = () => {
@@ -36,6 +37,7 @@ const LayoutBlog = () => {
   }
   return (
     <>
+      <Loader />
       <HeaderHomePage />
       <div className={`${styles.page_top_banner} text-[20px] sm:text-[28px] lg:text-[36px]`}>{getContentByUrl()}</div>
       <div className='max-w-[1211px] grid  m-auto px-4 sm:px-6 sm:grid-cols-1 lg:px-8 lg:grid-cols-[2fr,5fr] lg:gap-[30px]'>

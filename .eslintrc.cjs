@@ -5,7 +5,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'eslint-config-prettier',
-    'prettier',
+    'prettier'
   ],
   ignorePatterns: ['vite.config.ts'],
   parser: '@typescript-eslint/parser',
@@ -13,6 +13,8 @@ module.exports = {
   plugins: ['react-refresh', 'prettier'],
   rules: {
     'react-refresh/only-export-components': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'off',
     'prettier/prettier': [
       'warn',
       {
@@ -24,8 +26,8 @@ module.exports = {
         useTabs: false,
         singleQuote: true,
         printWidth: 120,
-        jsxSingleQuote: true,
-      },
-    ],
-  },
-};
+        jsxSingleQuote: true
+      }
+    ]
+  }
+}

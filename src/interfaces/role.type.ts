@@ -1,4 +1,4 @@
-export interface IRole {
+interface IRole {
   _id?: string
   name: string
   status: string

@@ -1,7 +1,6 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit'
 
 import { Auth } from '../../api/Auth'
-import { IRole } from '../../interfaces/role.type'
 import { responseUser } from '../../interfaces/user.type'
 
 const initialState: responseUser = {
@@ -16,7 +15,7 @@ const initialState: responseUser = {
     address: '',
     products: [],
     order: [],
-    role: {} as IRole,
+    role: '',
     accessToken: '',
     refreshToken: ''
   }

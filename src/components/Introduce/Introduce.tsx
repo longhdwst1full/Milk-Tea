@@ -1,10 +1,12 @@
 import FooterHomePage from '../Footer-HomePage'
 import HeaderHomePage from '../Header-HomePage'
+import Loader from '../Loader'
 import styles from './Introduce.module.scss'
 
 const Introduce = () => {
   return (
     <>
+      <Loader />
       <HeaderHomePage />
       <div className={`${styles.page_top_banner}`}>Giới thiệu</div>
       <div className='max-w-[1111px] m-auto px-4 sm:px-6 lg:px-8'>

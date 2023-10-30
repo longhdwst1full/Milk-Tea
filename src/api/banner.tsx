@@ -13,6 +13,11 @@ const BannerApi = createApi({
       providesTags: ['banner']
     }),
 
+    getAllBannerActiveTrue: builder.query<IBannerDocs, void>({
+      query: () => '/api/banners-is-active?status=true',
+      providesTags: ['banner']
+    }),
+
     //add banner
     addBanner: builder.mutation<void, IBanner>({
       query: (banner) => ({
@@ -58,6 +63,7 @@ export const {
   useUploadBannerMutation,
   useAddBannerMutation,
   useDeleteImageBannerMutation,
-  useDeleteBannerMutation
+  useDeleteBannerMutation,
+  useGetAllBannerActiveTrueQuery
 } = BannerApi
 export default BannerApi

@@ -1,12 +1,33 @@
 import { FaBars, FaSearch, FaTimes } from 'react-icons/fa'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Auth } from '../../api/Auth'
 import { Link } from 'react-router-dom'
 import { MdKeyboardArrowDown } from 'react-icons/md'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
+import styles from './HeaderHomePage.module.scss'
 
 const HeaderHomePage = () => {
+  const [isHeaderFixed, setHeaderFixed] = useState(false)
   const [fetchUser] = Auth.endpoints.fetchUser.useLazyQuery()
+  const { user } = useSelector((state: RootState) => state.persistedReducer.auth)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHeaderFixed(true)
+      } else {
+        setHeaderFixed(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  })
   useEffect(() => {
     fetchUser()
   }, [fetchUser])
@@ -18,7 +39,11 @@ const HeaderHomePage = () => {
   }
 
   return (
-    <header className='w-full absolute z-[99] py-3 px-5 md:px-10 lg:px-0 '>
+    <header
+      className={`w-full z-[99] py-3 px-5 md:px-10 lg:px-0  top-0 transition-all ${
+        isHeaderFixed ? `fixed bg-[#282828] ${styles.animation_slide_down}` : 'absolute bg-transparent'
+      } `}
+    >
       <div className='container my-0 mx-auto flex items-center justify-between '>
         <div className='left flex items-center '>
           <Link to='/' className='self-start'>
@@ -120,13 +145,23 @@ const HeaderHomePage = () => {
           <div
             ref={overlayRef}
             onClick={toggleMenu}
-            className='overlay hidden fixed w-[100vw] h-[100vh] top-0 left-0 z-[1] bg-[#80808080]'
+            className='overlay hidden md:hidden fixed w-[100vw] h-[100vh] top-0 left-0 z-[1] bg-[#80808080]'
           ></div>
         </div>
         <div className='right '>
-          <div className='hidden w-8 h-8 rounded-[50%] md:flex items-center justify-center bg-[#d3b673] text-white'>
-            <FaSearch />
-          </div>
+          {user?.avatar ? (
+            <div className='hidden w-8 h-8 rounded-[50%] md:flex items-center justify-center bg-[#d3b673] text-white'>
+              <FaSearch />
+            </div>
+          ) : (
+            <Link
+              to='signin'
+              className='hidden  py-2 uppercase text-sm rounded px-4 md:flex items-center justify-center bg-[#d3b673] text-white hover:bg-white hover:text-[#d3b673] transition-all'
+            >
+              Đăng nhập
+            </Link>
+          )}
+
           <div className='block md:hidden text-white text-2xl cursor-pointer' onClick={toggleMenu}>
             <FaBars />
           </div>

@@ -1,10 +1,12 @@
 import FooterHomePage from '../Footer-HomePage'
 import HeaderHomePage from '../Header-HomePage'
+import Loader from '../Loader'
 import styles from './Achievement.module.scss'
 
 const Achievement = () => {
   return (
     <>
+      <Loader />
       <HeaderHomePage />
       <div className={`${styles.page_top_banner}`}>THÀNH TỰU ĐẠT ĐƯỢC</div>
       <div className='max-w-[1111px] m-auto px-4 sm:px-6 lg:px-8'>

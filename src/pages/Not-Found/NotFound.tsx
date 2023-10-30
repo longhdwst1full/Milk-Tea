@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
 const NotFound = () => {
   const [second, setSecond] = useState<number>(10)
   const navigate = useNavigate()

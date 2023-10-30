@@ -1,18 +1,18 @@
 import Yup from './global'
 
 export const RegisterSchema = Yup.object({
-  account: Yup.string().trim().required('Account is required').regexMatch('Email or Phone is not valid'),
-  username: Yup.string().trim().required('Username is required'),
-  password: Yup.string().trim().required('Password is required').checkLength('Password >= 5 charactor'),
+  account: Yup.string().trim().required('Email hoặc SĐT là bắt buộc').regexMatch('Email hoặc SĐT không đúng'),
+  username: Yup.string().trim().required('Tên là bắt buộc'),
+  password: Yup.string().trim().required('Mật khẩu là bắt buộc').checkLength('Mật khẩu phải từ 5 ký tự'),
   confirmpassword: Yup.string()
     .trim()
-    .required('ConfirmPassword is required')
-    .oneOf([Yup.ref('password')], 'ConfirmPassword is not valid')
+    .required('Nhập lại mật khẩu là bắt buộc')
+    .oneOf([Yup.ref('password')], 'Nhập lại mật khẩu không khớp')
 })
 
 export const LoginSchema = Yup.object({
-  account: Yup.string().trim().required('Account is required').regexMatch('Email or Phone is not valid'),
-  password: Yup.string().trim().required('Password is required').checkLength('Password >= 5 charactor')
+  account: Yup.string().trim().required('Email hoặc SĐT là bắt buộc').regexMatch('Email hoặc SĐT không đúng'),
+  password: Yup.string().trim().required('Mật khẩu là bắt buộc').checkLength('Mật khẩu phải từ 5 ký tự')
 })
 
 export type Register = Yup.InferType<typeof RegisterSchema>
@@ -84,34 +84,28 @@ export const UserCheckoutSchema = Yup.object({
     .trim()
     .required('Số điện thoại không được để trống')
     .matches(/^(([+]{0,1}\d{2})|\d?)[\s-]?[0-9]{2}[\s-]?[0-9]{3}[\s-]?[0-9]{4}$/gm, 'Số điện thoại không hợp lệ'),
-  shippingLocation: Yup.string().trim().required('Địa chỉ không được để trống'),
+  shippingLocation: Yup.string().required('Địa chỉ không được để trống'),
 
-  shippingNote: Yup.string().trim(),
-  paymentMethod: Yup.string().trim().required(),
-  askRefer: Yup.boolean(),
+  shippingNote: Yup.string().default(' '),
+  paymentMethod: Yup.string().required()
+  // askRefer: Yup.boolean(),
 
-  nameOther: Yup.string()
-    .trim()
-    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
-    .when('askRefer', {
-      is: true,
-      then: (schema) => schema.required()
-    }),
-  phoneOther: Yup.string()
-    .trim()
-    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
-    .when('askRefer', {
-      is: true,
-      then: (schema) => schema.required()
-    }),
-  shippingLocationOther: Yup.string()
-    .trim()
-    // .test('Bạn chưa điền thông tin trường này', (value) => typeof value === 'string')
-    .when('askRefer', {
-      is: true,
-      then: (schema) => schema.required()
-    }),
-  shippingNoteOther: Yup.string().trim()
+  // nameOther: Yup.string()
+  //   .when('askRefer', {
+  //     is: true,
+  //     then: (schema) => schema.required()
+  //   }),
+  // phoneOther: Yup.string()
+  //   .when('askRefer', {
+  //     is: true,
+  //     then: (schema) => schema.required()
+  //   }),
+  // shippingLocationOther: Yup.string()
+  //   .when('askRefer', {
+  //     is: true,
+  //     then: (schema) => schema.required()
+  //   }),
+  // shippingNoteOther: Yup.string().trim()
 })
 export type IUserCheckout = Yup.InferType<typeof UserCheckoutSchema>
 
@@ -124,3 +118,9 @@ export const InforFormSchema = Yup.object({
 })
 
 export type InforForm = Yup.InferType<typeof InforFormSchema>
+
+export const BlogsSchema = Yup.object({
+  name: Yup.string().trim().required('Name is required'),
+  description: Yup.string().trim().required('Description is required')
+})
+export type BlogsForm = Yup.InferType<typeof BlogsSchema>

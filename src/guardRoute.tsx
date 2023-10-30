@@ -3,6 +3,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { RootState } from './store/store'
 import { useAppSelector } from './store/hooks'
 import { useEffect } from 'react'
+import { toLower } from 'lodash'
 
 interface Props {
   JSX: () => JSX.Element
@@ -10,40 +11,25 @@ interface Props {
 
 export const GuardSign = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (user.role?.name === 'admin' && user.role.status === 'active') {
-      navigate('/admin')
-    } else if (user.role?.name === 'customer') {
-      navigate('/')
-    }
-  }, [navigate, user])
-  return !user.role?.name ? <JSX /> : <Navigate to={'/'} />
+
+  return !user.role ? <JSX /> : <Navigate to={'/'} />
 }
 
 export const GuardAccount = ({ JSX }: Props) => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (user.role?.name === 'admin' && user.role.status === 'active') {
-      navigate('/admin')
-    } else if (!user.role?.name) {
-      navigate('/')
-    }
-  }, [user])
-  return user.role?.name === 'customer' ? <JSX /> : <Navigate to={'/'} />
+  return ['customer', 'shipper', 'staff', 'admin'].includes(toLower(user.role)) ? <JSX /> : <Navigate to={'/'} />
 }
 
 const GuardAuth = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const navigate = useNavigate()
+  const { pathname } = location
   useEffect(() => {
-    if (!user.role?.name) {
-      navigate('/signin')
+    if (!user.role) {
+      navigate('/')
     }
-  }, [user])
-  return user.role?.name === 'admin' && user.role.status === 'active' ? <Outlet /> : <Navigate to={'/signin'} />
+  }, [navigate, user])
+  return pathname.split('/')[1] === toLower(user.role) ? <Outlet /> : <Navigate to={`/${toLower(user.role)}`} />
 }
 
 export default GuardAuth

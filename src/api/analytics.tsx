@@ -7,30 +7,30 @@ const AnalyticsApi = createApi({
   tagTypes: ['analytics'],
   endpoints: (builder) => ({
     //vouchers
-    countVouchers: builder.query<any, void>({
+    countVouchers: builder.query<void, void>({
       query: () => '/api/countVoucher',
       providesTags: ['analytics']
     }),
 
     //users
-    countUser: builder.query<any, void>({
+    countUser: builder.query<void, void>({
       query: () => `/api/countUser`,
       providesTags: ['analytics']
     }),
 
     //Orders
-    countOrder: builder.query<any, void>({
+    countOrder: builder.query<void, void>({
       query: () => `/api/countOrder`,
       providesTags: ['analytics']
     }),
 
-    coutOrderInAWeek: builder.query<any, void>({
+    coutOrderInAWeek: builder.query({
       query: () => `/api/countOrderWeek`,
       providesTags: ['analytics']
     }),
 
     /* đếm số order theo sản phẩm */
-    countOrderDayByProduct: builder.query<any, void>({
+    countOrderDayByProduct: builder.query({
       query: () => `/api/countOrderDayByProduct`,
       providesTags: ['analytics']
     })

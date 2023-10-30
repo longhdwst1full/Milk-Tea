@@ -23,7 +23,7 @@ const BrandStory = () => {
             <Meta
               avatar={<Avatar src='/logo_icon.png' />}
               title='Cập bến ToCo Người bạn khổng lồ dung lượng 1 lít khiến giới trẻ bấn loạn'
-              description='ToCo Người bạn khổng lồ size XL “siêu to siêu khổng lồ” có thể làm 
+              description='ToCo Người bạn khổng lồ size XL “siêu to siêu khổng lồ” có thể làm
               hài lòng tất cả bạn trẻ với hương vị Trà Hibicus Chanh Vàng chua chua […]'
             />
           </Card>

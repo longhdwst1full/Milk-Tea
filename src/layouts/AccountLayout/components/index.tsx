@@ -33,7 +33,7 @@ export const items = ({ onLogout }: Props): MenuItem[] => {
     getItem('Thông tin tài khoản', 'sub2', <AiOutlineUser className='text-[14px] mr-2 ' />, [
       getItem(<Link to='/account-layout'>Hồ sơ</Link>, '1'),
       getItem(<Link to='/account-layout/my-address'>Địa chỉ</Link>, '2'),
-      getItem('Đổi mật khẩu', '3')
+      getItem(<Link to={'/account-layout/change-password'}>Đổi mật khẩu</Link>, '3')
     ]),
     getItem(<Link to='my-order'>Đơn hàng của tôi</Link>, 'sub3', <MdShoppingCart className='text-[14px] mr-2 ' />),
     getItem(<Link to='my-voucher'>Mã khuyến mại</Link>, 'sub4', <AiFillCreditCard className='text-[14px] mr-2 ' />),

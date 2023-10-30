@@ -58,7 +58,7 @@ const Header = () => {
       <form onSubmit={onSubmitSearch} className='search lg:flex items-center justify-center w-full'>
         <div>
           <input
-            className=' p-0 outline-none px-2 block focus:bg-gray-50 w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem] border'
+            className=' p-0 outline-none px-2 block focus:bg-gray-50 w-full bg-[#fbfbfb] h-[32px] text-[14px] rounded-2xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[35rem] border focus:ring-0'
             placeholder='Tìm kiếm sản phẩm...'
             {...register('name')}
             autoFocus={true}

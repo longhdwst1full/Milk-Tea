@@ -3,15 +3,15 @@ import { IProduct, IProductDocs } from '../../interfaces/products.type'
 import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { AxiosError } from 'axios'
 import { Button } from '..'
+import { IQueryConfig } from '../../hook/useQueryConfig'
 import ListProductItem from '../List-ProductItem'
 import { Pagination } from 'antd'
 import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
 import SKProduct from '../Skeleton/SKProduct'
 import http from '../../api/instance'
-import { AxiosError } from 'axios'
-import { IQueryConfig } from '../../hook/useQueryConfig'
 
 interface ListProductsProps {
   products: IProductDocs
@@ -50,7 +50,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
   }
 
   const onChange: PaginationProps['onChange'] = (pageNumber) => {
-    console.log('Page: ', pageNumber)
+    // console.log('Page: ', pageNumber)
     navigate({
       pathname: '/products',
       search: createSearchParams({
@@ -65,7 +65,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
     if (state && Object.keys(state)?.length > 0) {
       handleTogglePopup()
     }
-  }, [handleTogglePopup, state])
+  }, [])
 
   return (
     <>
@@ -103,7 +103,9 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
             </div>
           </div>
           <div className='text-center'>
-            <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+            {products.totalDocs > 1 && (
+              <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+            )}
           </div>
         </div>
 

@@ -19,11 +19,15 @@ const ListProductItem = ({ product, fetchProductById }: ListProductItemProps) =>
         alt={product?.name}
       />
       <div className='flex flex-col'>
-        <div className='product-name  mt-[20px] mb-[10px] flex-1 line-clamp-2'>{product?.name}</div>
-        <div className='product-price flex flex-shrink-0 gap-3 mt-auto'>
+        <div className='product-name  mt-[20px] mb-[10px] min-h-[42px] flex-1 line-clamp-2'>{product?.name}</div>
+        <div className='product-price flex  flex-shrink-0 gap-3 mt-auto'>
           <p className='product-origin-price text-[#8a733f] mb-[20px]'>
             {product?.sale !== 0 && product.sizes
-              ? formatCurrency(product?.sizes[0]?.price - product.sale)
+              ? formatCurrency(
+                  product.sale &&
+                    // ? product?.sizes[0]?.price * ((product.sale - 100) / 100)
+                    product?.sizes[0]?.price - product.sale
+                )
               : formatCurrency(product.sizes && product?.sizes[0]?.price)}
           </p>
           {product?.sale !== 0 && (

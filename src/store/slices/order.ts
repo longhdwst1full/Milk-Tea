@@ -123,6 +123,12 @@ export const OrderAPI = createApi({
     getAllOrderComfirmed: builder.query<IDocsTypeOrder, number | string>({
       query: (page) => `/api/order-confirmed?_page=${page}`,
       providesTags: ['Order']
+    }),
+
+    //get order user by user id
+    getOrderUserByid: builder.query<IDocsTypeOrder, number | string>({
+      query: (idUser) => `/api/order-user/${idUser}`,
+      providesTags: ['Order']
     })
   })
 })
@@ -141,5 +147,6 @@ export const {
   useGetAllOrderCancelQuery,
   useGetAllOrderDeliveryQuery,
   useGetAllOrdersPendingQuery,
-  useGetAllOrderComfirmedQuery
+  useGetAllOrderComfirmedQuery,
+  useGetOrderUserByidQuery
 } = OrderAPI

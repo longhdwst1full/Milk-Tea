@@ -1,13 +1,13 @@
 import { DarkThemeToggle, Navbar, Avatar, Dropdown } from 'flowbite-react'
-import { BiLogOut } from 'react-icons/bi'
+import { BiLogOut, BiUser } from 'react-icons/bi'
 import { useLogoutMutation } from '../../../api/Auth'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
-// import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
 import { useAppSelector } from '../../../store/hooks'
 import { FaBell } from 'react-icons/fa'
 import { AiOutlineMenu } from 'react-icons/ai'
+import { Link } from 'react-router-dom'
 
 type AdminNavbarProps = {
   toggleSideBar: () => void
@@ -80,6 +80,9 @@ const AdminNavbar = function ({ toggleSideBar }: AdminNavbarProps) {
               </Dropdown.Header>
               <Dropdown.Item icon={BiLogOut} onClick={onLogout}>
                 Đăng xuất
+              </Dropdown.Item>
+              <Dropdown.Item icon={BiUser}>
+                <Link to={'/account-layout'}>Tài khoản</Link>
               </Dropdown.Item>
             </Dropdown>
           </div>

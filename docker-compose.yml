@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: nginx:1.17-alpine
+    # command: sh -c "yarn install && yarn run dev"
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./dist:/usr/share/nginx/html
+    ports:
+      - "5173:80"
+    restart: unless-stopped
+
+

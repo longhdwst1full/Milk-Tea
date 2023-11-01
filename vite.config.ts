@@ -17,6 +17,16 @@ export default defineConfig({
   css: {
     devSourcemap: true
   },
+  preview: {
+    port: 8080,
+    strictPort: true
+  },
+  server: {
+    port: 8080,
+    strictPort: true,
+    host: true,
+
+  },
   resolve: {
     alias: {
       '~': path.resolve(__dirname, './src')

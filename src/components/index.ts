@@ -7,7 +7,5 @@ import MyInfor from './My-Infor'
 import MyOrder from './My-order'
 import MyVoucher from './My-voucher'
 import SidebarCate from './Category'
-import { DrawerAddProduct } from './CrudProduct'
 
-export { Input, Button, Header, SidebarCate, ListProducts, MyCart, MyInfor, MyOrder, MyVoucher, DrawerAddProduct }
-export * from './CrudProduct'
+export { Input, Button, Header, SidebarCate, ListProducts, MyCart, MyInfor, MyOrder, MyVoucher }

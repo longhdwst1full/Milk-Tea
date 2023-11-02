@@ -96,7 +96,7 @@ const routes = createBrowserRouter([
       { path: 'my-order/:id', element: 'My order detail' }
     ]
   },
-
+  //update
   {
     path: '*',
     element: <NotFound />

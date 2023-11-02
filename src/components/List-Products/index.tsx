@@ -32,10 +32,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
     setIsShowPopup(!isShowPopup)
   }, [isShowPopup])
 
-  // const paginatePage = (page: number) => {
-  //   dispatch(savePage(page))
-  // }
-
+ 
   const fetchProductById = async (id: string | number) => {
     try {
       const { data } = await http.get(`/product/${id}`)

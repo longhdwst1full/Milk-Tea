@@ -66,11 +66,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     setQuantity(1)
     setTotalToppingPrice(0)
     setCheckedToppings([])
-    // setNameRadioInput(product.sizes[0].name);
-
-    //reset checkbox when popup close
-    // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    // checkboxes.forEach((item: any) => (item.checked = false));
+     
   }, [product])
 
   const handleAddToCart = () => {

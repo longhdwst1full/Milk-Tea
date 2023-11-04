@@ -5,8 +5,8 @@ COPY package.json .
 COPY vite.config.ts .
 COPY tailwind.config.js .
 COPY  postcss.config.js .
-RUN rm /usr/local/bin/yarn
-RUN rm /usr/local/bin/yarnpkg && npm install -g yarn 
+# RUN rm /usr/local/bin/yarn
+RUN   npm install -g yarn 
 RUN yarn --production --silent
 
 COPY . .

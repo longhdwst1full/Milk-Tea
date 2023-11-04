@@ -11,7 +11,7 @@ RUN yarn --production --silent
 
 COPY . .
 
-RUN yarn run build
+RUN yarn build
 
 FROM nginx:1.17-alpine as production-stage
 COPY --from=build /app/build /usr/share/nginx/html

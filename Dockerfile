@@ -13,9 +13,9 @@ RUN rm -rf node_modules
 RUN npm cache clean --force
 RUN rm /usr/local/bin/yarn
 RUN rm /usr/local/bin/yarnpkg && npm install -g yarn
-RUN yarn add typescript -g
-RUN yarn add vite -g
-RUN yarn
+RUN yarn install --production --silent
+
+
 
 
 COPY . .

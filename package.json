@@ -3,12 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://longhdwst1full.github.io/Milk-Tea",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/longhdwst1full/Milk-Tea.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "homepage": "https://myusername.github.io/my-app",
-
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",

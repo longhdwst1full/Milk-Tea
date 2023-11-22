@@ -7,6 +7,7 @@ export interface IOrder {
   items: any[]
   status: string
   paymentMethodId: string
+  reasonCancelOrder?: string
   total: number
   priceShipping: number
   createdAt: string

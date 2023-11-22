@@ -4,29 +4,32 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Button } from '..'
 import { ITopping } from '../../interfaces/topping.type'
 import { useAppSelector } from '../../store/hooks'
-import { OrderAPI, useCanceledOrderMutation } from '../../store/slices/order'
+import { useCanceledOrderMutation } from '../../store/slices/order'
 import { formatCurrency } from '../../utils/formatCurrency'
-import './MyOrder.scss'
 import { pause } from '../../utils/pause'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import { ClientSocket } from '../../socket'
+import { RootState } from '../../store/store'
+import './MyOrder.scss'
 
 enum STATUS_ORDER {
-  ALL = 0,
-  PENDING = 1,
-  CONFIRMED = 2,
-  DONE = 3,
-  CANCELED = 4
+  PENDING = 0,
+  CONFIRMED = 1,
+  DONE = 2,
+  CANCELED = 3
 }
+
 const MyOrder = () => {
+  const navigate = useNavigate()
   const [seletedTab, setSelectedTab] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [idOrder, setIdOrder] = useState('')
   const [reason, setReason] = useState('')
 
-  const { user } = useAppSelector((state) => state.persistedReducer.auth)
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
   const [orderUser, setOrderUser] = useState<any>([])
-  const tabs = ['Tất cả', 'Chờ xác nhận', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy']
-  const [getDataOrderUser] = OrderAPI.endpoints.getOrderUserByid.useLazyQuery()
+  const tabs = ['Chờ xác nhận', 'Đã xác nhận', 'Hoàn thành', 'Đã hủy']
   const [cancelOrder] = useCanceledOrderMutation()
 
   const reasonChange = (e: CheckboxChangeEvent) => {
@@ -34,7 +37,6 @@ const MyOrder = () => {
   }
   const listReason: string[] = [
     'Không muốn mua sản phẩm này nữa.',
-    'Sản phẩm bị hỏng khi nhận hàng.',
     'Sản phẩm không đúng mô tả trên trang web.',
     'Đã tìm thấy một sản phẩm tốt hơn ở nơi khác.',
     'Sản phẩm không còn cần thiết.',
@@ -53,12 +55,19 @@ const MyOrder = () => {
     cancelOrder({ id: idOrder, reasonCancelOrder: reason })
       .unwrap()
       .then(() => {
+        ClientSocket.cancelOrder(idOrder)
+        ClientSocket.sendNotification({
+          idUser: user._id!,
+          idOrder,
+          content: `Đơn hàng "${idOrder.toUpperCase()}" đã được hủy thành công`
+        })
+        ClientSocket.sendNotificationToAdmin(`Đơn hàng "${idOrder.toUpperCase()}" đã được hủy!`)
         toast.success('Hủy đơn hàng thành công')
       })
       .catch(() => {
         toast.error('Hủy đơn hàng thất bại.')
       })
-    setIsModalOpen(false)
+    handleCancel()
   }
 
   const handleCancel = () => {
@@ -68,30 +77,25 @@ const MyOrder = () => {
 
   useEffect(() => {
     ;(async () => {
-      const { data } = await getDataOrderUser(user._id!)
-      if (seletedTab === STATUS_ORDER.ALL) {
-        setOrderUser(data?.docs)
-      }
       if (seletedTab === STATUS_ORDER.PENDING) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'pending'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'pending' })
       }
       if (seletedTab === STATUS_ORDER.CANCELED) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'canceled'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'canceled' })
       }
       if (seletedTab === STATUS_ORDER.DONE) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'done'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'done' })
       }
       if (seletedTab === STATUS_ORDER.CONFIRMED) {
-        setOrderUser(data?.docs.filter((item: any) => item.status === 'confirmed'))
+        ClientSocket.getOrderUser(setOrderUser, { room: user._id, status: 'confirmed' })
       }
     })()
   }, [seletedTab, isModalOpen])
-  // console.log(orderUser)
 
   return (
     <div className='layout-container w-full'>
       <h2 className='title text-[#333] text-lg font-medium mb-5'>Đơn hàng của tôi</h2>
-      <div className='tab-order mb-5 relative'>
+      <div className='tab-order mb-5 sticky top-[56px] bg-white'>
         <ul className='flex w-full text-center shadow-lg '>
           {tabs.map((tab: string, index: number) => (
             <li
@@ -122,7 +126,10 @@ const MyOrder = () => {
               alt=''
               className='max-w-[150px]'
             />
-            <h4 className='mt-2 text-lg'>Chưa có đơn hàng nào!</h4>
+            <h4 className='mt-2 mb-2 text-lg'>Chưa có đơn hàng nào!</h4>
+            <Button size='medium' shape='round' onClick={() => navigate('/products')}>
+              Đặt mua ngay
+            </Button>
           </div>
         ) : (
           orderUser &&
@@ -145,23 +152,24 @@ const MyOrder = () => {
                         <img className='w-full object-cover' src={item.image} alt='' />
                       </div>
                       <div className='title pl-3 flex flex-col'>
-                        <h3
-                          title=' Bàn làm việc gỗ, Bàn kệ lửng chân sắt dùng cho văn phòng, học bài, để máy tính cho học sinh, sinh viên
-              GIÁ XƯỞNG'
-                          className='line-clamp-2 text-[16px] font-semibold uppercase '
-                        >
-                          Cà Phê Sữa Đá
+                        <h3 title={item?.product?.name} className='line-clamp-2 text-[16px] font-semibold uppercase '>
+                          {item?.product.name}
                         </h3>
-                        <div className='category'>
+                        {/* <div className='category'>
                           <span className='text-sm text-[#866312]'>Danh mục: Cà phê</span>
-                        </div>
+                        </div> */}
                         <div>
                           <div className='size'>
                             <span className='text-sm text-[#866312]'>Size: {item.size.name}</span>
                           </div>
                           <div className={`topping ${item.toppings.length > 0 ? '' : 'hidden'}`}>
                             <span className='text-sm text-[#866312]'>
-                              Toppings: {item.toppings.map((topping: ITopping) => topping.name)}
+                              Toppings:{' '}
+                              {item.toppings.map((topping: ITopping) =>
+                                item.toppings[item.toppings.length - 1].name === topping.name
+                                  ? topping.name + '.'
+                                  : topping.name + ', '
+                              )}
                             </span>
                           </div>
                         </div>
@@ -186,15 +194,21 @@ const MyOrder = () => {
                 </div>
               </div>
               <div className='bottom flex items-center justify-end py-4 px-6 shadow rounded-md'>
-                {order.status === 'canceled' && (
-                  <div className='note flex-1 '>
-                    <span className='text-sm block w-[400px] max-w-[400px] text-left text-gray-500 '>
-                      <strong>Lý do hủy:</strong> {order?.reasonCancelOrder}
-                    </span>
-                  </div>
-                )}
+                <div className='note flex-1 '>
+                  <span className='text-sm block w-[400px] max-w-[400px] text-left text-gray-500 '>
+                    {order.status === 'canceled' && (
+                      <>
+                        <strong>Lý do hủy: </strong> {order?.reasonCancelOrder}
+                      </>
+                    )}
+                    {order.status === 'pending' && 'Đơn hàng đang chờ được xác nhận'}
+                    {order.status === 'confirmed' && 'Đơn hàng đang được giao đến bạn'}
+                    {order.status === 'done' && ' Đơn hàng đã hoàn thành'}
+                  </span>
+                </div>
+
                 <div className='confirm-button flex gap-x-3 items-center'>
-                  <Button onClick={() => alert('clicked')} size='medium' shape='round'>
+                  <Button onClick={() => navigate(`/account-layout/my-order/${order._id}`)} size='medium' shape='round'>
                     Chi tiết đơn hàng
                   </Button>
                   <Button
@@ -221,6 +235,7 @@ const MyOrder = () => {
       <Modal
         title='Lý do hủy đơn hàng?'
         open={isModalOpen}
+        destroyOnClose
         onCancel={handleCancel}
         footer={[
           <ButtonAnt hidden={!reason} key='cancel' onClick={handleCancel}>

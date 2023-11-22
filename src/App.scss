@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+/* custom-input.module.css */
+.custom-input-forgotPass:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

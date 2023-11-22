@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom'
 import { Button } from '..'
 
 const About = () => {
+  const navigate = useNavigate()
   return (
     <div>
       <div className='md:flex-row container relative flex flex-col items-center justify-end mx-auto'>
@@ -23,7 +25,12 @@ const About = () => {
             {/* <button className="uppercase text-white border border-[#d3b673] bg-[#d3b673] py-2 px-4 text-[16px] hover:bg-white hover:text-[#d3b673]">
               Xem thêm
             </button> */}
-            <Button size='medium' shape='square' style='hover:bg-white hover:text-[#d3b673]'>
+            <Button
+              onClick={() => navigate('/about')}
+              size='medium'
+              shape='square'
+              style='hover:bg-white hover:text-[#d3b673]'
+            >
               Xem thêm
             </Button>
           </div>
@@ -47,7 +54,12 @@ const About = () => {
             {/* <button className="uppercase text-white border border-[#d3b673] bg-[#d3b673] py-2 px-4 text-[16px] hover:bg-white hover:text-[#d3b673]">
               Xem thêm
             </button> */}
-            <Button size='medium' shape='square' style='hover:bg-white hover:text-[#d3b673]'>
+            <Button
+              onClick={() => navigate('/not-found')}
+              size='medium'
+              shape='square'
+              style='hover:bg-white hover:text-[#d3b673]'
+            >
               Xem thêm
             </Button>
           </div>

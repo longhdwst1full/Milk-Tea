@@ -29,7 +29,7 @@ interface Props {
 
 export const items = ({ onLogout }: Props): MenuItem[] => {
   return [
-    getItem(<Link to='/'>Trang chủ</Link>, 'sub1', <AiFillHome className='text-[14px] mr-2 ' />),
+    // getItem(<Link to='/'>Trang chủ</Link>, 'sub1', <AiFillHome className='text-[14px] mr-2 ' />),
     getItem('Thông tin tài khoản', 'sub2', <AiOutlineUser className='text-[14px] mr-2 ' />, [
       getItem(<Link to='/account-layout'>Hồ sơ</Link>, '1'),
       getItem(<Link to='/account-layout/my-address'>Địa chỉ</Link>, '2'),

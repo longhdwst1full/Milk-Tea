@@ -14,7 +14,7 @@ const HomePage = () => {
       <Loader />
       <HeaderHomePage />
       <Sliders />
-      <main className='p-8 md:p-5'>
+      <main className='md:p-5 p-8'>
         <NewProducts />
         <About />
         <News />

@@ -1,7 +1,16 @@
 import { Button } from '..'
 import { Link } from 'react-router-dom'
+import ReactHtmlParser from 'html-react-parser'
+import { useNavigate } from 'react-router-dom'
+import { useGetAllBlogsQuery } from '../../api/NewBlogs'
 
 const News = () => {
+  const navigate = useNavigate()
+  const { data: blogData } = useGetAllBlogsQuery()
+  const handleNavigateBlogDeatail = (blogData: any) => {
+    navigate(`/blogs/${blogData._id}`)
+  }
+
   return (
     <div className='container mx-auto'>
       <div className='title flex flex-col items-center mb-8'>
@@ -13,28 +22,30 @@ const News = () => {
       </div>
       <div className='news-content md:flex-row  flex flex-col justify-center mb-10'>
         <div className='left md:w-1/2 flex flex-wrap w-full mr-2'>
-          <Link
-            to='/'
-            className='block w-full m-0 bg-[#f5f5f5] mb-[30px] transition-all group shadow-[3.5px_6px_18px_0_rgb(0,0,0/10%)]'
+          <div
+            title={blogData?.docs[0]?.name}
+            onClick={() => handleNavigateBlogDeatail(blogData?.docs[0])}
+            className='block cursor-pointer w-full m-0 bg-[#f5f5f5] mb-[30px] transition-all group shadow-[3.5px_6px_18px_0_rgb(0,0,0/10%)]'
           >
             <div className='img overflow-hidden'>
               <img
-                className='w-full transition-all group-hover:scale-[1.1]'
-                src='https://tocotocotea.com/wp-content/uploads/2023/04/hinhthumb-scaled.jpg'
-                alt=''
+                className='w-full max-h-[333px] object-cover transition-all group-hover:scale-[1.1]'
+                src={blogData && blogData?.docs[0]?.images[0]?.url}
+                alt={blogData && blogData?.docs[0]?.name}
               />
             </div>
             <div className='info p-[15px]'>
               <div className='title'>
-                <h3 className='text-sm uppercase mb-[5px] text-[#282828] font-[700]'>
-                  Ice Cream – Coffee bán kem 10.000 đồng khiến mạng xã hội khấy đảo
+                <h3 className='text-sm uppercase mb-[5px] text-[#282828] font-[700] line-clamp-2'>
+                  {blogData && blogData?.docs[0]?.name}
                 </h3>
               </div>
               <div className='description mt-8'>
-                <p className='text-sm'>
-                  Với món kem 10.000 đồng và đồ uống chỉ 25.000 đồng, nhiều người trẻ với mức thu nhập trung bình dễ
-                  dàng chi trả, Ice Cream – Coffee đang […]
-                </p>
+                {ReactHtmlParser(
+                  blogData && blogData.docs[0].description.length > 200
+                    ? blogData?.docs[0].description.slice(0, 200) + '[...]'
+                    : ''
+                )}
               </div>
               <div className='btn mt-4'>
                 <Button
@@ -46,14 +57,37 @@ const News = () => {
                 </Button>
               </div>
             </div>
-          </Link>
-          <Link
+          </div>
+          {blogData &&
+            blogData?.docs?.slice(1, 5).map((blog, index: number) => (
+              <div
+                onClick={() => handleNavigateBlogDeatail(blog)}
+                key={index + blog.name}
+                title={blog.name}
+                className='cursor-pointer mr-2 w-[calc(50%-8px)] bg-[#f5f5f5] mb-[30px] overflow-hidden transition-all text-black group'
+              >
+                <div className='img overflow-hidden'>
+                  <img
+                    className='w-full max-h-[150px] object-cover transition-all group-hover:scale-[1.1]'
+                    src={blog.images[0].url}
+                    alt={blog.name}
+                  />
+                </div>
+                <div className='info p-[15px] '>
+                  <div className='title'>
+                    <h3 className='text-sm uppercase mb-[5px] font-[700] text-[#282828] line-clamp-2'>{blog.name}</h3>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+          {/* <Link
             to='/'
             className='mr-2 w-[calc(50%-8px)] bg-[#f5f5f5] mb-[30px] overflow-hidden transition-all text-black group'
           >
             <div className='img overflow-hidden'>
               <img
-                className='w-full transition-all group-hover:scale-[1.1]'
+                className='w-full max-h-[150px] transition-all group-hover:scale-[1.1]'
                 src='https://tocotocotea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg'
                 alt=''
               />
@@ -72,7 +106,7 @@ const News = () => {
           >
             <div className='img overflow-hidden'>
               <img
-                className='w-full transition-all group-hover:scale-[1.1]'
+                className='w-full  max-h-[150px] transition-all group-hover:scale-[1.1]'
                 src='https://tocotocotea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg'
                 alt=''
               />
@@ -84,27 +118,10 @@ const News = () => {
                 </h3>
               </div>
             </div>
-          </Link>
-          <Link
-            to='/'
-            className='mr-2 w-[calc(50%-8px)] bg-[#f5f5f5] mb-[30px] overflow-hidden transition-all text-black group'
-          >
-            <div className='img overflow-hidden'>
-              <img
-                className='w-full transition-all group-hover:scale-[1.1]'
-                src='https://tocotocotea.com/wp-content/uploads/2022/07/Hinh-thumb-2-scaled.jpg'
-                alt=''
-              />
-            </div>
-            <div className='info p-[15px] '>
-              <div className='title'>
-                <h3 className='text-sm uppercase mb-[5px] font-[700] text-[#282828]'>
-                  “cháy” cùng hàng trăm học sinh Amsterdam và Chuyên Ngoại Ngữ trong chương trình Camp Aletheia
-                </h3>
-              </div>
-            </div>
-          </Link>
+          </Link> */}
         </div>
+
+        {/* right */}
         <div className='right md:w-1/2 md:ml-2 w-full'>
           <div className='main-content '>
             <Link to='/' className='group '>

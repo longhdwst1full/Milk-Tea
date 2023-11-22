@@ -1,43 +1,169 @@
 import { Button, Result } from 'antd'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ConFetti from 'react-confetti'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { getAllProducts } from '../../store/services/product.service'
 import { RootState } from '../../store/store'
 import NewProductItem from '../../components/New-ProductItem'
 import { IProduct } from '../../interfaces/products.type'
-const PaymentResult = () => {
-  const [second, setSecond] = useState<number>(5)
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  const navigate = useNavigate()
-  const { state } = useLocation()
-  const dispatch = useAppDispatch()
-  const { products } = useAppSelector((state: RootState) => {
-    console.log(state)
+import { jwtDecode, JwtPayload } from 'jwt-decode'
+import { useBillingPaymentQuery } from '../../api/paymentstripe'
+import { ClientSocket } from '../../socket'
+import { toast } from 'react-toastify'
+import { useCreateOrderMutation } from '../../store/slices/order'
+import { resetAllCart } from '../../store/slices/cart.slice'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { arrTotal } from '../../store/slices/types/cart.type'
 
-    return state.persistedReducer.products
+interface Payload extends JwtPayload {
+  noteOrder?: string
+  noteShipping?: string
+}
+
+const PaymentResult = () => {
+  const [second, _] = useState<number>(5)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [idOrder, setIdOrder] = useState('')
+  const dataCartCheckout = useAppSelector((state) => state.persistedReducer.cart)
+  const navigate = useNavigate()
+  // const { state } = useLocation()
+  const dispatch = useAppDispatch()
+  const { data } = useBillingPaymentQuery()
+  const [orderAPIFn] = useCreateOrderMutation()
+  const { auth, products } = useAppSelector((state: RootState) => {
+    return state.persistedReducer
   })
+  const [searchParams] = useSearchParams()
+
   const handleWindowResize = () => {
     setWindowWidth(window.innerWidth)
   }
+
+  const getData = useCallback(
+    (getData: string) => {
+      const arrTotal: arrTotal[] = []
+      const arrTotalNumbers: number[] = []
+      dataCartCheckout.items.map((item) =>
+        item.items.map((data) => {
+          if (getData == 'list') {
+            console.log(item)
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { total, _id, ...rest } = data
+            arrTotal.push({ ...rest, name: item.name })
+          } else {
+            let value: number | undefined
+            if (getData === 'quantity') {
+              value = data.quantity
+            } else if (getData === 'total') {
+              value = data.total
+            }
+
+            if (value !== undefined) {
+              arrTotalNumbers.push(value)
+            }
+          }
+        })
+      )
+      return getData == 'list' ? arrTotal : arrTotalNumbers
+    },
+    [dataCartCheckout.items]
+  )
 
   useEffect(() => {
     dispatch(getAllProducts({}))
   }, [dispatch])
 
   useEffect(() => {
-    window.onresize = () => handleWindowResize()
-    if (!state) {
-      navigate(-1)
+    if (!searchParams.get('encode') && !searchParams.get('userId')) {
+      navigate('/')
     }
-    const intervalId = setInterval(() => {
-      if (second === 0) return
-      setSecond((prev) => prev - 1)
-    }, 1000)
+    let date = new Date()
+    if (searchParams.get('expire')) {
+      if (Number(searchParams.get('expire')) < date.getTime() / 1000) {
+        navigate(-1)
+      } else {
+        const orderVnpay: IOrderCheckout = {
+          user:
+            (searchParams.get('userId') as string) === 'undefined' ? undefined : (searchParams.get('userId') as string),
+          items: getData('list'),
+          payment_vnpay: searchParams.get('vnp_SecureHash')!,
+          total: searchParams.get('total')!,
+          priceShipping: searchParams.get('priceShipping')!,
+          noteOrder: searchParams.get('noteOrder') as string,
+          paymentMethodId: 'vnpay',
+          inforOrderShipping: {
+            name: searchParams.get('name') as string,
+            phone: searchParams.get('phone') as string,
+            address: searchParams.get('address') as string,
+            noteShipping: searchParams.get('noteShipping') as string
+          }
+        }
 
-    return () => clearInterval(intervalId)
-  }, [second, windowWidth])
+        orderAPIFn(orderVnpay)
+          .unwrap()
+          .then((res) => {
+            console.log(res)
+            if (res.error) {
+              return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+            } else {
+              dispatch(resetAllCart())
+              ClientSocket.sendNotificationToAdmin(
+                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                  res.order.orderNew.inforOrderShipping.name
+                }" và đang chờ xác nhận.`
+              )
+              ClientSocket.createOrder(res.order.orderNew.user)
+              setIdOrder(res.order.orderNew._id)
+            }
+          })
+      }
+    }
+
+    let decodedToken: Payload = {}
+
+    if (searchParams.get('encode')) {
+      decodedToken = jwtDecode(searchParams.get('encode')!)
+      if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+        navigate('/')
+      } else {
+        if (data) {
+          orderAPIFn(data.invoice)
+            .unwrap()
+            .then((res) => {
+              console.log(res)
+              if (res.error) {
+                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+              } else {
+                dispatch(resetAllCart())
+                ClientSocket.sendNotificationToAdmin(
+                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                    res.order.orderNew.inforOrderShipping.name
+                  }" và đang chờ xác nhận.`
+                )
+                ClientSocket.createOrder(res.order.orderNew.user)
+                setIdOrder(res.order.orderNew._id)
+              }
+            })
+        }
+      }
+    }
+
+    window.onresize = () => handleWindowResize()
+    // if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+    //   navigate('/')
+    // }
+    // if (!state || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
+    //   navigate(-1)
+    // }
+    // const intervalId = setInterval(() => {
+    //   if (second === 0) return
+    //   setSecond((prev) => prev - 1)
+    // }, 1000)
+
+    // return () => clearInterval(intervalId)
+  }, [second, windowWidth, data])
 
   return (
     <>
@@ -56,15 +182,17 @@ const PaymentResult = () => {
                 title='Chúc mừng bạn đã đặt hàng thành công 🎉'
                 subTitle='Đơn hàng đang được xử lý.Quá trình này sẽ mất 1 chút thời gian,bạn vui lòng đợi nhé!'
                 extra={[
-                  <Button
-                    size='large'
-                    className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
-                    type='primary'
-                    key='console'
-                    onClick={() => navigate('/account-layout/my-order')}
-                  >
-                    Xem đơn hàng
-                  </Button>,
+                  auth && auth.user.accessToken && (
+                    <Button
+                      size='large'
+                      className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
+                      type='primary'
+                      key='console'
+                      onClick={() => navigate(`/account-layout/my-order/${idOrder}`)}
+                    >
+                      Xem đơn hàng
+                    </Button>
+                  ),
                   <Button
                     size='large'
                     key='buy'
@@ -90,9 +218,9 @@ const PaymentResult = () => {
                 <div className='bg_title'></div>
               </div>
               <div className='list mt-[50px] flex flex-wrap '>
-                {products &&
-                  products?.docs?.length > 0 &&
-                  products?.docs
+                {products.products &&
+                  products.products?.docs?.length > 0 &&
+                  products.products?.docs
                     .slice(0, 4)
                     ?.map((product: IProduct) => <NewProductItem key={product._id} product={product} />)}
               </div>

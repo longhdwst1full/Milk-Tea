@@ -31,6 +31,7 @@ const List: ListStore[] = [
 interface Props {
   setGapStore?: React.Dispatch<React.SetStateAction<ListStore[]>>
   setAddress?: React.Dispatch<React.SetStateAction<string>>
+  setPickGapStore?: React.Dispatch<React.SetStateAction<ListStore>>
 }
 
 const getLocation = () => {
@@ -51,7 +52,7 @@ const getLocation = () => {
 
 getLocation()
 
-const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
+const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
   //   const [gapStore, setGapStore] = useState([])
@@ -60,7 +61,6 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
     setTimeout(async () => {
       const controller = new AbortController()
       const StorageDistance = JSON.parse(localStorage.getItem('location') ?? '')
-      console.log(StorageDistance)
 
       await axios
         .get(
@@ -77,12 +77,13 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
             return { ...List[index], ...item.distance }
           })
 
-          if (setGapStore) {
-            setGapStore(
-              listDistance.sort((a, b) => {
-                return (a.value ?? 0) - (b.value ?? 0)
-              })
-            )
+          const sortDistance = listDistance.sort((a, b) => {
+            return (a.value ?? 0) - (b.value ?? 0)
+          })
+
+          if (setGapStore && setPickGapStore) {
+            setGapStore(sortDistance)
+            setPickGapStore(sortDistance[0])
           }
 
           // localStorage.removeItem("location");

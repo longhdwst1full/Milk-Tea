@@ -66,7 +66,11 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
     setQuantity(1)
     setTotalToppingPrice(0)
     setCheckedToppings([])
-     
+    // setNameRadioInput(product.sizes[0].name);
+
+    //reset checkbox when popup close
+    // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    // checkboxes.forEach((item: any) => (item.checked = false));
   }, [product])
 
   const handleAddToCart = () => {
@@ -78,9 +82,13 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       quantity,
       image: product.images[0]?.url ?? '',
       price: (product.sale
-        ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
-        : nameRadioInput && nameRadioInput?.price - product.sale) as number,
-      total: product.sale ? price * ((100 - product.sale) / 100) * quantity : (price - product.sale) * quantity,
+        ? // ? nameRadioInput && nameRadioInput?.price * ((100 - product.sale) / 100)
+          nameRadioInput && nameRadioInput?.price - product.sale
+        : nameRadioInput?.price) as number,
+      total: product.sale
+        ? // ? price * ((100 - product.sale) / 100) * quantity
+          (price - product.sale) * quantity
+        : price,
       product: product._id
     }
 
@@ -101,10 +109,12 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
       dispatch(addToCart(data as CartItem))
     }
   }
+  if (!product) return null
+  console.log('🚀 ~ file: index.tsx:113 ~ PopupDetailProduct ~ product:', product)
 
   return (
     <div
-      className={`transition-opacity ease-in-out duration-[400ms] ${
+      className={`transition-opacity ease-in-out duration-[400ms] z-[11] ${
         showPopup ? 'opacity-1 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
@@ -119,7 +129,7 @@ const PopupDetailProduct = ({ showPopup, togglePopup, product }: PopupDetailProd
               <div className='left flex-1 md:flex-none w-[150px] h-[150px] md:w-[180px] md:h-[180px]'>
                 <img
                   className='w-full h-full rounded-md max-w-[150px] max-h-[150px] md:max-w-[180px] md:max-h-[180px]'
-                  src={product.images[0]?.url}
+                  src={product?.images[0]?.url}
                   alt='product image'
                 />
               </div>

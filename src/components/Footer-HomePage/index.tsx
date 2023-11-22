@@ -19,7 +19,7 @@ const FooterHomePage = () => {
       <div className='max-w-[1140px] w-full mx-auto pt-[55px] relative z-10'>
         <div className='main sm:p-0 flex flex-wrap px-5'>
           <div className='w-1/2 pr-5pnpm sm:p-0 sm:w-[24%]'>
-            <img className='max-h-max object-contain' src='/footer-logo.png' alt='' />
+            <img className='max-h-max object-contain' src='/logo_removebg.png' alt='' />
           </div>
 
           <div className='col-1 p-0 sm:pl-[30px] w-1/2 sm:w-[40%]'>

@@ -1,1 +1,6 @@
-console.log('index')
+export * from './Blogs.type'
+export * from './address.type'
+export * from './category.type'
+export * from './products.type'
+export * from './user.type'
+export * from './order.type'

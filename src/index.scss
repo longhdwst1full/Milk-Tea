@@ -215,3 +215,8 @@
     }
   }
 }
+
+.custom-input-forgotPass:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

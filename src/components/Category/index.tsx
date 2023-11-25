@@ -26,6 +26,8 @@ const SidebarCate = ({ categories, error, isLoading }: SidebarCateProps) => {
 
   const { products } = useAppSelector((state) => state.persistedReducer.products)
 
+  const { products } = useAppSelector((state) => state.persistedReducer.products)
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
   }

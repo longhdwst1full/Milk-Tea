@@ -47,6 +47,11 @@ const PaymentResult = () => {
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
+<<<<<<< HEAD
+=======
+            console.log(item)
+
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
@@ -73,8 +78,103 @@ const PaymentResult = () => {
     dispatch(getAllProducts({}))
   }, [dispatch])
 
+<<<<<<< HEAD
   const PaymentResult = () => {
     return Number(searchParams.get('vnp_ResponseCode')) == 24 ? (
+=======
+  useEffect(() => {
+    if (!searchParams.get('encode') && !searchParams.get('userId')) {
+      navigate('/')
+    }
+    let date = new Date()
+    if (searchParams.get('expire')) {
+      if (Number(searchParams.get('expire')) < date.getTime() / 1000) {
+        navigate(-1)
+      } else {
+        const orderVnpay: IOrderCheckout = {
+          user:
+            (searchParams.get('userId') as string) === 'undefined' ? undefined : (searchParams.get('userId') as string),
+          items: getData('list'),
+          payment_vnpay: searchParams.get('vnp_SecureHash')!,
+          total: searchParams.get('total')!,
+          priceShipping: searchParams.get('priceShipping')!,
+          noteOrder: searchParams.get('noteOrder') as string,
+          paymentMethodId: 'vnpay',
+          inforOrderShipping: {
+            name: searchParams.get('name') as string,
+            phone: searchParams.get('phone') as string,
+            address: searchParams.get('address') as string,
+            noteShipping: searchParams.get('noteShipping') as string
+          }
+        }
+
+        orderAPIFn(orderVnpay)
+          .unwrap()
+          .then((res) => {
+            console.log(res)
+            if (res.error) {
+              return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+            } else {
+              dispatch(resetAllCart())
+              ClientSocket.sendNotificationToAdmin(
+                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                  res.order.orderNew.inforOrderShipping.name
+                }" và đang chờ xác nhận.`
+              )
+              ClientSocket.createOrder(res.order.orderNew.user)
+              setIdOrder(res.order.orderNew._id)
+            }
+          })
+      }
+    }
+
+    let decodedToken: Payload = {}
+
+    if (searchParams.get('encode')) {
+      decodedToken = jwtDecode(searchParams.get('encode')!)
+      if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+        navigate('/')
+      } else {
+        if (data) {
+          orderAPIFn(data.invoice)
+            .unwrap()
+            .then((res) => {
+              console.log(res)
+              if (res.error) {
+                return toast.error('Xin lỗi đã có vấn đề về đặt hàng của bạn' + res.error.data.error)
+              } else {
+                dispatch(resetAllCart())
+                ClientSocket.sendNotificationToAdmin(
+                  `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                    res.order.orderNew.inforOrderShipping.name
+                  }" và đang chờ xác nhận.`
+                )
+                ClientSocket.createOrder(res.order.orderNew.user)
+                setIdOrder(res.order.orderNew._id)
+              }
+            })
+        }
+      }
+    }
+
+    window.onresize = () => handleWindowResize()
+    // if (decodedToken.exp && decodedToken.exp < date.getTime() / 1000) {
+    //   navigate('/')
+    // }
+    // if (!state || (decodedToken.exp && decodedToken.exp < date.getTime() / 1000)) {
+    //   navigate(-1)
+    // }
+    // const intervalId = setInterval(() => {
+    //   if (second === 0) return
+    //   setSecond((prev) => prev - 1)
+    // }, 1000)
+
+    // return () => clearInterval(intervalId)
+  }, [second, windowWidth, data])
+
+  return (
+    <>
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
       <div className='min-h-[100vh] overflow-hidden'>
         <ConFetti
           className={`transition-opacity duration-1000 pointer-events-none ${second <= 0 ? 'opacity-0 ' : ''}`}
@@ -90,6 +190,20 @@ const PaymentResult = () => {
                 title='Bạn đã hủy thanh toán giao dịch thành công 🎉'
                 subTitle='Nếu bạn muốn mua hàng thì bấm nút bên dưới nhé! 😃'
                 extra={[
+<<<<<<< HEAD
+=======
+                  auth && auth.user.accessToken && (
+                    <Button
+                      size='large'
+                      className='bg-[#D8B979] hover:!bg-transparent hover:!text-[#D8B979] hover:border-[#D8B979]'
+                      type='primary'
+                      key='console'
+                      onClick={() => navigate(`/account-layout/my-order/${idOrder}`)}
+                    >
+                      Xem đơn hàng
+                    </Button>
+                  ),
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
                   <Button
                     size='large'
                     key='buy'

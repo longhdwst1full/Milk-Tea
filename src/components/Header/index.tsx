@@ -103,17 +103,30 @@ const Header = () => {
                         title={item.content}
                       >
                         <span className='inline-block w-[10px] h-[10px] bg-[#d3b673] rounded-full group-hover:bg-white'></span>
+<<<<<<< HEAD
                         <Link
+=======
+                        <a
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
                           onClick={() => {
                             handleUpdateNotification(item._id)
                           }}
                           className='group-hover:!text-white block'
+<<<<<<< HEAD
                           // target='_blank'
                           // rel='noopener noreferrer'
                           to={`/account-layout/my-order/${item.idOrder}`}
                         >
                           {item.content}
                         </Link>
+=======
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          href={`/account-layout/my-order/${item.idOrder}`}
+                        >
+                          {item.content}
+                        </a>
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
                       </div>
                     ))
                   ) : (

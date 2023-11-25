@@ -1,5 +1,6 @@
 import { Button, Modal } from 'antd'
 import ListStore from '../../interfaces/Map.type'
+import { useEffect } from 'react'
 
 interface Props {
   isOpen: boolean
@@ -9,9 +10,15 @@ interface Props {
 }
 
 const YasuoGap = ({ isOpen, gapStore, setPickGapStore, toggleModal }: Props) => {
+<<<<<<< HEAD
   // useEffect(() => {
   //   console.log(gapStore)
   // }, [])
+=======
+  useEffect(() => {
+    console.log(gapStore)
+  }, [])
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   const handleCancel = () => {
     toggleModal()
   }

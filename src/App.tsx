@@ -15,7 +15,11 @@ const App = () => {
     if (user._id) {
       ClientSocket.JoinRoom(user._id)
     }
+<<<<<<< HEAD
   }, [user._id])
+=======
+  }, [])
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   return (
     <Flowbite theme={{ theme }}>
       <RouterProvider router={routes} />

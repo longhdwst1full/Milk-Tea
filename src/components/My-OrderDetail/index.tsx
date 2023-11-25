@@ -13,6 +13,7 @@ import formatDate from '../../utils/formatDate'
 const MyOrderDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+<<<<<<< HEAD
   const { data: orderData, isError } = useGetOrderByidQuery(id as string)
 
   const totalPrice = orderData?.order?.items.reduce(
@@ -20,6 +21,16 @@ const MyOrderDetail = () => {
       accumulator + item.price + item?.toppings.reduce((acc: number, topping: ITopping) => acc + topping.price, 0),
     0
   )
+=======
+  const { data: orderData, isError } = useGetOrderByidQuery(id!)
+
+  const totalPrice = orderData?.order?.items.reduce(
+    (accumulator, item) =>
+      accumulator + item.price + item?.toppings.reduce((acc: any, topping: ITopping) => acc + topping.price, 0),
+    0
+  )
+  console.log(totalPrice)
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
   const items = [
     {
@@ -50,9 +61,13 @@ const MyOrderDetail = () => {
         <div className='py-5 flex items-center justify-between sticky top-0 bg-white z-[8]'>
           <div className='flex items-center gap-x-2 cursor-pointer select-none' onClick={() => navigate(-1)}>
             <AiOutlineArrowLeft className='text-lg' />
+<<<<<<< HEAD
             <span className='uppercase' onClick={() => navigate(-1)}>
               Trở lại
             </span>
+=======
+            <span className='uppercase'>Trở lại</span>
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
           </div>
           <div className='uppercase flex items-center gap-x-3 text-sm'>
             <span>Mã đơn hàng: {orderData?.order?._id}</span>
@@ -95,7 +110,11 @@ const MyOrderDetail = () => {
                 </span>
               )}
               <span className='text-[12px] text-[#0000008a]'>
+<<<<<<< HEAD
                 Thời gian đặt hàng: {orderData?.order?.createdAt && formatDate(orderData?.order?.createdAt)}
+=======
+                Thời gian đặt hàng: {formatDate(orderData?.order?.createdAt!)}
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
               </span>
             </div>
           </div>
@@ -176,7 +195,11 @@ const MyOrderDetail = () => {
             <div className='flex justify-end  items-center py-3 text-right border-b border-b-[#ccc]'>
               <div className='text-[12px] pr-2'>Phí vận chuyển</div>
               <div className='w-[200px] text-[#866312] border-l border-l-[#ccc]'>
+<<<<<<< HEAD
                 {orderData?.order?.priceShipping && formatCurrency(orderData?.order?.priceShipping)}
+=======
+                {formatCurrency(orderData?.order?.priceShipping!)}
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
               </div>
             </div>
             {/* <div className='flex justify-end  items-center py-3 text-right border-b border-b-[#ccc]'>
@@ -186,7 +209,11 @@ const MyOrderDetail = () => {
             <div className='flex justify-end  items-center py-3 text-right border-b border-b-[#ccc]'>
               <div className='text-[12px] pr-2'>Thành tiền</div>
               <div className='w-[200px] text-2xl text-[#866312] border-l border-l-[#ccc]'>
+<<<<<<< HEAD
                 {orderData?.order?.total && formatCurrency(orderData?.order?.total)}
+=======
+                {formatCurrency(orderData?.order?.total!)}
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
               </div>
             </div>
           </div>

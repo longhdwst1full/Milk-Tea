@@ -2,7 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Input } from '../../components'
+<<<<<<< HEAD
 import { useAppSelector } from '../../store/hooks'
+=======
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { message } from 'antd'
@@ -10,8 +14,11 @@ import { useForm } from 'react-hook-form'
 import { BiSolidUser } from 'react-icons/bi'
 import { toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
+<<<<<<< HEAD
 import { useStripePaymentMutation } from '../../api/paymentstripe'
 import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
+=======
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 import CheckoutItem from '../../components/Checkout-Item'
 import ModalListVouchers from '../../components/ModalListVouchers'
 import YaSuoMap from '../../components/map/YaSuoMap'
@@ -19,12 +26,22 @@ import YasuoGap from '../../components/map/YasuoGap'
 import ListStore from '../../interfaces/Map.type'
 import { IVoucher } from '../../interfaces/voucher.type'
 import { ClientSocket } from '../../socket'
+<<<<<<< HEAD
 import { useCreateOrderMutation } from '../../store/slices/order'
+=======
+import { useStripePaymentMutation } from '../../api/paymentstripe'
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 import { arrTotal } from '../../store/slices/types/cart.type'
 import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { formatCurrency } from '../../utils/formatCurrency'
 import { UserCheckoutSchema } from '../../validate/Form'
 import styles from './Checkout.module.scss'
+<<<<<<< HEAD
+=======
+import { useCreateOrderMutation } from '../../store/slices/order'
+import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
+import { resetAllCart } from '../../store'
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
 //
 const Checkout = () => {
@@ -84,6 +101,8 @@ const Checkout = () => {
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
+            console.log(item)
+
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
@@ -117,9 +136,13 @@ const Checkout = () => {
 
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
+<<<<<<< HEAD
       return pickGapStore.value > 30000 || pickGapStore.value <= 5000
         ? 0
         : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
+=======
+      return pickGapStore.value > 30000 || pickGapStore.value <= 2000 ? 0 : (pickGapStore.value - 2000) * 2
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
     }
     return 0
   }, [gapStore, pickGapStore])
@@ -160,6 +183,7 @@ const Checkout = () => {
         }
       }
 
+<<<<<<< HEAD
       const storeNote = {
         noteOrder: dataForm.noteOrder,
         noteShipping: dataForm.inforOrderShipping.noteShipping,
@@ -176,12 +200,28 @@ const Checkout = () => {
             } else {
               // dispatch(resetAllCart())
 
+=======
+      console.log(dataForm)
+
+      if (data.paymentMethod == 'cod') {
+        console.log(dataForm)
+
+        orderAPIFn(dataForm)
+          .unwrap()
+          .then((res) => {
+            if (res.error) {
+              return toast.error('Đặt hàng thất bại' + res.error.data.error)
+            } else {
+              dispatch(resetAllCart())
+              console.log(res.order.orderNew)
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
               ClientSocket.sendNotificationToAdmin(
                 `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
                   res.order.orderNew.inforOrderShipping.name
                 }" và đang chờ xác nhận.`
               )
               ClientSocket.createOrder(res.order.orderNew.user)
+<<<<<<< HEAD
               window.location.href = res.order.url
             }
           })
@@ -193,15 +233,27 @@ const Checkout = () => {
           .catch((err) => {
             console.error(err)
           })
+=======
+              // window.location.href = res.order.url
+            }
+          })
+      } else if (data.paymentMethod == 'stripe') {
+        stripePayment(dataForm).then(({ data: { url } }: any) => {
+          window.location.href = url
+        })
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
       } else if (data.paymentMethod == 'vnpay') {
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
             window.location.href = url
           })
+<<<<<<< HEAD
           .catch((err) => {
             console.error(err)
           })
+=======
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
       }
 
       // orderAPIFn(dataForm)

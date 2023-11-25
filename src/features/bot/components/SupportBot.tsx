@@ -26,6 +26,10 @@ export const SupportBot = ({ showDrawer }: SupportBotProps) => {
       <ChatContent messages={chatMessages} />
 
       <ChatInputBox sendANewMessage={sendANewMessage} />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
     </div>,
     bodyElement
   )

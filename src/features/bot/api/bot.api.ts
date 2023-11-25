@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // import { API_BOT_CHAT } from '../../../configs'
+=======
+import { API_BOT_CHAT } from '../../../configs'
+>>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 import http from '../../../api/instance'
 import { message } from 'antd'
 

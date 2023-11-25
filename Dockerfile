@@ -1,4 +1,4 @@
-FROM node:16-alpine as build
+FROM node:18-alpine as build
 
 WORKDIR /app
 COPY package.json .
@@ -14,8 +14,8 @@ RUN npm cache clean --force
 RUN rm /usr/local/bin/yarn
 RUN rm /usr/local/bin/yarnpkg && npm install -g yarn
  
-RUN yarn global add typescript@4.4.4
-RUN yarn global add vite
+RUN yarn add typescript -g 
+RUN yarn add vite -g
 RUN yarn
 
 COPY . .

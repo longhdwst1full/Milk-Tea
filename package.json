@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://longhdwst1full.github.io/Milk-Tea",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/longhdwst1full/Milk-Tea.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -43,6 +48,7 @@
     "react-epic-spinners": "^0.5.0",
     "react-flatpickr": "^3.10.13",
     "react-highlight-words": "^0.20.0",
+    "gh-pages": "^6.0.0",
     "react-hook-form": "^7.45.2",
     "react-icons": "^4.10.1",
     "react-loading-skeleton": "^3.3.1",

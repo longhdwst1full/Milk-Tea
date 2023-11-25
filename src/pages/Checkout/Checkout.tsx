@@ -1,42 +1,45 @@
-import { Button, Input } from '../../components'
-import { FaAngleDown, FaPhoneAlt, FaStickyNote, FaStore } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
+import { Link, useNavigate } from 'react-router-dom'
+import { Button, Input } from '../../components'
+import { useAppSelector } from '../../store/hooks'
 
-import { BiSolidUser } from 'react-icons/bi'
-import { CartItemState } from '../../store/slices/types/cart.type'
-import CheckoutItem from '../../components/Checkout-Item'
-import { IVoucher } from '../../interfaces/voucher.type'
-import ModalListVouchers from '../../components/ModalListVouchers'
-import { UserCheckoutSchema } from '../../validate/Form'
-import { formatCurrency } from '../../utils/formatCurrency'
-import { resetAllCart } from '../../store/slices/cart.slice'
-import styles from './Checkout.module.scss'
-import { toast } from 'react-toastify'
-import { useCreateOrderMutation } from '../../store/slices/order'
-import { useForm } from 'react-hook-form'
-import { v4 as uuidv4 } from 'uuid'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { message } from 'antd'
+import { useForm } from 'react-hook-form'
+import { BiSolidUser } from 'react-icons/bi'
+import { toast } from 'react-toastify'
+import { v4 as uuidv4 } from 'uuid'
+import { useStripePaymentMutation } from '../../api/paymentstripe'
+import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
+import CheckoutItem from '../../components/Checkout-Item'
+import ModalListVouchers from '../../components/ModalListVouchers'
 import YaSuoMap from '../../components/map/YaSuoMap'
 import YasuoGap from '../../components/map/YasuoGap'
 import ListStore from '../../interfaces/Map.type'
-import { message } from 'antd'
-import { useDeleteCartDBMutation } from '../../api/cartDB'
+import { IVoucher } from '../../interfaces/voucher.type'
+import { ClientSocket } from '../../socket'
+import { useCreateOrderMutation } from '../../store/slices/order'
+import { arrTotal } from '../../store/slices/types/cart.type'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { formatCurrency } from '../../utils/formatCurrency'
+import { UserCheckoutSchema } from '../../validate/Form'
+import styles from './Checkout.module.scss'
 
 //
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-  const [orderAPIFn] = useCreateOrderMutation()
+  const [orderAPIFn, { isLoading: cod }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
   const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
-  const [deleteCartDBFn] = useDeleteCartDBMutation()
+  const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
+  const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
+  // const [deleteCartDBFn] = useDeleteCartDBMutation()
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen)
@@ -49,8 +52,7 @@ const Checkout = () => {
     register,
     formState: { errors },
     handleSubmit,
-    setValue,
-    reset
+    setValue
   } = useForm({
     resolver: yupResolver(UserCheckoutSchema)
   })
@@ -64,7 +66,7 @@ const Checkout = () => {
     setValue('shippingLocation', address ?? '')
   }, [address, setValue])
   useEffect(() => {
-    dataCartCheckout.items.length < 1 && navigate('/products/checkout/payment-result', { state: 'success' })
+    dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
@@ -77,14 +79,14 @@ const Checkout = () => {
 
   const getData = useCallback(
     (getData: string) => {
-      const arrTotal: Omit<CartItemState, 'total'>[] = []
+      const arrTotal: arrTotal[] = []
       const arrTotalNumbers: number[] = []
       dataCartCheckout.items.map((item) =>
         item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { total, _id, ...rest } = data
-            arrTotal.push(rest)
+            arrTotal.push({ ...rest, name: item.name })
           } else {
             let value: number | undefined
             if (getData === 'quantity') {
@@ -104,11 +106,20 @@ const Checkout = () => {
     [dataCartCheckout.items]
   )
 
+  const totalQuantity = useMemo(() => {
+    const all = getData('quantity') as number[]
+
+    const a = all.reduce((acc, curent) => {
+      return acc + curent
+    }, 0)
+    return a
+  }, [getData])
+
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return (pickGapStore.value - 2000) * 2
-    } else if ((gapStore[0]?.value as number) > 0) {
-      return ((gapStore[0]?.value as number) - 2000) * 2
+      return pickGapStore.value > 30000 || pickGapStore.value <= 5000
+        ? 0
+        : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
     }
     return 0
   }, [gapStore, pickGapStore])
@@ -125,23 +136,14 @@ const Checkout = () => {
     }, 0)
   }, [getData])
 
-  const totalQuantity = useMemo(() => {
-    const all = getData('quantity') as number[]
-
-    const a = all.reduce((acc, curent) => {
-      return acc + curent
-    }, 0)
-    return a
-  }, [getData])
-
   // tong cong tien
   const totalAllMoneyCheckOut = useMemo(() => {
     return moneyShipping + totalMoneyCheckout - moneyPromotion
   }, [moneyPromotion, moneyShipping, totalMoneyCheckout])
 
   const handleFormInfoCheckout = handleSubmit((data) => {
-    if (dataInfoUser.user.accessToken === '' && dataInfoUser.user._id == '') {
-      return navigate('/signin')
+    if (Number(pickGapStore.value) > 30000) {
+      message.error('Khoảng cách quá xa không thể giao hàng', 2)
     } else {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
@@ -158,38 +160,81 @@ const Checkout = () => {
         }
       }
 
-      orderAPIFn(dataForm)
-        .unwrap()
-        .then((res) => {
-          if (res.error) {
-            return toast.error('Đặt hàng thất bại' + res.error.data.error)
-          } else {
-            reset()
-            dataCartCheckout.items.length &&
-              dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
-            dispatch(resetAllCart())
-            toast.success('Bạn đặt hàng thành công')
+      const storeNote = {
+        noteOrder: dataForm.noteOrder,
+        noteShipping: dataForm.inforOrderShipping.noteShipping,
+        paymentMethodId: dataForm.paymentMethodId
+      }
+      localStorage.setItem('storeNote', JSON.stringify(storeNote))
 
-            // alert(data.shippingNote)
+      if (data.paymentMethod == 'cod') {
+        orderAPIFn(dataForm)
+          .unwrap()
+          .then((res) => {
+            if (res.error) {
+              return toast.error('Đặt hàng thất bại' + res.error.data.error)
+            } else {
+              // dispatch(resetAllCart())
 
-            // dispatch(resetAllCart());
-            // navigate('http://localhost:4000/vnpay');
-            if (data.paymentMethod == 'vnpay') {
-              const returnUrl = 'http://localhost:5173' // url trả về
-              window.location.href =
-                'http://ketquaday99.com/vnpay/fast?amount=' +
-                dataForm.total +
-                '&txt_inv_mobile=' +
-                data.phone +
-                '&txt_billing_fullname=' +
-                data.name +
-                '&txt_ship_addr1=' +
-                data.shippingLocation +
-                '&returnUrl=' +
-                returnUrl
+              ClientSocket.sendNotificationToAdmin(
+                `Đơn hàng "${res.order.orderNew._id.toUpperCase()}" vừa được tạo bởi khách hàng "${
+                  res.order.orderNew.inforOrderShipping.name
+                }" và đang chờ xác nhận.`
+              )
+              ClientSocket.createOrder(res.order.orderNew.user)
+              window.location.href = res.order.url
             }
-          }
-        })
+          })
+      } else if (data.paymentMethod == 'stripe') {
+        stripePayment(dataForm)
+          .then(({ data: { url } }: any) => {
+            window.location.href = url
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+      } else if (data.paymentMethod == 'vnpay') {
+        vnpayPayment(dataForm)
+          .unwrap()
+          .then(({ url }) => {
+            window.location.href = url
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+      }
+
+      // orderAPIFn(dataForm)
+      //   .unwrap()
+      //   .then((res) => {
+      //     if (res.error) {
+      //       return toast.error('Đặt hàng thất bại' + res.error.data.error)
+      //     } else {
+      //       reset()
+      //       dataCartCheckout.items.length &&
+      //         dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
+      //       dispatch(resetAllCart())
+      //       toast.success('Bạn đặt hàng thành công')
+
+      //       // alert(data.shippingNote)=
+      //       // dispatch(resetAllCart());
+      //       // navigate('http://localhost:4000/vnpay');
+      //       if (data.paymentMethod == 'vnpay') {
+      //         const returnUrl = 'http://localhost:5173' // url trả về
+      //         window.location.href =
+      //           'http://ketquaday99.com/vnpay/fast?amount=' +
+      //           dataForm.total +
+      //           '&txt_inv_mobile=' +
+      //           data.phone +
+      //           '&txt_billing_fullname=' +
+      //           data.name +
+      //           '&txt_ship_addr1=' +
+      //           data.shippingLocation +
+      //           '&returnUrl=' +
+      //           returnUrl
+      //       }
+      //     }
+      //   })
     }
   })
 
@@ -200,9 +245,6 @@ const Checkout = () => {
           <div className='title flex justify-between items-center px-5 mb-[7px] '>
             <div>
               <h2 className='text-sm font-bold'>Thông tin giao hàng</h2>
-            </div>
-            <div className='text-[#adaeae]'>
-              <FaAngleDown />
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] p-5'>
@@ -256,7 +298,7 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} />
+              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} setPickGapStore={setPickGapStore} />
               <div id='map'></div>
             </div>
           </div>
@@ -281,9 +323,20 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán qua Ví vnPay</span>
                 <input
                   className='absolute opacity-0'
-                  defaultChecked
+                  // defaultChecked
                   type='radio'
                   value='vnpay'
+                  {...register('paymentMethod')}
+                />
+                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
+              </label>
+              <label className={` ${styles.container_radio} cod-payment block group`}>
+                <span className='text-sm'>Thanh toán qua Stripe</span>
+                <input
+                  className='absolute opacity-0'
+                  // defaultChecked
+                  type='radio'
+                  value='stripe'
                   {...register('paymentMethod')}
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
@@ -302,37 +355,8 @@ const Checkout = () => {
             <div>
               <h2 className='text-sm font-bold'>Thông tin đơn hàng</h2>
             </div>
-            <div className='text-[#adaeae]'>
-              <FaAngleDown />
-            </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
-            <div className='store pt-[14px] pb-[10px] border-transparent border border-b-[#f1f1f1]'>
-              <h3 className='text-sm'>Chọn cửa hàng</h3>
-              <div
-                className=' flex items-center justify-between cursor-pointer'
-                onClick={() => {
-                  if (gapStore.length <= 0) {
-                    message.error('Vui lòng điền địa chỉ giao hàng', 2)
-                  } else {
-                    setOpenGapStore(true)
-                  }
-                }}
-              >
-                <div className='gap-x-2 flex items-center'>
-                  <FaStore />
-                  <span className='text-sm'>
-                    {pickGapStore.highName ? pickGapStore.highName : gapStore[0]?.highName}
-                  </span>
-                </div>
-                <div className='gap-x-2 flex items-center'>
-                  <span className='text-sm'>
-                    {pickGapStore.text ? pickGapStore.text : gapStore.length > 0 && gapStore[0].text}
-                  </span>
-                  <FaAngleDown className='text-[#adaeae]' />
-                </div>
-              </div>
-            </div>
             <div className='list'>
               {dataCartCheckout.items &&
                 dataCartCheckout.items.map((item) => <CheckoutItem key={uuidv4()} dataCartCheckout={item} />)}
@@ -364,6 +388,10 @@ const Checkout = () => {
                 </div>
               </div>
               <div className='flex justify-end py-1 text-sm'>
+                <span>Quãng đường:</span>
+                <span className='w-[80px] text-right'>{pickGapStore.text ? pickGapStore.text : '0 Km'}</span>
+              </div>
+              <div className='flex justify-end py-1 text-sm'>
                 <span>Phí vận chuyển: </span>
                 <span className='w-[80px] text-right'>{formatCurrency(moneyShipping)}</span>
               </div>
@@ -374,7 +402,7 @@ const Checkout = () => {
               <div className='flex justify-end py-1 text-sm'>
                 <span className='font-bold'>Tổng cộng: </span>
                 <span className='w-[80px] text-right text-[#86744e] font-bold'>
-                  {formatCurrency(totalAllMoneyCheckOut)}
+                  {moneyPromotion >= totalAllMoneyCheckOut ? 0 : formatCurrency(totalAllMoneyCheckOut)}
                 </span>
               </div>
             </div>
@@ -386,7 +414,7 @@ const Checkout = () => {
               ></textarea>
             </div>
             <div className=''>
-              <Button type='checkout' size='large' shape='circle'>
+              <Button type='checkout' style={cod || stripe || vnpay ? 'bg-gray-500' : ''} size='large' shape='circle'>
                 <span className='block' onClick={handleFormInfoCheckout}>
                   Đặt hàng
                 </span>

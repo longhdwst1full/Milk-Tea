@@ -32,7 +32,7 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
       <div className='img md:h-[255px] md:w-[255px]'>
         <img
           className='transition-all group-hover:scale-[1.2] h-full w-full object-cover'
-          src={product.images[0]?.url}
+          src={product?.images[0]?.url}
           alt={product?.name}
         />
       </div>
@@ -42,17 +42,14 @@ const NewProductItem = ({ product }: NewProductItemProps) => {
         </div>
         <div className='flex items-center mt-6 item-price gap-x-2'>
           <span className='text-[#8a733f] text-sm font-[700] '>
-            {product.sale && product.sizes
-              ? formatCurrency(
-                  product.sale
-                    ? product?.sizes[0]?.price * ((100 - product.sale) / 100)
-                    : product?.sizes[0]?.price - product.sale
-                )
-              : formatCurrency(product.sizes && product.sizes[0].price)}
+            {product.sale
+              ? formatCurrency(product?.sizes[0]?.price - product.sale)
+              : formatCurrency(product?.sizes[0]?.price)}
           </span>
           {product?.sale !== 0 && (
             <span className='text-[#bebebe] text-sm line-through'>
-              {formatCurrency(product.sizes && product.sizes[0]?.price)}
+              {/* {product.sale < 100 ? formatCurrency(product.sizes && product.sizes[0]?.price) : ''} */}
+              {product.sizes && formatCurrency(product?.sizes[0]?.price)}
             </span>
           )}
         </div>

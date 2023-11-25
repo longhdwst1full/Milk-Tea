@@ -39,7 +39,7 @@ export const addCate = createAsyncThunk('cate/addCate', async (cate: Pick<ICateg
 export const updateCate = createAsyncThunk('cate/updateCate', async (cate: Pick<ICategory, 'name' | '_id'>) => {
   try {
     const { data } = await http.put(`/category/${cate._id}`, { name: cate.name })
-    console.log(data)
+
     return data
   } catch (error) {
     return (error as AxiosError).message

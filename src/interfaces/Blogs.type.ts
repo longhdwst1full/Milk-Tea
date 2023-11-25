@@ -15,6 +15,7 @@ export interface IBlogsDocs {
 export interface IBlogs {
   _id: string
   name: string
+  category: any
   images: IImage[]
   description: string
   createdAt?: string

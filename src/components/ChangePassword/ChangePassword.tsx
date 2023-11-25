@@ -1,6 +1,7 @@
 import { Button, Form, Input, message } from 'antd'
 import { useUpdatePasswordMutation } from '../../api/User'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { RootState, useAppSelector } from '../../store'
 
 type FieldType = {
   password: string
@@ -10,6 +11,12 @@ type FieldType = {
 
 const ChangePassword = () => {
   const [updatePasswordFn, updatePasswordRes] = useUpdatePasswordMutation()
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
+
+  const [avatar, _] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
+    file: undefined,
+    base64: ''
+  })
 
   const handleFinish = async (data: FieldType) => {
     if (data) {
@@ -26,7 +33,7 @@ const ChangePassword = () => {
     }
 
     if (updatePasswordRes.isSuccess) {
-      message.success('Đổi mật khẩu thành công')
+      message.success('Đổi mật khẩu thành công!')
     }
   }, [updatePasswordRes])
   return (
@@ -34,7 +41,14 @@ const ChangePassword = () => {
       <div className='items-center justify-between border-b border-gray-200 pb-4'>
         <h2 className='text-[#333] text-lg font-medium'>Thay đổi mật khẩu</h2>
       </div>
-      <div className='select-none mt-[20px]'>
+      <div className='mt-[70px] border border-[#E5E7EB] shadow-md w-full rounded-md'>
+        <div className='account-avatar h-[120px] ml-[calc(45%-60px)] w-[120px] mt-[-60px] bg-[#fff] rounded-full border-[5px] border-white'>
+          <div className='avatar'>
+            <div>
+              <img className='w-full rounded-full' src={String(avatar.base64) || user?.avatar} />
+            </div>
+          </div>
+        </div>
         <Form<FieldType>
           name='basic'
           labelCol={{ span: 8 }}
@@ -44,11 +58,13 @@ const ChangePassword = () => {
           onFinish={handleFinish}
           // onFinishFailed={onFinishFailed}
           autoComplete='off'
+          layout='vertical'
+          className='ml-[24%] mt-5'
         >
           <Form.Item
             label='Mật khẩu cũ'
             name='password'
-            rules={[{ required: true, message: 'Mời bạn điền vào mật khẩu cũ!' }]}
+            rules={[{ required: true, message: 'Mật khẩu cũ không được bỏ trống!' }]}
           >
             <Input.Password className='border-gray-300 h-[35px] rounded-[5px]' />
           </Form.Item>
@@ -56,7 +72,13 @@ const ChangePassword = () => {
           <Form.Item
             label='Mật khẩu mới'
             name='passwordNew'
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[
+              { required: true, message: 'Mật khẩu mới không được bỏ trống!' },
+              {
+                min: 5,
+                message: 'Mật khẩu mới phải có ít nhất 5 kí tự.'
+              }
+            ]}
           >
             <Input.Password />
           </Form.Item>
@@ -69,14 +91,14 @@ const ChangePassword = () => {
             rules={[
               {
                 required: true,
-                message: 'Làm ơn điền Confirm Password!'
+                message: 'Xác nhận mật khẩu mới không được bỏ trống!'
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('passwordNew') === value) {
                     return Promise.resolve()
                   }
-                  return Promise.reject(new Error('Password new and Confirm Password không khớp!'))
+                  return Promise.reject(new Error('Mật khẩu nhập lại không khớp!'))
                 }
               })
             ]}
@@ -84,8 +106,8 @@ const ChangePassword = () => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='submit' className='bg-primary-500'>
+          <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
+            <Button type='primary' htmlType='submit' className='bg-[#D8B979]'>
               Đổi mật khẩu
             </Button>
           </Form.Item>

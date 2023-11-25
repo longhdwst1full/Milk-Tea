@@ -9,6 +9,9 @@ interface Props {
 }
 
 const YasuoGap = ({ isOpen, gapStore, setPickGapStore, toggleModal }: Props) => {
+  // useEffect(() => {
+  //   console.log(gapStore)
+  // }, [])
   const handleCancel = () => {
     toggleModal()
   }

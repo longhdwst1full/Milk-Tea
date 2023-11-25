@@ -9,10 +9,13 @@ const Loader = () => {
     <div
       className={`${styles.preloader} ${
         !isLoading ? 'opacity-0 pointer-events-none ' : 'opacity-100'
-      } transition-opacity duration-1000`}
+      } transition-opacity duration-700`}
     >
-      <div className={styles.wrapLoading}>
+      {/* <div className={styles.wrapLoading}>
         <div className={styles.loader}>Loading...</div>
+      </div> */}
+      <div className={`${styles.wrapLoading2} select-none`}>
+        <img className={`w-[250px] max-w-[250px] ${styles.loader}`} src='/BUBBLE_TEA-02.png' alt='' />
       </div>
     </div>
   )

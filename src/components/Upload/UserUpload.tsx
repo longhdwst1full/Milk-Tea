@@ -13,8 +13,7 @@ type UserUploadProps = {
 const UserUpload = ({ urlAvatar, setUrlAvatar, upLoadAvartaUser, deleteImageUser }: UserUploadProps) => {
   const handleChangeUpload = (event: any) => {
     const file = event.target.files[0]
-    console.log(file)
-    // console.log(file);
+
     const formData = new FormData()
     formData.append('images', file)
 

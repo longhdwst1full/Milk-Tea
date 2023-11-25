@@ -29,8 +29,6 @@ const Signup = () => {
   })
 
   const onRegister = (registerData: any) => {
-    console.log(registerData)
-
     registerUser(registerData).then((data: any) => {
       if (data.error) {
         return toast.error(data.error.data.err, {

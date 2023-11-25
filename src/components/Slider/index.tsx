@@ -42,7 +42,7 @@ const Sliders = () => {
   return (
     <section className='slider overflow-hidden'>
       <Slider {...settings}>
-        {data?.banners &&
+        {data?.banners && data.banners.length > 0 ? (
           data.banners.map((banner: { url: string }) => (
             <div key={uuidv4()} className='item relative'>
               <div className={`${styles.overlay}`}></div>
@@ -64,7 +64,25 @@ const Sliders = () => {
                 <div className='text-sm text-white hidden md:block'>Cuộn xuống</div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div key={uuidv4()} className='item relative'>
+            <div className={`${styles.overlay}`}></div>
+            <div className='block w-[414px] h-[276px] md:w-[820px] md:h-[546px] lg:w-full lg:h-[864px] lg:max-h-[864px] object-cover'></div>
+            <div className='slide-content center-slider text-center'>
+              <div className='flex items-center justify-center'>
+                <Link
+                  to='/products'
+                  className=' hover:bg-[#d3b673] w-[166px] h-full  max-w-[166px] text-[16px] uppercase py-[10px] text-white border border-white px-[15px] inline-block font-semibold'
+                >
+                  Đặt hàng ngay
+                </Link>
+              </div>
+              <div className={`${styles.cursor} hidden md:block`}></div>
+              <div className='text-sm text-white hidden md:block'>Cuộn xuống</div>
+            </div>
+          </div>
+        )}
 
         {/* <div className='item relative'>
           <div className={`${styles.overlay}`}></div>

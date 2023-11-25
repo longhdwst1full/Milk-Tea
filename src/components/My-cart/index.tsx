@@ -17,7 +17,11 @@ const MyCart = () => {
 
   const [deleteCartDBFn, deleteCartDBRes] = useDeleteCartDBMutation()
 
-  const getAllCart = useGetAllCartDBQuery()
+  ;(() => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const getAllCart = user && user.accessToken ? useGetAllCartDBQuery() : null
+    return getAllCart
+  })()
 
   /* Tính tổng tiền và tổng số lượng quantity */
   const { total, quantity } = items.reduce(
@@ -43,22 +47,15 @@ const MyCart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire('Xóa!', 'Đã xóa xong.', 'success')
-        user.accessToken === '' && user._id === ''
+        user.accessToken === ''
           ? dispatch(resetAllCart())
           : items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
       }
     })
   }
 
-  // check user login when click
-  // console.log('auth ', user)
   const handleCheckUser = () => {
-    if (!user.accessToken && !user._id) {
-      navigate('/signin')
-      return
-    } else {
-      navigate('/products/checkout')
-    }
+    navigate('/products/checkout')
   }
   return (
     <div className='sidebar shrink-0 w-[300px] bg-[#fff] text-[14px] rounded-sm mx-[16px] pb-[12px] h-fit hidden lg:block'>
@@ -91,7 +88,9 @@ const MyCart = () => {
             <button
               disabled={items.length > 0 ? false : true}
               onClick={handleCheckUser}
-              className='bg-[#d8b979] text-white text-center rounded-xl py-1 w-full'
+              className={`bg-[#d8b979] text-white text-center rounded-xl py-1 w-full ${
+                items.length <= 0 && 'bg-opacity-50'
+              }`}
             >
               Thanh toán
             </button>

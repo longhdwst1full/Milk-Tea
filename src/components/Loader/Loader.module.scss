@@ -6,7 +6,7 @@
   left: 0;
   z-index: 1000;
   background-color: #fff;
-  .wrapLoading {
+  .wrapLoading2 {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -15,26 +15,40 @@
     -ms-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
     .loader {
-      color: #ee4d2d;
-      font-size: 60px;
-      text-indent: -9999em;
-      overflow: hidden;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      margin: 72px auto;
-      position: relative;
-      -webkit-transform: translateZ(0);
-      -ms-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-animation:
-        load6 1.7s infinite ease,
-        round 1.7s infinite ease;
-      animation:
-        load6 1.7s infinite ease,
-        round 1.7s infinite ease;
+      animation-name: ring-ring;
+      animation-duration: 1.5s;
+      animation-iteration-count: infinite;
     }
   }
+  // .wrapLoading {
+  //   position: absolute;
+  //   top: 50%;
+  //   left: 50%;
+  //   transform: translate(-50%, -50%);
+  //   -webkit-transform: translate(-50%, -50%);
+  //   -ms-transform: translate(-50%, -50%);
+  //   -o-transform: translate(-50%, -50%);
+  //   .loader {
+  //     color: #ee4d2d;
+  //     font-size: 60px;
+  //     text-indent: -9999em;
+  //     overflow: hidden;
+  //     width: 60px;
+  //     height: 60px;
+  //     border-radius: 50%;
+  //     margin: 72px auto;
+  //     position: relative;
+  //     -webkit-transform: translateZ(0);
+  //     -ms-transform: translateZ(0);
+  //     transform: translateZ(0);
+  //     -webkit-animation:
+  //       load6 1.7s infinite ease,
+  //       round 1.7s infinite ease;
+  //     animation:
+  //       load6 1.7s infinite ease,
+  //       round 1.7s infinite ease;
+  //   }
+  // }
 }
 
 @keyframes round {
@@ -151,5 +165,29 @@
       0 -0.83em 0 -0.44em,
       0 -0.83em 0 -0.46em,
       0 -0.83em 0 -0.477em;
+  }
+}
+
+@keyframes ring-ring {
+  0% {
+    transform: rotate(0deg) scale(1) skew(1deg);
+  }
+  10% {
+    transform: rotate(-25deg) scale(1) skew(1deg);
+  }
+  20% {
+    transform: rotate(25deg) scale(1) skew(1deg);
+  }
+  30% {
+    transform: rotate(-25deg) scale(1) skew(1deg);
+  }
+  40% {
+    transform: rotate(25deg) scale(1) skew(1deg);
+  }
+  50% {
+    transform: rotate(0deg) scale(1) skew(1deg);
+  }
+  100% {
+    transform: rotate(0deg) scale(1) skew(1deg);
   }
 }

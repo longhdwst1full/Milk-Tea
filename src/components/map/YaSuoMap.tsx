@@ -17,20 +17,13 @@ const List: ListStore[] = [
       lat: 21.038338774000067,
       lng: 105.74712340900004
     }
-  },
-  {
-    highName: 'Xã Hồng Hà',
-    name: 'Xã Hồng Hà, Đan Phượng, Hà Nội',
-    geoLocation: {
-      lat: 21.13130478200003,
-      lng: 105.68977495700005
-    }
   }
 ]
 
 interface Props {
   setGapStore?: React.Dispatch<React.SetStateAction<ListStore[]>>
   setAddress?: React.Dispatch<React.SetStateAction<string>>
+  setPickGapStore?: React.Dispatch<React.SetStateAction<ListStore>>
 }
 
 const getLocation = () => {
@@ -51,23 +44,21 @@ const getLocation = () => {
 
 getLocation()
 
-const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
+const YaSuoMap = ({ setGapStore, setAddress, setPickGapStore }: Props) => {
   const { lnglat } = GeoLoCaTion()
   const map = useRef(document.createElement('script'))
-  //   const [gapStore, setGapStore] = useState([])
 
   const getDistance = async () => {
     setTimeout(async () => {
       const controller = new AbortController()
       const StorageDistance = JSON.parse(localStorage.getItem('location') ?? '')
-      console.log(StorageDistance)
 
       await axios
         .get(
           `https://rsapi.goong.io/DistanceMatrix?origins=${StorageDistance?.lat ? StorageDistance.lat : lnglat.lat},${
             StorageDistance?.lng ? StorageDistance.lng : lnglat.lng
-          }&destinations=${List[0].geoLocation.lat},${List[0].geoLocation.lng}%7C${List[1].geoLocation.lat},${
-            List[1].geoLocation.lng
+          }&destinations=${List[0].geoLocation.lat},${
+            List[0].geoLocation.lng
           }&vehicle=car&api_key=BCLZh27rb6GtYXaozPyS16xbZoYw3E1STP7Ckg2P`,
           { signal: controller.signal }
         )
@@ -77,12 +68,13 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
             return { ...List[index], ...item.distance }
           })
 
-          if (setGapStore) {
-            setGapStore(
-              listDistance.sort((a, b) => {
-                return (a.value ?? 0) - (b.value ?? 0)
-              })
-            )
+          const sortDistance = listDistance.sort((a, b) => {
+            return (a.value ?? 0) - (b.value ?? 0)
+          })
+
+          if (setGapStore && setPickGapStore) {
+            setGapStore(sortDistance)
+            setPickGapStore(sortDistance[0])
           }
 
           // localStorage.removeItem("location");
@@ -99,7 +91,6 @@ const YaSuoMap = ({ setGapStore, setAddress }: Props) => {
         { signal: controller.signal }
       )
       .then(({ data: { results } }) => {
-        console.log(results)
         ;(document.querySelector<HTMLInputElement>('.mapboxgl-ctrl-geocoder--input')!.value =
           results[0].formatted_address),
           controller.abort()

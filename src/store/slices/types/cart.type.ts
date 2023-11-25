@@ -21,6 +21,10 @@ export interface CartItemState {
   _id?: string
 }
 
+export interface arrTotal extends Omit<CartItemState, 'total'> {
+  name: string
+}
+
 export interface CartLists {
   _id?: string
   name: string

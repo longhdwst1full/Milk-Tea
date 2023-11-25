@@ -16,7 +16,7 @@ export interface IVoucherDocs {
 export interface IVoucher {
   _id?: string
   code: string
-  title: string
+  title?: string
   discount: number
   sale: number
   startDate?: string

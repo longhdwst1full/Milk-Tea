@@ -18,7 +18,7 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const product = action.payload
-      console.log('🚀 ~ file: cart.slice.ts:21 ~ product:', product)
+
       // /* check xem đã có sản phẩm nào tồn tại bên trong giỏ hàng chưa */
       const products = [...state.items]
       const productIndex = products.findIndex((item) => item.name === product.name)
@@ -71,7 +71,6 @@ const cartSlice = createSlice({
               // console.log(state.items[])
               const isEqual = _.isEqual(state.items[productIndex].items[i].toppings, product.toppings)
               if (isEqual === true) {
-                // console.log(3.1)
                 state.items[productIndex].items[i].quantity += product.quantity
                 state.items[productIndex].items[i].total += product.total
                 return

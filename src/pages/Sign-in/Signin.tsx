@@ -1,4 +1,4 @@
-import { BiLogoFacebookSquare, BiLogoGoogle, BiLogoTwitter } from 'react-icons/bi'
+import { BiLogoGoogle } from 'react-icons/bi'
 import { Button, Input } from '../../components'
 import { Login, LoginSchema } from '../../validate/Form'
 
@@ -12,6 +12,7 @@ import { useCreateCartDBMutation } from '../../api/cartDB'
 import { useAppSelector } from '../../store/hooks'
 import { RootState } from '../../store/store'
 import Loader from '../../components/Loader'
+import { ClientSocket } from '../../socket'
 
 const Signin = () => {
   const [loginUser] = useLoginMutation()
@@ -32,6 +33,7 @@ const Signin = () => {
           position: toast.POSITION.TOP_RIGHT
         })
       } else {
+        ClientSocket.JoinRoom(data.data.user._id)
         if (items.length > 0) {
           items.map(async (cart) => {
             cart.items.map(async (item) => {
@@ -95,22 +97,6 @@ const Signin = () => {
                   colorHover='#fef2f2'
                   bgColorHover='#991b1b'
                   LoginIn='google'
-                />
-                <CardSigin
-                  bgColor='#0369a1'
-                  color='#fafafa'
-                  icon={<BiLogoFacebookSquare />}
-                  colorHover='#fef2f2'
-                  bgColorHover='#075985'
-                  LoginIn='facebook'
-                />
-                <CardSigin
-                  bgColor='#0891b2'
-                  color='#fafafa'
-                  icon={<BiLogoTwitter />}
-                  colorHover='#fef2f2'
-                  bgColorHover='#075985'
-                  LoginIn='twitter'
                 />
               </div>
               <div className='gap-x-2 flex items-center justify-center my-5 text-sm'>

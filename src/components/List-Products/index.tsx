@@ -12,6 +12,7 @@ import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
 import SKProduct from '../Skeleton/SKProduct'
 import http from '../../api/instance'
+import { useAppSelector } from '../../store/hooks'
 
 interface ListProductsProps {
   products: IProductDocs
@@ -23,8 +24,9 @@ interface ListProductsProps {
 const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) => {
   const orderRef = useRef<HTMLDivElement>(null)
   const [isShowPopup, setIsShowPopup] = useState<boolean>(false)
+  const [productList, setProductList] = useState<IProductDocs | null>(null)
   const [product, setProduct] = useState<IProduct | object>({})
-  // const { page } = useSelector((state: RootState) => state.persistedReducer.products)
+  const { idCate } = useAppSelector((state) => state.persistedReducer.category)
 
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -35,6 +37,20 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
   // const paginatePage = (page: number) => {
   //   dispatch(savePage(page))
   // }
+
+  useEffect(() => {
+    setProductList(products)
+  }, [products])
+
+  /* filter product with idcategory */
+  useEffect(() => {
+    if (idCate) {
+      const filterProduct = products?.docs?.filter((product) => product.category._id === idCate)
+      setProductList({ ...products, docs: filterProduct })
+    } else {
+      setProductList(products)
+    }
+  }, [idCate])
 
   const fetchProductById = async (id: string | number) => {
     try {
@@ -50,7 +66,6 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
   }
 
   const onChange: PaginationProps['onChange'] = (pageNumber) => {
-    // console.log('Page: ', pageNumber)
     navigate({
       pathname: '/products',
       search: createSearchParams({
@@ -69,7 +84,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
 
   return (
     <>
-      <div className='grow rounded-sm'>
+      <div className='grow rounded-sm max-h-[100vh] overflow-y-auto hidden-scroll-bar'>
         <div className='pb-[160px]'>
           <div className='category '>
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
@@ -78,7 +93,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
                 <FaAngleDown />
               </div>
             </div>
-            {products && products.docs && products.docs.length <= 0 ? (
+            {productList && productList.docs && productList.docs.length <= 0 ? (
               <section className='flex flex-col justify-center bg-gray-100 items-center h-[70vh] font-bold my-5'>
                 <img
                   className='mx-auto'
@@ -95,16 +110,16 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
               {isLoading ? (
                 <SKProduct amount={10} />
               ) : (
-                products?.docs &&
-                products?.docs?.map((product: IProduct) => (
+                productList?.docs &&
+                productList?.docs?.map((product: IProduct) => (
                   <ListProductItem key={product._id} product={product} fetchProductById={fetchProductById} />
                 ))
               )}
             </div>
           </div>
           <div className='text-center'>
-            {products.totalDocs > 1 && (
-              <Pagination defaultCurrent={9} onChange={onChange} total={products?.docs?.length} />
+            {productList && productList.totalDocs > 1 && (
+              <Pagination defaultCurrent={9} onChange={onChange} total={productList?.docs?.length} />
             )}
           </div>
         </div>

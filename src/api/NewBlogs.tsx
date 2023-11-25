@@ -11,6 +11,10 @@ const NewBlogsApi = createApi({
       query: () => 'api/newsBlog',
       providesTags: ['blogs']
     }),
+    getBlogDetail: builder.query({
+      query: (id: string) => `/api/newBlog/${id}`,
+      providesTags: ['blogs']
+    }),
 
     deleteBlogs: builder.mutation<void, string>({
       query: (_id: string) => ({
@@ -21,7 +25,7 @@ const NewBlogsApi = createApi({
     }),
 
     addBlogs: builder.mutation<void, IBlogs>({
-      query: (size: any) => ({
+      query: (size) => ({
         url: '/api/create-newsBlog',
         method: 'POST',
         body: size
@@ -36,9 +40,22 @@ const NewBlogsApi = createApi({
         body: rest
       }),
       invalidatesTags: ['blogs']
+    }),
+
+    /**get all category of blogs */
+    getAllBlogCategory: builder.query<any, void>({
+      query: () => `/api/category-blogs`,
+      providesTags: ['blogs']
     })
   })
 })
 
-export const { useGetAllBlogsQuery, useDeleteBlogsMutation, useAddBlogsMutation, useUpdateBlogsMutation } = NewBlogsApi
+export const {
+  useGetAllBlogsQuery,
+  useDeleteBlogsMutation,
+  useAddBlogsMutation,
+  useUpdateBlogsMutation,
+  useGetBlogDetailQuery,
+  useGetAllBlogCategoryQuery
+} = NewBlogsApi
 export default NewBlogsApi

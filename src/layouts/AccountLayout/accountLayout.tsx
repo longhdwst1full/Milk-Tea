@@ -9,10 +9,14 @@ import { toast } from 'react-toastify'
 import { useLogoutMutation } from '../../api/Auth'
 import { useState } from 'react'
 import Loader from '../../components/Loader'
+import { ClientSocket } from '../../socket'
+import { useAppDispatch } from '../../store/hooks'
+import { resetAllCart } from '../../store/slices/cart.slice'
 
 const AccountLayout = () => {
   const [logout] = useLogoutMutation()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const onLogout = () => {
     Swal.fire({
       icon: 'question',
@@ -24,6 +28,8 @@ const AccountLayout = () => {
           .unwrap()
           .then(() => {
             navigate('/', { replace: true, relative: 'path' })
+            ClientSocket.Disconnect()
+            dispatch(resetAllCart())
             toast.success('Đăng xuất thành công')
           })
           .catch(() => toast.error('Đăng xuất thất bại'))

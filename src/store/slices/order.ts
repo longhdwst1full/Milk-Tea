@@ -126,7 +126,7 @@ export const OrderAPI = createApi({
     }),
 
     //get order user by user id
-    getOrderUserByid: builder.query<IDocsTypeOrder, number | string>({
+    getOrderUserByid: builder.query<any, number | string>({
       query: (idUser) => `/api/order-user/${idUser}`,
       providesTags: ['Order']
     })

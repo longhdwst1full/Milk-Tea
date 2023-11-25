@@ -23,10 +23,11 @@ enum PaymentMethod {
   ZALO = 'zalo'
 }
 export interface IOrderCheckout {
-  user: string
+  user: string | undefined
+  payment_vnpay?: string
   items: Omit<CartItemState, 'total'>[] | number[]
-  total: number
-  priceShipping: number
+  total: number | string
+  priceShipping: number | string
   noteOrder: string | undefined
   paymentMethodId: string
   inforOrderShipping: inforOrderShipping

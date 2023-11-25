@@ -12,10 +12,6 @@ export const formatPriceCompact = (price: number) => {
       : Compact.split('.').length === 2
       ? `${Compact.split('.')[0]}K`
       : `${Compact.split('.')[0]}Tr`
-  // console.log(Compact.split('.'))
-  // if (Compact.split('.').length == 2) {
-  //   Compact = Compact.split('.')[0] + 'K'
-  // }
   return Compact
 }
 

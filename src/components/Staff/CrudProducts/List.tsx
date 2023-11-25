@@ -58,7 +58,6 @@ const List = () => {
     fetchData()
   }, [tableParams])
 
-  // console.log(productData);
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,

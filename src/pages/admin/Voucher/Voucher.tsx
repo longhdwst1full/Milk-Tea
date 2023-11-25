@@ -28,19 +28,6 @@ const Voucher = () => {
   const { data: vouchers, isLoading } = useGetAllVouchersQuery(currentPage)
   const [data] = useState<(string | undefined)[][]>([])
 
-  useEffect(() => {
-    const rows = vouchers?.data?.docs?.map((item: IVoucher) => [
-      item.code,
-      item.discount,
-      item.sale,
-      item.startDate,
-      item.endDate,
-      item.isActive,
-      item.createdAt,
-      item.updatedAt
-    ])
-    // console.log('🚀 ~ file: Voucher.tsx:45 ~ useEffect ~ rows:', rows)
-  }, [vouchers])
   return (
     <>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>

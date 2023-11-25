@@ -249,10 +249,7 @@ const AddBlogsModal = function ({ error }: { error: string }) {
     setOpen(false)
     reset()
   })
-  const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files
-    // console.log(file)
-  }
+  // const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {}
 
   return (
     <>
@@ -293,7 +290,7 @@ const AddBlogsModal = function ({ error }: { error: string }) {
                     <p className='dark:text-gray-500 py-1 text-sm text-gray-600'>Upload a file or drag and drop</p>
                     <p className='dark:text-gray-400 text-xs text-gray-500'>PNG, JPG, GIF up to 10MB</p>
                   </div>
-                  <input type='file' multiple hidden onChange={(e) => handleUploadChange(e)} />
+                  <input type='file' multiple hidden   />
                 </label>
               </div>
             </div>

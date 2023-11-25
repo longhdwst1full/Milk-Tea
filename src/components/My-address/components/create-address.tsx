@@ -23,19 +23,11 @@ export const CreateAddress = ({ isModalOpen, setIsModalOpen }: Props) => {
 
   const handleSubmitAddress = async (data: Pick<IAddressCreate, 'address' | 'name' | 'phone' | 'default'>) => {
     try {
-<<<<<<< HEAD
       // console.log('data', {
       //   ...data,
       //   default: data.default ? true : false,
       //   userId: user._id as string
       // })
-=======
-      console.log('data', {
-        ...data,
-        default: data.default ? true : false,
-        userId: user._id as string
-      })
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
       const response = await createAddress({
         ...data,
         default: data.default ? true : false,

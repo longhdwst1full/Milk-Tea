@@ -169,22 +169,11 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files
 
-<<<<<<< HEAD
-=======
-    // console.log(event.target.files[0])
-    // console.log('file', file)
-
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
     const formData = new FormData()
     Array.prototype.forEach.call(fileList, (file) => {
       formData.append('images', file)
       uploadBanner(formData)
         .then(({ data }: any) => {
-<<<<<<< HEAD
-=======
-          // console.log(data)
-
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
           const dataBanner = data.urls.map((item: IBanner) => {
             return {
               url: item.url,
@@ -209,10 +198,6 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
 
           setBanner([] as IBanner[])
           toast.success('Thêm thành công')
-<<<<<<< HEAD
-=======
-          console.log(banner)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
         })
         .catch(() => {
           toast.error('Thêm thất bại')
@@ -231,12 +216,6 @@ const AddBannerModal = ({ deleteImageBanner, isDeleting }: AddBannerModalProps) 
       })
   }
 
-<<<<<<< HEAD
-=======
-  // console.log('banner', banner)
-  // console.log('bannerPreview', banner)
-
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   return (
     <>
       <Button color='primary' onClick={() => setOpen(true)} className='w-max'>

@@ -31,11 +31,7 @@ const TrashCanUser = () => {
   const { data: userList, isLoading } = useGetAllUsersQuery(0)
   const [isAtiveUserFN, isAtiveUserRes] = useIsAtiveUserMutation()
   const dataListUser: IUser[] = useMemo(
-<<<<<<< HEAD
     () => (userList ? userList.docs.filter((item) => item.role === 'inactive') : []),
-=======
-    () => (userList ? userList.docs.filter((item) => item.role.status === 'inactive') : []),
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
     [userList]
   )
 

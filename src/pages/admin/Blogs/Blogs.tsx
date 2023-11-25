@@ -21,10 +21,6 @@ import Loading from '../../../components/Loading'
 
 const Blogs = () => {
   const { data: dataBlogs, error, isLoading } = useGetAllBlogsQuery()
-<<<<<<< HEAD
-=======
-  console.log(dataBlogs?.docs)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
   const [data, setData] = useState<(string | undefined)[][]>([])
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -34,10 +30,6 @@ const Blogs = () => {
       setData([...rows])
     }
   }, [dataBlogs])
-<<<<<<< HEAD
-=======
-  // console.log(dataBlogs?.docs)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
   return (
     <>
@@ -102,10 +94,6 @@ type BlogsTableProps = {
 }
 
 const BlogsTable = ({ dataBlogs, error, isLoading }: BlogsTableProps) => {
-<<<<<<< HEAD
-=======
-  //   console.log(dataBlogs)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   //   const dispatch = useAppDispatch()
   const [deleteBlog] = useDeleteBlogsMutation()
   const [ChildChecks, setChildChecks] = useState<{ [key: string]: boolean }>({})
@@ -145,10 +133,6 @@ const BlogsTable = ({ dataBlogs, error, isLoading }: BlogsTableProps) => {
   }
 
   const handleDeleteBlog = (_id: string) => {
-<<<<<<< HEAD
-=======
-    console.log(error)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
     if (!error || ('undefined' && _id)) {
       Swal.fire({
         icon: 'info',
@@ -267,11 +251,7 @@ const AddBlogsModal = function ({ error }: { error: string }) {
   })
   const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files
-<<<<<<< HEAD
     // console.log(file)
-=======
-    console.log(file)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   }
 
   return (
@@ -363,12 +343,8 @@ const EditBlogsModal = function ({ dataBlogs11 }: IPropBlog) {
         _id: dataBlogs11._id,
         name: data.name,
         description: data.description,
-<<<<<<< HEAD
         images: dataBlogs11.images,
         category: undefined
-=======
-        images: dataBlogs11.images
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
       })
       if (response) {
         toast.success('Cập nhật blog thành công')
@@ -385,10 +361,6 @@ const EditBlogsModal = function ({ dataBlogs11 }: IPropBlog) {
   useEffect(() => {
     setValue('name', dataBlogs11.name)
   }, [dataBlogs11.name, setValue])
-<<<<<<< HEAD
-=======
-  // console.log(dataBlogs11.name)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
   return (
     <>

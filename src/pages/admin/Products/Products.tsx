@@ -1,16 +1,8 @@
 import { Button, Label, TextInput, Tooltip } from 'flowbite-react'
 
-<<<<<<< HEAD
 import { useState } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
-=======
-import BreadCrumb from '../../../components/BreadCrumb/BreadCrumb'
-import { DrawerAddProduct } from '../../../components'
-import { FaPlus } from 'react-icons/fa'
-import ProductsTable from '../../../components/CrudProduct/listProduct'
-import { useState } from 'react'
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
 export default function ProductsList() {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false)
@@ -34,11 +26,7 @@ export default function ProductsList() {
                 </Button>
               </Tooltip>
 
-<<<<<<< HEAD
               {/* <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} /> */}
-=======
-              <DrawerAddProduct setIsOpenDrawer={setIsOpenDrawer} isOpenDrawer={isOpenDrawer} />
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
               {/* {isOpenModalAdd ? <AddProductModal isOpen={isOpenModalAdd} setIsOpen={setOpenModalAdd} /> : ''} */}
             </div>
           </div>
@@ -47,13 +35,7 @@ export default function ProductsList() {
       <div className='flex flex-col'>
         <div className='overflow-x-auto'>
           <div className='inline-block min-w-full align-middle'>
-<<<<<<< HEAD
             <div className='overflow-hidden shadow'>{/* <ProductsTable /> */}</div>
-=======
-            <div className='overflow-hidden shadow'>
-              <ProductsTable />
-            </div>
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
           </div>
         </div>
       </div>

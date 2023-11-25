@@ -33,10 +33,6 @@ const TrashCanProduct = () => {
   const [deleteRealProductFN, deleteRealProductRes] = useDeleteRealProductMutation()
   const [restoreProductFN, restoreProductRes] = useRestoreProductMutation()
 
-<<<<<<< HEAD
-=======
-  console.log(productData, '::')
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setData] = useState<IProduct[]>(productData?.docs ? productData.docs : [])
   const [loading, setLoading] = useState(false)
@@ -48,10 +44,6 @@ const TrashCanProduct = () => {
     }
   })
 
-<<<<<<< HEAD
-=======
-  console.log(productData)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   const handleTableChange = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
@@ -74,10 +66,6 @@ const TrashCanProduct = () => {
     }, 1000)
   }
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-<<<<<<< HEAD
-=======
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
     setSelectedRowKeys(newSelectedRowKeys)
   }
   const rowSelection = {
@@ -101,11 +89,7 @@ const TrashCanProduct = () => {
       is_active: item.is_active,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt
-<<<<<<< HEAD
     })) as DataType[]
-=======
-    }))
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   }
 
   const [searchText, setSearchText] = useState('')
@@ -277,26 +261,13 @@ const TrashCanProduct = () => {
       )
     }
   ]
-<<<<<<< HEAD
-=======
-  // console.log(productData);
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
   const OPTIONS = ['Cà phê', 'Sữa chua dẻo', 'Trà sữa', '	Macchiato Cream Cheese']
   const [selectedItems, setSelectedItems] = useState<string[]>([])
 
   const handleProductAll = (type: string) => {
-<<<<<<< HEAD
     selectedRowKeys.length > 0 &&
       selectedRowKeys.forEach((item) => {
-=======
-    console.log('a', selectedRowKeys)
-
-    selectedRowKeys.length > 0 &&
-      selectedRowKeys.forEach((item) => {
-        console.log('1')
-        console.log(item)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
         if (type == 'deleteRealProduct') {
           deleteRealProductFN(item as string)
         }

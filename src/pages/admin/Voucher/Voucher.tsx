@@ -39,11 +39,7 @@ const Voucher = () => {
       item.createdAt,
       item.updatedAt
     ])
-<<<<<<< HEAD
     // console.log('🚀 ~ file: Voucher.tsx:45 ~ useEffect ~ rows:', rows)
-=======
-    console.log('🚀 ~ file: Voucher.tsx:45 ~ useEffect ~ rows:', rows)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   }, [vouchers])
   return (
     <>

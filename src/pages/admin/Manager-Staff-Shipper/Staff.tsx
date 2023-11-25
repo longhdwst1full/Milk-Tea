@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Button, Label, TextInput } from 'flowbite-react'
 
 const Staff = () => {
@@ -6,18 +5,6 @@ const Staff = () => {
   // const { data, isLoading } = useGetAllUsersQuery(currentPage)
 
   // if (isLoading) return <Loading />
-=======
-import { useState } from 'react'
-import { useGetAllUsersQuery } from '../../../api/User'
-import Loading from '../../../components/Loading'
-import { Button, Label, TextInput } from 'flowbite-react'
-
-const Staff = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const { data, isLoading } = useGetAllUsersQuery(currentPage)
-
-  if (isLoading) return <Loading />
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
   return (
     <>
       <div className='dark:border-gray-700 dark:bg-gray-800 sm:flex items-center justify-between block p-4 bg-white border-b border-gray-200'>

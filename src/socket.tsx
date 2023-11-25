@@ -49,11 +49,6 @@ export const ClientSocket = {
   getUnreadNotificationsByidUser: (setNotification: React.Dispatch<any>, idUser: string) => {
     socket.emit('client:requestUnreadNotificationByidUser', idUser)
     socket.on('server:loadUnreadNotificationByidUser', ({ data }) => {
-<<<<<<< HEAD
-=======
-      // console.log(data)
-      // return
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
       data && data.length > 0 ? setNotification([...data]) : setNotification([])
     })
   }

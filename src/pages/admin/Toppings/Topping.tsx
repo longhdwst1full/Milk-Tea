@@ -65,10 +65,6 @@ const Topping = () => {
 
 const ToppingTable = () => {
   const { data: dataTopping, isLoading, isError } = useGetAllToppingQuery()
-<<<<<<< HEAD
-=======
-  console.log(dataTopping)
->>>>>>> 800703ab2268567780963d1e735f7845a994a0df
 
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [deleteTopping, responDelete] = useDeleteToppingMutation()

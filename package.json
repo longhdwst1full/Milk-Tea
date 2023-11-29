@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode production",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "yarn build",
@@ -21,13 +21,12 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.5",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+
     "@hookform/resolvers": "^3.1.1",
-    "@mui/lab": "5.0.0-alpha.140",
+
     "@mui/material": "^5.14.2",
     "@reduxjs/toolkit": "^1.9.5",
-    "@types/react-slick": "^0.23.10",
+
     "antd": "^5.8.3",
     "axios": "^1.4.0",
     "clsx": "^2.0.0",
@@ -60,6 +59,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+     "@types/react-slick": "^0.23.10",
     "@types/lodash": "^4.14.197",
     "@types/node": "^20.9.0",
     "@types/qs": "^6.9.7",

@@ -17,19 +17,18 @@ import { ToppingAPI } from '../api/topping'
 import { addressApi } from './services'
 import cartReducer from './slices/cart.slice'
 import { categoriesReducer } from './slices/categories'
-import { productReducer } from './slices/product.slice'
 import storage from 'redux-persist/lib/storage'
 import StripeApi from '../api/paymentstripe'
 import VnpayApi from '../api/paymentvnpay'
 import ApiNotifications from '../api/notifications'
-
-// import storageSession from 'reduxjs-toolkit-persist/lib/storage/session';
+import { orderReducer } from './slices/order.slice'
+import { productReducer } from '.'
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  whitelist: ['cart', 'auth', 'category']
+  whitelist: ['cart', 'auth', 'category', 'order']
 }
 
 const productsPersistConfig = {
@@ -42,7 +41,8 @@ const rootReducer = combineReducers({
   products: persistReducer(productsPersistConfig, productReducer),
   auth: AuthReducer,
   cart: cartReducer,
-  category: categoriesReducer
+  category: categoriesReducer,
+  order: orderReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

@@ -3,7 +3,7 @@ import { AiOutlineCopy } from 'react-icons/ai'
 interface IContentProps {
   code: string
   endDate: string
-  title: string
+  desc: string
 }
 export const Content = (props: IContentProps) => {
   const handleCopy = () => {
@@ -46,7 +46,7 @@ export const Content = (props: IContentProps) => {
       <hr />
       <div>
         <p className='text-gray-500 text-[15px] mb-1 mt-3'>Điều kiện</p>
-        <p className='text-[15px]'>{props.title}</p>
+        <p className='text-[15px]'>{props.desc}</p>
       </div>
     </div>
   )

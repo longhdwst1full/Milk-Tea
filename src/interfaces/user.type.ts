@@ -10,7 +10,7 @@ export interface IUser {
   account?: string
   avatar?: string
   password?: string
-  address?: string
+  address?: string | IUserAddress[]
   products?: string[]
   order?: string[]
   role: string
@@ -43,5 +43,13 @@ export interface IUserDocs {
 
 export interface IAddUser extends AddUserForm {
   avatar?: string
+  _id: string
+}
+
+export interface IUserAddress {
+  address: string
+  name: string
+  phone: string
+  default: boolean
   _id: string
 }

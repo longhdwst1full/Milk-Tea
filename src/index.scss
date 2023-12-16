@@ -214,9 +214,16 @@
       scrollbar-width: none; /* Firefox */
     }
   }
- 
+
 
 .custom-input-forgotPass:focus {
   outline: none !important;
   box-shadow: none !important;
+}
+
+.styleSelecbox {
+  .ant-select-selector {
+    border: none !important;
+  }
+
 }

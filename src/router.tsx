@@ -107,8 +107,7 @@ const routes = createBrowserRouter([
       { path: 'my-order/:id', element: <MyOrderDetail /> },
       { path: 'my-voucher', element: <MyVoucher /> },
       { path: 'my-address', element: <MyAddress /> },
-      { path: 'change-password', element: <ChangePassword /> },
-      { path: 'my-order/:id', element: 'My order detail' }
+      { path: 'change-password', element: <ChangePassword /> }
     ]
   },
 

@@ -17,7 +17,9 @@ const MyOrderDetail = () => {
 
   const totalPrice = orderData?.order?.items.reduce(
     (accumulator, item) =>
-      accumulator + item.price + item?.toppings.reduce((acc: number, topping: ITopping) => acc + topping.price, 0),
+      accumulator +
+      item.price * item?.quantity +
+      item?.toppings.reduce((acc: number, topping: ITopping) => acc + topping.price, 0),
     0
   )
 
@@ -116,21 +118,27 @@ const MyOrderDetail = () => {
                       <h4 className='title mb-2 text-[#866312] text-sm'>{item?.product.name}</h4>
                       <div className='flex flex-col gap-y-1'>
                         <span className='text-[#866312] text-sm'>Size: {item?.size?.name}</span>
-                        <span className='text-sm text-[#866312]'>
-                          Toppings:{' '}
-                          {item?.toppings?.map((topping: ITopping) =>
-                            item.toppings[item.toppings.length - 1].name === topping.name
-                              ? `${topping.name}(${formatCurrency(topping.price)}).`
-                              : `${topping.name}(${formatCurrency(topping.price)}), `
-                          )}
-                        </span>
+                        {item && item?.toppings.length > 0 && (
+                          <span className='text-sm text-[#866312]'>
+                            Toppings:{' '}
+                            {item?.toppings?.map((topping: ITopping) =>
+                              item.toppings[item.toppings.length - 1].name === topping.name
+                                ? `${topping.name}(${formatCurrency(topping.price)}).`
+                                : `${topping.name}(${formatCurrency(topping.price)}), `
+                            )}
+                          </span>
+                        )}
+
                         <span className='quantity text-[12px]'>x{item?.quantity}</span>
                       </div>
                     </div>
                   </div>
                   <div className='right'>
                     <div className='price flex flex-col items-end'>
-                      <span className='text-[#866312] ml-2'>{formatCurrency(item?.price)}</span>
+                      <span className='text-[#866312] ml-2'>
+                        {formatCurrency(item?.price)} x {item?.quantity} ={' '}
+                        {formatCurrency(item?.price * item?.quantity)}
+                      </span>
                       {item.toppings?.map((topping: ITopping) => (
                         <span key={topping._id} className='text-[#866312] ml-2'>
                           {formatCurrency(topping.price)}

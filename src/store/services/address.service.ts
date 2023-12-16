@@ -1,15 +1,16 @@
+import { baseQueryWithReauth } from '../../api/Auth'
 import { IAddress, IAddressCreate, IDocAddress } from '../../interfaces'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const addressApi = createApi({
   reducerPath: 'addressApi',
-  baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_API_BACKEND}` }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['Address'],
   endpoints: (build) => ({
     createAddress: build.mutation<IAddress, Partial<IAddressCreate>>({
       query(body) {
         return {
-          url: `/address/create`,
+          url: `/api/address/create`,
           method: 'POST',
           body
         }
@@ -20,7 +21,7 @@ export const addressApi = createApi({
     }),
 
     getAddress: build.query<IDocAddress, { userId: string }>({
-      query: ({ userId }) => `/address/get/${userId}`,
+      query: ({ userId }) => `/api/address/get/${userId}`,
       providesTags: (result) => {
         if (result) {
           const final = [
@@ -36,7 +37,7 @@ export const addressApi = createApi({
     deleteAddress: build.mutation<{ address: IAddress }, string>({
       query(id) {
         return {
-          url: `/address/delete/${id}`,
+          url: `/api/address/delete/${id}`,
           method: 'DELETE'
         }
       },
@@ -46,7 +47,7 @@ export const addressApi = createApi({
     updateAddress: build.mutation<IAddress, Partial<IAddress>>({
       query(body) {
         return {
-          url: `/address/update/${body._id}`,
+          url: `/api/address/update/${body._id}`,
           method: 'PUT',
           body
         }

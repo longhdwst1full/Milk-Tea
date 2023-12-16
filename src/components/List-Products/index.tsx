@@ -1,18 +1,18 @@
-import { FaAngleDown, FaArrowDown, FaBars } from 'react-icons/fa'
-import { IProduct, IProductDocs } from '../../interfaces/products.type'
-import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { FaArrowDown, FaBars } from 'react-icons/fa'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
+import { IProduct, IProductDocs } from '../../interfaces/products.type'
 
+import type { PaginationProps } from 'antd'
+import { Pagination } from 'antd'
 import { AxiosError } from 'axios'
 import { Button } from '..'
+import http from '../../api/instance'
 import { IQueryConfig } from '../../hook/useQueryConfig'
+import { useAppSelector } from '../../store/hooks'
 import ListProductItem from '../List-ProductItem'
-import { Pagination } from 'antd'
-import type { PaginationProps } from 'antd'
 import PopupDetailProduct from '../PopupDetailProduct'
 import SKProduct from '../Skeleton/SKProduct'
-import http from '../../api/instance'
-import { useAppSelector } from '../../store/hooks'
 
 interface ListProductsProps {
   products: IProductDocs
@@ -89,9 +89,7 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
           <div className='category '>
             <div className='category-name flex items-center justify-between px-[20px] py-[16px]'>
               <div className='text-lg capitalize select-none'>{'Tất cả sản phẩm'}</div>
-              <div className='right'>
-                <FaAngleDown />
-              </div>
+              <div className='right'>{/* <FaAngleDown /> */}</div>
             </div>
             {productList && productList.docs && productList.docs.length <= 0 ? (
               <section className='flex flex-col justify-center bg-gray-100 items-center h-[70vh] font-bold my-5'>
@@ -118,8 +116,8 @@ const ListProducts = ({ products, isLoading, queryConfig }: ListProductsProps) =
             </div>
           </div>
           <div className='text-center'>
-            {productList && productList.totalDocs > 1 && (
-              <Pagination defaultCurrent={9} onChange={onChange} total={productList?.docs?.length} />
+            {productList && productList.totalPages > 1 && (
+              <Pagination defaultCurrent={1} onChange={onChange} total={productList.totalDocs} />
             )}
           </div>
         </div>

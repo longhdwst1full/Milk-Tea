@@ -8,6 +8,7 @@ export interface CartItem {
   toppings: { name: string; price: number }[]
   total: number
   product: string
+  sale?: number
 }
 
 export interface CartItemState {
@@ -19,6 +20,7 @@ export interface CartItemState {
   total: number
   product: string
   _id?: string
+  sale?: number
 }
 
 export interface arrTotal extends Omit<CartItemState, 'total'> {

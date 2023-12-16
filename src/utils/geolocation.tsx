@@ -15,7 +15,6 @@ const GeoLoCaTion = () => {
           })
         },
         () => {
-          console.log('Not')
           setLngLat({
             lng: 0,
             lat: 0

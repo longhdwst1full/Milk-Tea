@@ -33,13 +33,12 @@ const Signin = () => {
           position: toast.POSITION.TOP_RIGHT
         })
       } else {
-        console.log(data, 'data userr ')
         ClientSocket.JoinRoom(data.data.user._id)
         if (items.length > 0) {
           items.map(async (cart) => {
             cart.items.map(async (item) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { _id, ...rest } = item
+              const { sale, _id, ...rest } = item
               await addCartDbFn({
                 name: cart.name,
                 items: [
@@ -70,7 +69,7 @@ const Signin = () => {
             <form action='' className='flex flex-col' onSubmit={handleSubmit(onLogin)}>
               <Input
                 type='auth'
-                placeholder='Nhập SDT hoặc email của bạn'
+                placeholder='Nhập email của bạn'
                 name='account'
                 register={register}
                 error={errors.account?.message}

@@ -1,6 +1,7 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
-import { baseQueryWithReauth } from './Auth'
 import { IBlogs, IBlogsDocs } from '../interfaces/Blogs.type'
+
+import { baseQueryWithReauth } from './Auth'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 const NewBlogsApi = createApi({
   reducerPath: 'Blogs',
@@ -8,7 +9,7 @@ const NewBlogsApi = createApi({
   tagTypes: ['blogs'],
   endpoints: (builder) => ({
     getAllBlogs: builder.query<IBlogsDocs, void>({
-      query: () => 'api/newsBlog',
+      query: () => 'api/newsBlog-update/active',
       providesTags: ['blogs']
     }),
     getBlogDetail: builder.query({

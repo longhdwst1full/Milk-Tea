@@ -96,7 +96,7 @@ const Header = () => {
               content={
                 <>
                   {notification.length > 0 ? (
-                    notification?.reverse()?.map((item, index) => (
+                    notification?.map((item, index) => (
                       <div
                         key={index}
                         className='py-2 px-2 group hover:bg-[#d3b673] rounded flex items-center gap-x-2'

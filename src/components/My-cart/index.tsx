@@ -34,6 +34,7 @@ const MyCart = () => {
     },
     { total: 0, quantity: 0 }
   )
+   
   /* xóa tất cả các item có trong cart */
   const handleDeleteAll = (): void => {
     /* confirm lai */

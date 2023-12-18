@@ -33,7 +33,8 @@ const cartSlice = createSlice({
               size: product.size,
               toppings: product.toppings,
               total: product.total,
-              product: product.product
+              product: product.product,
+              sale: product?.sale ? product.sale : 0
             }
           ]
         })
@@ -48,7 +49,8 @@ const cartSlice = createSlice({
             size: product.size,
             toppings: product.toppings,
             total: product.total,
-            product: product.product
+            product: product.product,
+            sale: product?.sale ? product.sale : 0
           }
           state.items[productIndex].items.push(newProduct)
         } else {
@@ -68,7 +70,6 @@ const cartSlice = createSlice({
             /* kiểm tra xem topping có trùng nhau hay không */
             /* nếu mà có trùng nhau hết thì tăng số lượng lên không thì tạo mới sản phẩn */
             for (let i = 0; i < state.items[productIndex].items.length; i++) {
-              // console.log(state.items[])
               const isEqual = _.isEqual(state.items[productIndex].items[i].toppings, product.toppings)
               if (isEqual === true) {
                 state.items[productIndex].items[i].quantity += product.quantity
@@ -79,7 +80,7 @@ const cartSlice = createSlice({
             // TH2  topping không chùng nhau=> thêm mới
 
             /* nếu mà không có topping nào trùng nhau thì sẽ thêm sản phẩm mới */
-            // console.log(3.2)
+
             const newProduct = {
               image: product.image,
               price: product.price,
@@ -87,7 +88,8 @@ const cartSlice = createSlice({
               size: product.size,
               toppings: product.toppings,
               total: product.total,
-              product: product.product
+              product: product.product,
+              sale: product?.sale ? product.sale : 0
             }
             state.items[productIndex].items.push(newProduct)
           }
@@ -103,6 +105,7 @@ const cartSlice = createSlice({
         size: { _id: string; name: string; price: number }
         toppings: { name: string; price: number }[]
         product?: string
+        sale: number
       }>
     ) => {
       const payload = action.payload
@@ -113,14 +116,15 @@ const cartSlice = createSlice({
         if (payload.toppings.length === 0) {
           /* tìm ra size của sản phẩm muốn tăng số lượng */
           state.items[productIndex].items[payload.index].quantity++
-          state.items[productIndex].items[payload.index].total += payload.size.price
+          const priceData = payload.size?.price - payload?.sale
+          state.items[productIndex].items[payload.index].total += priceData
         } else {
           /* tính tổng tiền của topping đó */
           const totalTopping = payload.toppings.reduce((total, item) => {
             return (total += item.price)
           }, 0)
           state.items[productIndex].items[payload.index].quantity++
-          state.items[productIndex].items[payload.index].total += totalTopping + payload.size.price
+          state.items[productIndex].items[payload.index].total += totalTopping + payload.size.price - payload.sale
         }
       }
     },
@@ -133,6 +137,7 @@ const cartSlice = createSlice({
         size: { _id: string; name: string; price: number }
         toppings: { name: string; price: number }[]
         product?: string
+        sale: number
       }>
     ) => {
       const result = action.payload
@@ -143,7 +148,8 @@ const cartSlice = createSlice({
         if (result.toppings.length === 0) {
           /* tìm ra size của sản phẩm muốn tăng số lượng */
           state.items[productIndex].items[result.index].quantity--
-          state.items[productIndex].items[result.index].total -= result.size.price
+          const priceSize = result.size.price - result.sale
+          state.items[productIndex].items[result.index].total -= priceSize
           if (state.items[productIndex].items[result.index].quantity === 0) {
             state.items[productIndex].items.splice(result.index, 1)
             if (state.items[productIndex].items.length === 0) {
@@ -156,7 +162,7 @@ const cartSlice = createSlice({
             return (total += item.price)
           }, 0)
           state.items[productIndex].items[result.index].quantity--
-          state.items[productIndex].items[result.index].total -= totalTopping + result.size.price
+          state.items[productIndex].items[result.index].total -= totalTopping + result.size.price - result.sale
           if (state.items[productIndex].items[result.index].quantity === 0) {
             state.items[productIndex].items.splice(result.index, 1)
             if (state.items[productIndex].items.length === 0) {
@@ -166,42 +172,33 @@ const cartSlice = createSlice({
         }
       }
     },
+    updateCart: (
+      state,
+      action: PayloadAction<{
+        index: number
+        name: string
+        quantity: number
+        size: { _id: string; name: string; price: number }
+        toppings: { name: string; price: number }[]
+        product?: string
+        sale: number
+      }>
+    ) => {
+      const product = action.payload
+      const products = [...state.items]
+      const productIndex = products.findIndex((item) => item.name === product.name)
+      state.items[productIndex].items[product.index].size = product.size
+      state.items[productIndex].items[product.index].price = product.size.price - product.sale
+      const totalTopping = product.toppings.reduce((total, item) => {
+        return (total += item.price)
+      }, 0)
+
+      state.items[productIndex].items[product.index].total =
+        totalTopping * product.quantity + (product.size.price - product.sale) * product.quantity
+    },
     resetAllCart: (state) => {
       state.items = []
     }
-
-    /* optimize code */
-    // updateCartItem: (state, action) => {
-    //   const { index, quantityChange, priceChange } = action.payload;
-    //   const item = state.items[index];
-    //   item.quantity += quantityChange;
-    //   item.total += priceChange * quantityChange;
-    // },
-    // removeCartItem: (state, action) => {
-    //   const { productIndex, itemIndex } = action.payload;
-    //   state.items[productIndex].items.splice(itemIndex, 1);
-    //   if (state.items[productIndex].items.length === 0) {
-    //     state.items.splice(productIndex, 1);
-    //   }
-    // },
-    // updateQuantity: (state, action) => {
-    //   const { index, name, quantity, size, toppings } = action.payload;
-    //   const products = [...state.items];
-    //   const productIndex = products.findIndex((item) => item.name === name);
-    //   if (productIndex >= 0) {
-    //     const currentItem = state.items[productIndex].items[index];
-    //     const totalTopping = toppings.reduce((total, item) => total + item.price, 0);
-    //     const totalPriceChange = totalTopping + size.price;
-    //     if (quantity > 0) {
-    //       state.updateCartItem({ index, quantityChange: quantity, priceChange: totalPriceChange });
-    //     } else {
-    //       state.updateCartItem({ index, quantityChange: -1, priceChange: -totalPriceChange });
-    //       if (currentItem.quantity === 0) {
-    //         state.removeCartItem({ productIndex, itemIndex: index });
-    //       }
-    //     }
-    //   }
-    // },
   },
 
   extraReducers: (builder) => {
@@ -211,6 +208,6 @@ const cartSlice = createSlice({
   }
 })
 
-export const { addToCart, resetAllCart, increamentQuantity, decreamentQuantity } = cartSlice.actions
+export const { addToCart, updateCart, resetAllCart, increamentQuantity, decreamentQuantity } = cartSlice.actions
 
 export default cartSlice.reducer

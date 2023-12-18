@@ -1,41 +1,61 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Button, Input } from '../../components'
 import { FaPhoneAlt, FaStickyNote } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, Input } from '../../components'
-import { useAppSelector } from '../../store/hooks'
+import { Popover, message } from 'antd'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { yupResolver } from '@hookform/resolvers/yup'
-import { message } from 'antd'
-import { useForm } from 'react-hook-form'
 import { BiSolidUser } from 'react-icons/bi'
-import { toast } from 'react-toastify'
-import { v4 as uuidv4 } from 'uuid'
-import { useStripePaymentMutation } from '../../api/paymentstripe'
-import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
 import CheckoutItem from '../../components/Checkout-Item'
+import { ClientSocket } from '../../socket'
+import { IOrderCheckout } from '../../store/slices/types/order.type'
+import { IUserAddress } from '../../interfaces'
+import { IVoucher } from '../../interfaces/voucher.type'
+import ListStore from '../../interfaces/Map.type'
 import ModalListVouchers from '../../components/ModalListVouchers'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { UserCheckoutSchema } from '../../validate/Form'
 import YaSuoMap from '../../components/map/YaSuoMap'
 import YasuoGap from '../../components/map/YasuoGap'
-import ListStore from '../../interfaces/Map.type'
-import { IVoucher } from '../../interfaces/voucher.type'
-import { ClientSocket } from '../../socket'
-import { useCreateOrderMutation } from '../../store/slices/order'
 import { arrTotal } from '../../store/slices/types/cart.type'
-import { IOrderCheckout } from '../../store/slices/types/order.type'
 import { formatCurrency } from '../../utils/formatCurrency'
-import { UserCheckoutSchema } from '../../validate/Form'
 import styles from './Checkout.module.scss'
+import { toast } from 'react-toastify'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useCreateOrderMutation } from '../../store/slices/order'
+import { useForm } from 'react-hook-form'
+import { useStripePaymentMutation } from '../../api/paymentstripe'
+import { useVnpayPaymentMutation } from '../../api/paymentvnpay'
+import { v4 as uuidv4 } from 'uuid'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { MdOutlineMail } from 'react-icons/md'
+import { saveFormOrder } from '../../store/slices/order.slice'
 
-//
+const content = (
+  <div className='w-72'>
+    <ul className='list-disc pl-4'>
+      <li>Kiểm tra sản phẩm trước khi thanh toán.</li>
+      <li>Đổi trả hàng nếu bị lỗi, hỏng hóc hoặc giao sai hàng.</li>
+      <li>Không thể đổi trả sau khi đã nhận và kiểm tra với nhân viên bán hoặc giao hàng.</li>
+      <li>
+        Điều kiện đổi trả: sản phẩm còn nguyên vẹn, chưa sử dụng, chưa bóc hộp và còn mới 100%. Giữ phiếu mua hàng.
+      </li>
+      <li>Đổi trả tại cửa hàng mua hàng ban đầu.</li>
+      <li>
+        Sẽ hoàn tiền sau khi xác nhận đã nhận được hàng trả lại. Chi phí vận chuyển hàng trả lại do khách hàng chịu.
+      </li>
+      <li>Không đổi trả nếu sản phẩm không còn nguyên vẹn hoặc là quà tặng.</li>
+    </ul>
+  </div>
+)
 const Checkout = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [voucherChecked, setVoucherChecked] = useState({} as IVoucher)
-  const [orderAPIFn, { isLoading: cod }] = useCreateOrderMutation()
+  const [orderAPIFn, { isLoading: cod, error: errorCreate }] = useCreateOrderMutation()
 
   const [gapStore, setGapStore] = useState<ListStore[]>([])
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [OpenGapStore, setOpenGapStore] = useState(false)
-  const [address, setAddress] = useState('') // Lấy value ở input địa chỉ người nhận;
+
   const [pickGapStore, setPickGapStore] = useState({} as ListStore)
   const [stripePayment, { isLoading: stripe }] = useStripePaymentMutation()
   const [vnpayPayment, { isLoading: vnpay }] = useVnpayPaymentMutation()
@@ -63,19 +83,28 @@ const Checkout = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setValue('shippingLocation', address ?? '')
-  }, [address, setValue])
-  useEffect(() => {
     dataCartCheckout.items.length < 1 && navigate('/products')
   }, [dataCartCheckout.items, navigate])
 
   useEffect(() => {
+    errorCreate && toast.error((errorCreate as any)?.data.error)
+  }, [errorCreate])
+  useEffect(() => {
     if (dataInfoUser.user) {
       dataInfoUser.user.username && setValue('name', dataInfoUser.user.username)
-      dataInfoUser.user.address && setValue('shippingLocation', dataInfoUser.user.address)
+      setValue('email', dataInfoUser.user.account || '')
+
+      dataInfoUser.user.address?.length &&
+        (dataInfoUser.user.address as IUserAddress[])?.map((item) => {
+          if (item.default) {
+            setValue('shippingLocation', item.address)
+            setValue('phone', item.phone)
+            return
+          }
+          return
+        })
     }
-    // YaSuoMap();
-  }, [dataInfoUser.user, dataInfoUser.user.address, dataInfoUser.user.username, setValue])
+  }, [dataInfoUser, setValue])
 
   const getData = useCallback(
     (getData: string) => {
@@ -85,7 +114,7 @@ const Checkout = () => {
         item.items.map((data) => {
           if (getData == 'list') {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { total, _id, ...rest } = data
+            const { total, sale, _id, ...rest } = data
             arrTotal.push({ ...rest, name: item.name })
           } else {
             let value: number | undefined
@@ -117,12 +146,10 @@ const Checkout = () => {
 
   const moneyShipping = useMemo(() => {
     if (pickGapStore.value) {
-      return pickGapStore.value > 30000 || pickGapStore.value <= 5000
-        ? 0
-        : Math.round(pickGapStore.value * 0.1 + totalQuantity * 0.005)
+      return pickGapStore.value > 30000 || pickGapStore.value <= 5000 ? 0 : Math.round(pickGapStore.value * 2.5)
     }
     return 0
-  }, [gapStore, pickGapStore])
+  }, [pickGapStore])
   // total khuyen mai
   const moneyPromotion = useMemo(() => voucherChecked.sale ?? 0, [voucherChecked])
 
@@ -148,30 +175,32 @@ const Checkout = () => {
       const dataForm: IOrderCheckout = {
         user: dataInfoUser.user._id as string,
         items: getData('list'),
-        total: totalAllMoneyCheckOut,
+        total: totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut,
         priceShipping: moneyShipping,
         noteOrder: textNoteOrderRef.current?.value !== '' ? textNoteOrderRef.current?.value : ' ',
+        moneyPromotion: voucherChecked?._id
+          ? {
+              price: moneyPromotion,
+              voucherId: voucherChecked?._id || ''
+            }
+          : {},
         paymentMethodId: data.paymentMethod,
         inforOrderShipping: {
           name: data.name,
+          email: data.email,
           phone: data.phone,
           address: data.shippingLocation,
           noteShipping: data.shippingNote == '' ? ' ' : data.shippingNote
         }
       }
 
-      const storeNote = {
-        noteOrder: dataForm.noteOrder,
-        noteShipping: dataForm.inforOrderShipping.noteShipping,
-        paymentMethodId: dataForm.paymentMethodId
-      }
-      localStorage.setItem('storeNote', JSON.stringify(storeNote))
+      dispatch(saveFormOrder(dataForm))
 
       if (data.paymentMethod == 'cod') {
         orderAPIFn(dataForm)
           .unwrap()
           .then((res) => {
-            if (res.error) {
+            if (res.error || res?.error?.data?.error) {
               return toast.error('Đặt hàng thất bại' + res.error.data.error)
             } else {
               // dispatch(resetAllCart())
@@ -194,6 +223,7 @@ const Checkout = () => {
             console.error(err)
           })
       } else if (data.paymentMethod == 'vnpay') {
+        // console.log(dataForm)
         vnpayPayment(dataForm)
           .unwrap()
           .then(({ url }) => {
@@ -204,21 +234,6 @@ const Checkout = () => {
           })
       }
 
-      // orderAPIFn(dataForm)
-      //   .unwrap()
-      //   .then((res) => {
-      //     if (res.error) {
-      //       return toast.error('Đặt hàng thất bại' + res.error.data.error)
-      //     } else {
-      //       reset()
-      //       dataCartCheckout.items.length &&
-      //         dataCartCheckout.items.map((itemcart) => deleteCartDBFn(itemcart?._id as string))
-      //       dispatch(resetAllCart())
-      //       toast.success('Bạn đặt hàng thành công')
-
-      //       // alert(data.shippingNote)=
-      //       // dispatch(resetAllCart());
-      //       // navigate('http://localhost:4000/vnpay');
       //       if (data.paymentMethod == 'vnpay') {
       //         const returnUrl = 'http://localhost:5173' // url trả về
       //         window.location.href =
@@ -232,9 +247,6 @@ const Checkout = () => {
       //           data.shippingLocation +
       //           '&returnUrl=' +
       //           returnUrl
-      //       }
-      //     }
-      //   })
     }
   })
 
@@ -259,6 +271,15 @@ const Checkout = () => {
             </div>
             <div className='py-[10px]'>
               <Input
+                prefix={<MdOutlineMail />}
+                placeholder='Email'
+                name='email'
+                register={register}
+                error={errors.email?.message}
+              />
+            </div>
+            <div className='py-[10px]'>
+              <Input
                 prefix={<FaPhoneAlt />}
                 placeholder='Số điện thoại người nhận'
                 name='phone'
@@ -279,14 +300,6 @@ const Checkout = () => {
                   <span className='text-red-500 text-[13px] self-start'>Địa chỉ nhận hàng là bắt buộc</span>
                 )}
               </div>
-              {/* <Input
-                  prefix={<FaMapMarkerAlt />}
-                  placeholder='Địa chỉ người nhận'
-                  name='address'
-                  error={errors.shippingLocation?.message}
-                  register={register}
-                /> */}
-              {/* </div> */}
             </div>
             <div className='py-[10px]'>
               <Input
@@ -298,7 +311,7 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <YaSuoMap setGapStore={setGapStore} setAddress={setAddress} setPickGapStore={setPickGapStore} />
+              <YaSuoMap setValue={setValue} setGapStore={setGapStore} setPickGapStore={setPickGapStore} />
               <div id='map'></div>
             </div>
           </div>
@@ -312,7 +325,7 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán khi nhận hàng</span>
                 <input
                   className='absolute opacity-0'
-                  defaultChecked
+                  // defaultChecked
                   type='radio'
                   value='cod'
                   {...register('paymentMethod')}
@@ -323,29 +336,15 @@ const Checkout = () => {
                 <span className='text-sm'>Thanh toán qua Ví vnPay</span>
                 <input
                   className='absolute opacity-0'
-                  // defaultChecked
+                  defaultChecked
                   type='radio'
                   value='vnpay'
                   {...register('paymentMethod')}
                 />
                 <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
               </label>
-              <label className={` ${styles.container_radio} cod-payment block group`}>
-                <span className='text-sm'>Thanh toán qua Stripe</span>
-                <input
-                  className='absolute opacity-0'
-                  // defaultChecked
-                  type='radio'
-                  value='stripe'
-                  {...register('paymentMethod')}
-                />
-                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-              </label>
-              {/* <label className={` ${styles.container_radio} momo-payment block group`}>
-                <span className='text-sm'>Thanh toán qua Ví MoMo</span>
-                <input className='opacity-0 absolute' type='radio' value='momo' {...register('paymentMethod')} />
-                <span className={`${styles.checkmark_radio} group-hover:bg-[#ccc]`}></span>
-              </label> */}
+              <label className={` ${styles.container_radio} cod-payment group !hidden`}></label>
+
               {errors.paymentMethod && <span className='text-red-500 text-[13px]'>{errors.paymentMethod.message}</span>}
             </div>
           </div>
@@ -354,6 +353,11 @@ const Checkout = () => {
           <div className='title flex justify-between items-center px-5 mb-[7px] '>
             <div>
               <h2 className='text-sm font-bold'>Thông tin đơn hàng</h2>
+            </div>
+            <div>
+              <Popover className='cursor-pointer' content={content} title='Chính sách cửa hàng'>
+                <QuestionCircleOutlined />
+              </Popover>
             </div>
           </div>
           <div className='content shadow-[0_3px_10px_0_rgba(0,0,0,0.1)] px-5 py-5'>
@@ -387,10 +391,10 @@ const Checkout = () => {
                   <span className='font-bold w-[80px] text-right'>{formatCurrency(totalMoneyCheckout)}</span>
                 </div>
               </div>
-              <div className='flex justify-end py-1 text-sm'>
+              {/* <div className='flex justify-end py-1 text-sm'>
                 <span>Quãng đường:</span>
                 <span className='w-[80px] text-right'>{pickGapStore.text ? pickGapStore.text : '0 Km'}</span>
-              </div>
+              </div> */}
               <div className='flex justify-end py-1 text-sm'>
                 <span>Phí vận chuyển: </span>
                 <span className='w-[80px] text-right'>{formatCurrency(moneyShipping)}</span>
@@ -402,7 +406,7 @@ const Checkout = () => {
               <div className='flex justify-end py-1 text-sm'>
                 <span className='font-bold'>Tổng cộng: </span>
                 <span className='w-[80px] text-right text-[#86744e] font-bold'>
-                  {moneyPromotion >= totalAllMoneyCheckOut ? 0 : formatCurrency(totalAllMoneyCheckOut)}
+                  {totalAllMoneyCheckOut <= 0 ? 0 : formatCurrency(totalAllMoneyCheckOut)}
                 </span>
               </div>
             </div>
@@ -438,9 +442,9 @@ const Checkout = () => {
       />
       <ModalListVouchers
         isOpen={isModalOpen}
-        voucherChecked={voucherChecked}
         setVoucherChecked={setVoucherChecked}
         toggleModal={toggleModal}
+        totallPrice={totalAllMoneyCheckOut <= 0 ? 0 : totalAllMoneyCheckOut}
       />
     </div>
   )

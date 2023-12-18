@@ -1,31 +1,31 @@
-import { RootState } from '../../store/store'
-import { useAppSelector } from '../../store/hooks'
-import { useEffect, useState } from 'react'
-import Flatpickr from 'react-flatpickr'
-import { useForm } from 'react-hook-form'
-import { InforForm, InforFormSchema } from '../../validate/Form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useUpdateInforMutation } from '../../api/Auth'
-import { toast } from 'react-toastify'
-import convertToBase64 from '../../utils/convertBase64'
-import { useUpLoadAvartaUserMutation } from '../../api/User'
-import CircularProgress from '@mui/material/CircularProgress'
 import { Box } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import { useUpdateInforMutation } from '../../api/Auth'
+import { useUpLoadAvartaUserMutation } from '../../api/User'
+import { IUserAddress } from '../../interfaces'
+import { useAppSelector } from '../../store/hooks'
+import { RootState } from '../../store/store'
+import convertToBase64 from '../../utils/convertBase64'
+import { InforForm, InforFormSchema } from '../../validate/Form'
 
 const MyInfor = () => {
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-  const [birthday, setBirthday] = useState<Date | null>(user.birthday!)
-  const [errDate, setErrDate] = useState('')
   const [updateInfor, { isLoading: isUpdateInfor }] = useUpdateInforMutation()
   const [avatar, setAvatar] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
     file: undefined,
     base64: ''
   })
   const [uploadAvatar, { isLoading: isUpdateAvatar }] = useUpLoadAvartaUserMutation()
+
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm<InforForm>({
     mode: 'onSubmit',
     resolver: yupResolver(InforFormSchema),
@@ -33,10 +33,20 @@ const MyInfor = () => {
       _id: user._id,
       username: user.username,
       account: user.account,
-      gender: user.gender,
-      address: user.address
+      gender: user.gender
     }
   })
+  useEffect(() => {
+    if (user) {
+      user.address?.length &&
+        (user.address as IUserAddress[])?.map((item: IUserAddress) => {
+          if (item.default) {
+            setValue('address', item.address)
+            setValue('phone', item.phone)
+          }
+        })
+    }
+  }, [setValue, user])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -48,27 +58,6 @@ const MyInfor = () => {
         })
       }))
   }
-
-  const handleDateChange = (selectedDates: Date[]) => {
-    const selected = selectedDates[0] || null
-    setBirthday(selected)
-  }
-
-  const validateDate = (selectedDate: any) => {
-    if (!selectedDate) {
-      setErrDate('Sinh nhật không hợp lệ')
-
-      return false // Date is not selected
-    }
-
-    setErrDate('')
-
-    return true // Date is valid
-  }
-
-  useEffect(() => {
-    // Flatpickr()
-  })
 
   const ChangeInfor = (dataUpdate: any) => {
     updateInfor(dataUpdate).then(({ data }: any) => {
@@ -85,18 +74,14 @@ const MyInfor = () => {
   }
 
   const onInfor = (dateUpdate: InforForm) => {
-    // console.log(dateUpdate)
-
-    if (!errDate) {
-      if (avatar.file) {
-        const form = new FormData()
-        form.append('images', avatar.file)
-        uploadAvatar(form).then(({ data: { urls } }: any) => {
-          ChangeInfor({ ...dateUpdate, birthday: birthday, avatar: urls[0].url })
-        })
-      } else {
-        ChangeInfor({ ...dateUpdate, birthday: birthday })
-      }
+    if (avatar.file) {
+      const form = new FormData()
+      form.append('images', avatar.file)
+      uploadAvatar(form).then(({ data: { urls } }: any) => {
+        ChangeInfor({ ...dateUpdate, avatar: urls[0].url, userId: user._id })
+      })
+    } else {
+      ChangeInfor({ ...dateUpdate, userId: user._id })
     }
   }
 
@@ -155,29 +140,16 @@ const MyInfor = () => {
                       readOnly
                     />
                   </div>
-                  {['admin', 'Shipper', 'Staff'].includes(user.role) ? (
-                    <div className='item-profile w-[50%] my-3 '>
-                      <label className='block py-2 text-[#959393]'>Chức vụ</label>
-                      <input
-                        className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
-                        type='text'
-                        name='grade'
-                        defaultValue={user.role}
-                        readOnly
-                      />
-                    </div>
-                  ) : (
-                    ''
-                  )}
                   <div className='item-profile w-[50%] my-3 '>
-                    <label className='block py-2 text-[#959393]'>Điểm</label>
+                    <label className='block py-2 text-[#959393]'>SĐT</label>
                     <input
                       className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
                       type='text'
-                      name='grade'
-                      defaultValue={user.grade}
-                      readOnly
+                      {...register('phone')}
+                      name='phone'
+                      // defaultValue={user.grade}
                     />
+                    <span className='text-red-500'>{errors.phone && errors.phone.message}</span>
                   </div>
                   <div className='item-profile w-[50%] my-3'>
                     <label className='block py-2 text-[#959393]'>Họ và tên</label>
@@ -188,22 +160,6 @@ const MyInfor = () => {
                       name='username'
                     />
                     <span className='text-red-500'>{errors.username && errors.username.message}</span>
-                  </div>
-                  <div className='item-profile w-[50%] my-3'>
-                    <label className='block py-2 text-[#959393]'>Sinh nhật</label>
-                    <Flatpickr
-                      className='w-full g-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none'
-                      value={birthday!}
-                      onChange={handleDateChange}
-                      onClose={(_, selectedDates) => {
-                        const isValid = validateDate(selectedDates)
-                        if (!isValid) {
-                          setBirthday(null)
-                        }
-                      }}
-                      options={{ dateFormat: 'd/m/Y', allowInput: true }}
-                    />
-                    <span className='text-red-500'>{errDate && errDate}</span>
                   </div>
                   <div className='item-profile w-[50%] my-3'>
                     <label className='block py-2 text-[#959393]'>Tài khoản</label>

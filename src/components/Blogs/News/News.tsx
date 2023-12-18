@@ -9,8 +9,7 @@ const News = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: dataBlog } = useGetAllBlogsQuery()
-  const listBlogsByIdCate = dataBlog && dataBlog?.docs?.filter((item) => item.category._id === id)
-
+  const listBlogsByIdCate = dataBlog && dataBlog?.docs?.filter((item) => item?.category?._id === id)
   if (listBlogsByIdCate && listBlogsByIdCate.length <= 0) {
     return (
       <div className='flex items-center justify-center w-full py-4'>

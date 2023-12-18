@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Auth } from '../../api/Auth'
 import { Link } from 'react-router-dom'
 import { MdKeyboardArrowDown } from 'react-icons/md'
-import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
 import styles from './HeaderHomePage.module.scss'
 import { useGetAllBlogCategoryQuery } from '../../api/NewBlogs'
+import { useSelector } from 'react-redux'
 
 const HeaderHomePage = () => {
   const [isHeaderFixed, setHeaderFixed] = useState(false)
@@ -68,7 +68,7 @@ const HeaderHomePage = () => {
                   Trang chủ
                 </Link>
               </li>
-              <li className='font-[700] py-2 text-sm '>
+              {/* <li className='font-[700] py-2 text-sm '>
                 <div className='menu_item relative group'>
                   <a href='/about' onClick={toggleMenu} className='flex'>
                     <p className='mr-1 hover:underline'>Giới thiệu</p> <MdKeyboardArrowDown className='text-[20px]' />
@@ -87,7 +87,7 @@ const HeaderHomePage = () => {
                     </li>
                   </ul>
                 </div>
-              </li>
+              </li> */}
 
               <li className='font-[700] py-2 text-sm '>
                 <Link to='/products' onClick={toggleMenu}>
@@ -144,7 +144,7 @@ const HeaderHomePage = () => {
                 </div>
               </li>
 
-              <li className='font-[700] py-2 text-sm '>
+              {/* <li className='font-[700] py-2 text-sm '>
                 <Link to='/' onClick={toggleMenu}>
                   Cửa hàng
                 </Link>
@@ -158,7 +158,7 @@ const HeaderHomePage = () => {
                 <Link to='/' onClick={toggleMenu}>
                   Nhượng quyền
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </nav>
 
@@ -176,7 +176,7 @@ const HeaderHomePage = () => {
             </div>
           ) : (
             <Link
-              to='signin'
+              to='/signin'
               className='hidden  py-2 uppercase text-sm rounded px-4 md:flex items-center justify-center bg-[#d3b673] text-white hover:bg-white hover:text-[#d3b673] transition-all'
             >
               Đăng nhập

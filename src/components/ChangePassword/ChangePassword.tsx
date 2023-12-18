@@ -1,6 +1,8 @@
 import { Button, Form, Input, message } from 'antd'
-import { useUpdatePasswordMutation } from '../../api/User'
 import { useEffect, useState } from 'react'
+import { useLogoutMutation } from '../../api/Auth'
+import { useUpdatePasswordMutation } from '../../api/User'
+import { ClientSocket } from '../../socket'
 import { RootState, useAppSelector } from '../../store'
 
 type FieldType = {
@@ -12,7 +14,7 @@ type FieldType = {
 const ChangePassword = () => {
   const [updatePasswordFn, updatePasswordRes] = useUpdatePasswordMutation()
   const { user } = useAppSelector((state: RootState) => state.persistedReducer.auth)
-
+  const [logout] = useLogoutMutation()
   const [avatar, _] = useState<{ file: File | undefined; base64: string | ArrayBuffer | null }>({
     file: undefined,
     base64: ''
@@ -34,8 +36,14 @@ const ChangePassword = () => {
 
     if (updatePasswordRes.isSuccess) {
       message.success('Đổi mật khẩu thành công!')
+      logout()
+        .unwrap()
+        .then(() => {
+          ClientSocket.Disconnect()
+        })
+      window.location.href = '/signin'
     }
-  }, [updatePasswordRes])
+  }, [updatePasswordRes, logout])
   return (
     <div className='flex-1'>
       <div className='items-center justify-between border-b border-gray-200 pb-4'>
@@ -75,8 +83,8 @@ const ChangePassword = () => {
             rules={[
               { required: true, message: 'Mật khẩu mới không được bỏ trống!' },
               {
-                min: 5,
-                message: 'Mật khẩu mới phải có ít nhất 5 kí tự.'
+                min: 6,
+                message: 'Mật khẩu mới phải có ít nhất 6 kí tự.'
               }
             ]}
           >

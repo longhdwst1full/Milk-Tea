@@ -14,7 +14,6 @@ export const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
 
   // const dispatch = useDispatch()
   const { user: userInfo } = useAppSelector((state) => state.persistedReducer.auth)
-  console.log('🚀 ~ file: chat-input-box.tsx:22 ~ ChatInputBox ~ userInfo:', userInfo)
 
   const doSendMessage = async () => {
     if (newMessage && newMessage.length > 0) {

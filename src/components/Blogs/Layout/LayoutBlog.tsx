@@ -9,23 +9,6 @@ import Loader from '../../Loader'
 const LayoutBlog = () => {
   const location = useLocation()
 
-  // Sao méo được ??
-  //   const [content, setContent] = useState<any>('')
-  //   console.log(location)
-  //   const contentMapping = {
-  //     'tin-tuc-khuyen-mai': 'Tin tức khuyến mãi',
-  //     'su-kien': 'Sự kiện',
-  //     'cau-chuyen': 'Câu chuyện'
-  //   } as any
-  //   useEffect(() => {
-  //     const pathname = location.pathname.replace('/', '')
-  //     console.log(pathname);
-
-  //     const mappedContent = contentMapping[pathname] || ''
-  //     setContent(mappedContent)
-  //   }, [location.pathname])
-  //   console.log(content);
-
   const getContentByUrl = () => {
     if (location.pathname.includes('tin-tuc-khuyen-mai')) {
       return 'Tin tức khuyến mãi'

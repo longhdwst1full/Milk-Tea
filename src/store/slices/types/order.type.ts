@@ -4,6 +4,7 @@ import { ITopping } from '../../../interfaces/topping.type'
 
 interface inforOrderShipping {
   name: string
+  email: string
   phone: string
   address: string
   noteShipping?: string
@@ -31,6 +32,12 @@ export interface IOrderCheckout {
   noteOrder: string | undefined
   paymentMethodId: string
   inforOrderShipping: inforOrderShipping
+  moneyPromotion:
+    | {
+        price: number
+        voucherId: string
+      }
+    | any
 }
 
 export interface dataDocsOrderRes {

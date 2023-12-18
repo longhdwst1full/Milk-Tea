@@ -32,7 +32,7 @@ export const ChatContent = ({ messages }: ChatContentProps) => {
               )}
               {!message.isChatOwner && (
                 <img
-                  src={'https://cdn.dribbble.com/users/464600/screenshots/2863054/bot-emotions-principle.gif'}
+                  src='https://cdn.dribbble.com/users/464600/screenshots/2863054/bot-emotions-principle.gif'
                   className='w-12 object-cover h-12 text-gray-400'
                   alt='bot'
                 />

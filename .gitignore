@@ -11,8 +11,10 @@ yarn.lock
 package-lock.json
 
 node_modules
- 
+
 *.local
+dist
+dist-ssr
 
 # Editor directories and files
 .vscode/*
